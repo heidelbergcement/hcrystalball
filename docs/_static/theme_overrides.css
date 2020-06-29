@@ -1,0 +1,27 @@
+/* override table width restrictions */
+@media screen and (min-width: 767px) {
+
+   .wy-table-responsive table td {
+      /* !important prevents the common CSS stylesheets from overriding
+         this as on RTD they are loaded after this stylesheet */
+      white-space: normal !important;
+   }
+
+   .wy-table-responsive {
+      overflow: visible !important;
+   }
+}
+
+:root {
+    --primary: #008238;
+}
+
+/* sidebar header (and topbar for mobile) */
+.wy-side-nav-search, .wy-nav-top {
+    background: var(--primary);
+}
+
+
+.sphx-glr-thumbcontainer{
+    display: inline-block !important;
+}
