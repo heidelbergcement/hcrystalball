@@ -1,6 +1,6 @@
 ![License](https://img.shields.io/github/license/heidelbergcement/hcrystalball)
 ![Contributors](https://img.shields.io/github/contributors/heidelbergcement/hcrystalball)
-
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 TODO
 [shields]
@@ -9,10 +9,7 @@ TODO
  - downloads
  - pypi version
  - conda forge version
- - licence
  - python versions
- - contributors
- - code style black
 
 # HCrystal Ball
 
