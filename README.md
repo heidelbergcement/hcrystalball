@@ -1,3 +1,7 @@
+![License](https://img.shields.io/github/license/heidelbergcement/hcrystalball)
+![Contributors](https://img.shields.io/github/contributors/heidelbergcement/hcrystalball)
+
+
 TODO
 [shields]
  - tests
@@ -28,7 +32,7 @@ forecasting in the Python ecosystem.</i>
    and add convenient layer over whole process (access to results, plots, storage, ...)
 
 ## Documentation
-See examples, tutorials, contribution, API and more on the documentation [site](https://hcrystalball.readthedocs.io/en/lastest).
+See examples, tutorials, contribution, API and more on the documentation [site](https://hcrystalball.readthedocs.io/en/lastest) or browse [example notebooks](https://github.com/heidelbergcement/hcrystalball/tree/master/docs/examples) directly.
 
 ## Core Installation
 
