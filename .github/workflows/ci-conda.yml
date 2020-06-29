@@ -26,16 +26,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           channels: defaults,conda-forge
           environment-file: environment.yml
-          use-only-tar-bz2: true
-      - name: Lint with flake8
-        shell: pwsh
-        run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # all Python files should follow PEP8 (except some notebooks, see setup.cfg)
-          flake8 hcrystalball tests
-          # exit-zero treats all errors as warnings.
-          flake8 . --count --exit-zero --max-complexity=10 --statistics
+          use-only-tar-bz2: true     
       - name: Install from source
         # This is required for the pre-commit tests
         shell: pwsh
