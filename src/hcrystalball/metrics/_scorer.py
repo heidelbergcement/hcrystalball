@@ -75,26 +75,26 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
 
     def _score(self, method_caller, estimator, X, y_true, sample_weight=None):
         """Evaluate predicted target values for X relative to y_true.
-        
+
         Parameters
         ----------
         method_caller : callable
             Returns predictions given an estimator, method name, and other
             arguments, potentially caching results.
-            
+
         estimator : object
             Trained estimator to use for scoring. Must have a predict_proba
             method; the output of that is used to compute the score.
-            
+
         X : array-like or sparse matrix
             Test data that will be fed to estimator.predict.
-            
+
         y_true : array-like
             Gold standard target values for X.
-            
+
         sample_weight : array-like
             Sample weights.
-            
+
         Returns
         -------
         score : float
@@ -155,7 +155,7 @@ def get_scorer(function="neg_mean_absolute_error"):
     ----------
     function : callable or str
         callable your own function
-        
+
     Returns
     -------
     sklearn compatible scorer
@@ -169,7 +169,8 @@ def get_scorer(function="neg_mean_absolute_error"):
         return function
     else:
         raise ValueError(
-            f"Provided scoring function must be instance of ts predict scorer (use make_ts_scorer) or one of {SCORERS.keys()}"
+            f"Provided scoring function must be instance of `_TSPredictScorer`"
+            f"(use make_ts_scorer) or one of {SCORERS.keys()}"
         )
 
 

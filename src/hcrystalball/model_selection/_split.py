@@ -93,9 +93,7 @@ class FinerTimeSplit:
         indices = np.arange(n_samples)
         if self.between_split_lag is not None:
             test_starts = range(
-                n_samples
-                - (self.between_split_lag * self.n_splits)
-                - (self.horizon - self.between_split_lag),
+                n_samples - (self.between_split_lag * self.n_splits) - (self.horizon - self.between_split_lag),
                 n_samples - (self.horizon - self.between_split_lag),
                 self.between_split_lag,
             )

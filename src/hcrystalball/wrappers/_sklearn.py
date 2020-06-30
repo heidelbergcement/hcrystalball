@@ -40,7 +40,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
             y - numpy.ndarray
         """
         if y is not None:
-            y = self._y[self.lags + horizon - 1 :]
+            y = self._y[self.lags + horizon - 1:]
         X = self._add_lag_features(X, self._y, horizon)
         if "holiday" in X.columns:
             X = self._adjust_holidays(X)
@@ -120,7 +120,8 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         """Predict using provided Sklearn compatible regressor.
 
         If `optimize_for_horizon` is set to True, then new model is created for
-        each new horizon and fitted independently (i.e. len(X)=5 --> horizon=5 --> 5 models will be fitted).
+        each new horizon and fitted independently
+        (i.e. len(X)=5 --> horizon=5 --> 5 models will be fitted).
         The final prediction is then combination of single point forecast of individual models
         for different horizons.
 
@@ -136,7 +137,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         """
         if len(X) > len(self._X) + 3:
             raise InsufficientDataLengthError(
-                f"`X` must have at least {len(self._X) + 3} observations. " f"Please provide valid data."
+                f"`X` must have at least {len(self._X) + 3} observations. Please provide valid data."
             )
 
         if self.optimize_for_horizon:
@@ -170,7 +171,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         """
         lag_features = []
         shift = horizon if horizon else 0
-        y = y if horizon else y[-(len(X) + self.lags - 1) :]
+        y = y if horizon else y[-(len(X) + self.lags - 1):]
 
         for i in range(0, self.lags):
             lag_features.append(pd.Series(y, name=f"lag_{i}").shift(i + shift))
@@ -185,8 +186,9 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
 def _get_sklearn_wrapper(model_cls):
     """Factory function returning the model specific SklearnWrapper with provided `model_cls` parameters.
 
-    This function is required for sklearn compatibility since our SklearnWrapper need to have all parameters of `model_cls`
-    set already during SklearnWrapper definition time. This factory function is not needed in case of
+    This function is required for sklearn compatibility since our SklearnWrapper
+    need to have all parameters of `model_cls` set already during SklearnWrapper definition time.
+    This factory function is not needed in case of
     other wrappers since the regressor is already part of the wrapper.
 
     Parameters
@@ -324,4 +326,3 @@ class _ClassInitializer:
 
 
 __all__ = ["get_sklearn_wrapper"]
-

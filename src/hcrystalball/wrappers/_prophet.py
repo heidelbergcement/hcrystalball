@@ -11,12 +11,9 @@ logging.getLogger("pystan").addHandler(sys_out)
 
 from fbprophet import Prophet
 import pandas as pd
-from hcrystalball.utils import (
-    check_fit_before_predict,
-    check_X_y,
-    enforce_y_type,
-)
-
+from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import check_X_y
+from hcrystalball.utils import enforce_y_type
 
 pd.plotting.register_matplotlib_converters()
 

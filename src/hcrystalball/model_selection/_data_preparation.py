@@ -108,9 +108,8 @@ def filter_data(df, include_rules=None, exclude_rules=None):
             common_values = set(include_rules[key]) & set(exclude_rules[key])
             if len(common_values) > 0:
                 raise ValueError(
-                    "Overlap is found in include_rules and exclude_rules in key `"
-                    + key
-                    + "`. This is not allowed."
+                    f"Overlap is found in include_rules and exclude_rules in key `{key}`."
+                    f"This is not allowed"
                 )
 
     if include_rules is not None:

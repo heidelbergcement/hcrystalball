@@ -127,11 +127,7 @@ class SeasonalityTransformer(BaseEstimator, TransformerMixin):
             season_feat.append(pd.get_dummies(date.week).rename(columns=lambda x: f"{x}_week"))
         if self.monthly or (self.auto and self.freq in ["D", "W", "M"]) and self.monthly is not False:
             season_feat.append(pd.get_dummies(date.month_name()))
-        if (
-            self.quarterly
-            or (self.auto and self.freq in ["D", "W", "M", "Q"])
-            and self.quarterly is not False
-        ):
+        if self.quarterly or (self.auto and self.freq in ["D", "W", "M", "Q"]) and self.quarterly is not False:
             season_feat.append(pd.get_dummies(date.quarter).rename(columns=lambda x: f"{x}_quarter"))
         if self.yearly or (self.auto and self.freq in ["D", "W", "M", "Q", "Y"]) and self.yearly is not False:
             season_feat.append(pd.get_dummies(date.year))
