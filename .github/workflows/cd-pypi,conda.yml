@@ -41,10 +41,20 @@ jobs:
       - name: Conda list
         shell: pwsh
         run: conda list
-      - name: Build and publish
+      - name: Build
+        shell: pwsh
+        run: |
+          pip install twine
+          python setup.py sdist bdist_wheel
+      - name: Publish to PyPI
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: |
-          python setup.py sdist bdist_wheel
-          twine upload dist/*
+        shell: pwsh
+        run: twine upload dist/*
+      - name: Publish to Conda
+        uses: fcakyon/conda-publish-action@v1.3
+        with:
+          subdir: 'conda'
+          anacondatoken: ${{ secrets.ANACONDA_TOKEN }}
+          platforms: 'win oxs linux'
