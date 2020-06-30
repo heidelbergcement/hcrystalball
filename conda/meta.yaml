@@ -15,7 +15,13 @@ build:
 requirements:
   build:
     - python
-    - setuptools    
+    - setuptools
+    - numpy x.x      
+    - pandas =1.0
+    - scipy =1.4
+    - scikit-learn =0.23
+    - workalendar =10.1
+    - matplotlib  
   run:
     - python
     - numpy x.x
