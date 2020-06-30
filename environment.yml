@@ -23,7 +23,6 @@ dependencies:
 - sphinx-gallery # to build docs
 - black # to format the code
 # - prefect # to execute model selection in parallel
-- git
 - pip
 
 - pip: 
