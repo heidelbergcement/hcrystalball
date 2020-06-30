@@ -1,0 +1,5 @@
+[flake8]
+# ignore = E226,E302,E41
+ignore = E402,F401,E501
+exclude = tests/*,*eggs*
+max-complexity = 10
