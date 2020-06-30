@@ -137,10 +137,10 @@ def get_estimator_name(estimator):
     Returns
     -------
     str
-        Name of the estimator. For TS Framework models, the name attribute 
-        of the estimator is returned, while for other model instances 
-        the class name will be returned. In case the input estimator is a pipeline 
-        the name of the last step in the pipeline, which is supposed 
+        Name of the estimator. For TS Framework models, the name attribute
+        of the estimator is returned, while for other model instances
+        the class name will be returned. In case the input estimator is a pipeline
+        the name of the last step in the pipeline, which is supposed
         to be a regressor/classifier will be returned.
     """
 
@@ -195,12 +195,11 @@ def get_sales_data(n_dates=100, n_assortments=2, n_states=3, n_stores=3):
 
     The ``Assortment``, ``State`` and ``Store`` serve as data partitioning columns.
     ``HolidayCode`` will provide country specific holidays for the given ``Date``.
-    ``Open``, ``Promo``, ``Promo2`` and ``SchoolHoliday`` serve as exogenous variables - additions to the feature set.
+    ``Open``, ``Promo``, ``Promo2`` and ``SchoolHoliday`` serve as exogenous variables.
     ``Sales`` is the target column we will predict.
-    ``StoreType`` will not be part of exogenous cols, neither target col, neither partition col thus will be skipped.
 
     Parameters
-    ---------- 
+    ----------
     n_dates : int
         Number of days to be included for each series
 
@@ -218,7 +217,7 @@ def get_sales_data(n_dates=100, n_assortments=2, n_states=3, n_stores=3):
     -------
     >>> get_sales_data()
                 Store  Sales  Open  Promo  SchoolHoliday StoreType Assortment  Promo2 State HolidayCode
-    Date                                                                                               
+    Date
     2015-04-23    906   8162  True  False          False         a          a   False    HE       DE-HE
     2015-04-23    251  16573  True  False          False         a          c   False    NW       DE-NW
     2015-04-23    320  13114  True  False          False         a          c   False    SH       DE-SH
@@ -230,7 +229,7 @@ def get_sales_data(n_dates=100, n_assortments=2, n_states=3, n_stores=3):
     2015-07-31    906  15131  True   True           True         a          a   False    HE       DE-HE
     2015-07-31    586  17879  True   True           True         a          c   False    NW       DE-NW
     2015-07-31    251  22205  True   True           True         a          c   False    NW       DE-NW
-    
+
     Returns
     -------
     pandas.DataFrame
@@ -242,7 +241,7 @@ def get_sales_data(n_dates=100, n_assortments=2, n_states=3, n_stores=3):
         Error is raised if the number of assortments is higher than what dataset holds,
         if there are less than requested number of states within any assortment,
         or if there are not enough valid combinations of number of assortments, states and stores.
-    """    
+    """
     data_path = Path(__file__).parent / "data/rossmann_train_rich_top_100.csv"
     df = pd.read_csv(data_path, parse_dates=["Date"], index_col="Date")
 
@@ -300,7 +299,8 @@ def get_sales_data(n_dates=100, n_assortments=2, n_states=3, n_stores=3):
 
     if len(data) != n_assortments * n_states * n_stores * n_dates:
         raise ValueError(
-            f"There are not enough data for valid combinations of stores, store_types and states" f"{data}"
+            f"There are not enough data for valid combinations of "
+            f"stores, store_types and states" f"{data}"
         )
 
     return data
@@ -308,7 +308,7 @@ def get_sales_data(n_dates=100, n_assortments=2, n_states=3, n_stores=3):
 
 def generate_tsdata(n_dates=365, random_state=None):
     """Generate dummy daily time series data compatible with hcrystalball API.
-    
+
     Parameters
     ----------
     n_dates : int
@@ -342,7 +342,9 @@ def generate_tsdata(n_dates=365, random_state=None):
     return X, y
 
 
-def generate_multiple_tsdata(n_dates=10, n_regions=2, n_plants=3, n_products=4, country="DE", random_state=None):
+def generate_multiple_tsdata(
+    n_dates=10, n_regions=2, n_plants=3, n_products=4, country="DE", random_state=None
+):
     """Provide easy way how to generate dummy data for tests or tutorial purposes
 
     Parameters
@@ -358,11 +360,11 @@ def generate_multiple_tsdata(n_dates=10, n_regions=2, n_plants=3, n_products=4, 
 
     n_products : int
         number of products within colum 'Product'
-    
+
     country : str
         ISO code of country or country-region
 
-    random_state : int or RandomState instance, 
+    random_state : int or RandomState instance,
         Control random number generation following the scikit-learn pattern.
         Default is to use the global Numpy RNG.
         For reproducible results pass an int.
@@ -371,7 +373,7 @@ def generate_multiple_tsdata(n_dates=10, n_regions=2, n_plants=3, n_products=4, 
     Returns
     -------
     pandas.DataFrame
-        Data with datetime index and following columns 
+        Data with datetime index and following columns
         - "Region", "Plant", "Product" - for partitioning the data
         - "Country" - for holidays code
         - "Raining" - as bool exogenous variable
@@ -402,6 +404,7 @@ def generate_multiple_tsdata(n_dates=10, n_regions=2, n_plants=3, n_products=4, 
                 dfs.append(df_tmp.copy())
 
     return pd.concat(dfs).set_index("Date")
+
 
 __all__ = [
     "get_estimator_repr",

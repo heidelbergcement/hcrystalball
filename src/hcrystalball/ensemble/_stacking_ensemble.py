@@ -8,51 +8,51 @@ from hcrystalball.exceptions import DuplicatedModelNameError
 
 
 class StackingEnsemble(BaseEstimator):
-    """StackingEnsemble model, which takes a list of any hcrystalball model 
+    """StackingEnsemble model, which takes a list of any hcrystalball model
     wrapper instance(s) as base learners.
 
-    During fitting the base learners are fitted and prediction(s) will be made for 
-    the requested horizon, using possibly more than one splits. The predictions for 
-    each model in all splits are concatenated and serve as the feature matrix for the 
-    meta model, with the prediction of each model over all splits being a distinct feature. 
-    Finally the meta model, which is just a regular regressor, will then be fitted to the 
+    During fitting the base learners are fitted and prediction(s) will be made for
+    the requested horizon, using possibly more than one splits. The predictions for
+    each model in all splits are concatenated and serve as the feature matrix for the
+    meta model, with the prediction of each model over all splits being a distinct feature.
+    Finally the meta model, which is just a regular regressor, will then be fitted to the
     data to determine the relative weights of each base learner in the prediction of the ensemble.
 
-    As a default behaviour the meta model is fitted only the first time the fit() 
-    method is called, then in each subsequent calls of the fit() method (of a given 
-    StackingEnsemble instance) omits the fitting of the meta model and fits only the base 
+    As a default behaviour the meta model is fitted only the first time the fit()
+    method is called, then in each subsequent calls of the fit() method (of a given
+    StackingEnsemble instance) omits the fitting of the meta model and fits only the base
     learners. This behaviour can, however be changed using the fit_meta_model_always
     parameter to force the meta model to be refitted every time the fit method is called.
-    Note, however, that this latter behaviour can be computationally expensive, as fitting 
+    Note, however, that this latter behaviour can be computationally expensive, as fitting
     the meta model requires fitting the base learners train_n_splits times.
 
     Parameters
     ----------
     name: str
         Unique name / identifier of the model instance
-        
+
     base_learners: list
         List of fully instantiated hcrystalball model wrappers
-        
+
     meta_model: sklearn.base.BaseEstimator
         Scikit-learn compatible regressor
-        
+
     train_n_splits: int
         Number of splits used for fitting the meta model
-        
+
     train_horizon: int
         Max. number of steps ahead to be predicted. Ideally this value should not be identical
         to the forecasting horizon in prediction.
-        
+
     horizons_as_features: bool
         Adds horizon feature for meta model
-                                
+
     weekdays_as_features: bool
         Adds weekdays feature for meta model
 
     fit_meta_model_always: bool
         If True the meta model will always be re-fitted, each time  the fit() method is called,
-        if False the meta model will only be fitted the first time the fit() method is 
+        if False the meta model will only be fitted the first time the fit() method is
         called and in subsequent calls of the fit() method only the base learners will be re-fitted.
     """
 
@@ -95,7 +95,7 @@ class StackingEnsemble(BaseEstimator):
         Returns
         -------
         None
-        
+
         Raises
         ------
         DuplicatedModelNameError
@@ -139,8 +139,8 @@ class StackingEnsemble(BaseEstimator):
         Returns
         -------
         pandas.DataFrame
-            Container with the X['date'] as index and the names of the base learners 
-            as column names. Each column should contain the prediction of a base learner 
+            Container with the X['date'] as index and the names of the base learners
+            as column names. Each column should contain the prediction of a base learner
             with a name found in the column name.
         """
 
@@ -161,7 +161,7 @@ class StackingEnsemble(BaseEstimator):
         Dummy column is created for each horizon(i.e. horizon 5 == 5 new columns). Column itself
         will be 1 only for it's particular horizon, for the rest will be 0.
         This method is intended for use when 'variable_horizon' is set to True.
-        
+
         Returns
         -------
         pandas.DataFrame
@@ -174,7 +174,7 @@ class StackingEnsemble(BaseEstimator):
     @staticmethod
     def _create_weekdays_as_features(cross_results_index):
         """DataFrame with dummy columns for each week_day based on provided `cross_results_index`
-        
+
         Returns
         -------
         pandas.DataFrame
@@ -193,7 +193,7 @@ class StackingEnsemble(BaseEstimator):
 
         y: numpy.ndarray
             Target vector.
-            
+
         Returns
         -------
         StackingEnsemble
@@ -246,8 +246,8 @@ class StackingEnsemble(BaseEstimator):
         return self
 
     def _ensure_pred_and_train_cols_equals(self, X):
-        """Returns Pandas dataframe for inference with the same features as during training 
-        
+        """Returns Pandas dataframe for inference with the same features as during training
+
         (i.e. Test data could miss some months...). This method is important as most regressors
         expect the same structure of data for training as for inference
 
@@ -284,8 +284,8 @@ class StackingEnsemble(BaseEstimator):
         Returns
         -------
         pandas.DataFrame
-            A DataFrame container with the index being the input (date)time vector. 
-            The single column in the DataFrame contains the prediction and the column 
+            A DataFrame container with the index being the input (date)time vector.
+            The single column in the DataFrame contains the prediction and the column
             name is the name of the model (i.e. the `name` parameter passed to the constructor)
         """
 

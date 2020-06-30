@@ -6,8 +6,8 @@ from hcrystalball.exceptions import DuplicatedModelNameError
 
 
 class SimpleEnsemble(BaseEstimator):
-    """SimpleEnsemble model, which takes a list of any hcrystalball model 
-    wrapper instance(s) as base learners and aggregates their prediction 
+    """SimpleEnsemble model, which takes a list of any hcrystalball model
+    wrapper instance(s) as base learners and aggregates their prediction
     using `ensemble_func`.
 
     See motivation to average forecasts from different models
@@ -22,7 +22,7 @@ class SimpleEnsemble(BaseEstimator):
         List of fully instantiated hcrystalball model wrappers
 
     ensemble_func: {'mean', 'median', 'min', 'max'}
-        Function to aggregate `base_learners` predictions        
+        Function to aggregate `base_learners` predictions
     """
 
     def __init__(
@@ -54,7 +54,7 @@ class SimpleEnsemble(BaseEstimator):
         ----------
         models: list
             List of instatiated hcrystalball model wrapper instances
-        
+
         Raises
         ------
         DuplicatedModelNameError
@@ -80,7 +80,7 @@ class SimpleEnsemble(BaseEstimator):
 
         y: numpy.ndarray
             Target vector.
-            
+
         Returns
         -------
         SimpleEnsemble
@@ -101,14 +101,14 @@ class SimpleEnsemble(BaseEstimator):
         Parameters
         ----------
         X: pandas.DataFrame
-            DataFrame container with a single column, named 'date', 
+            DataFrame container with a single column, named 'date',
             containing the datetimes for which the predictions should be made.
 
         Returns
         -------
         pandas.DataFrame
-            A DataFrame container with the index being the input (date)time vector. 
-            The single column in the DataFrame contains the prediction and the column 
+            A DataFrame container with the index being the input (date)time vector.
+            The single column in the DataFrame contains the prediction and the column
             name is the name of the model (i.e. the `name` parameter passed to the constructor)
         """
         y_pred = pd.DataFrame(index=X.index, columns=[self.name])

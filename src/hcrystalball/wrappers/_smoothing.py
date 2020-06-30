@@ -20,8 +20,8 @@ from hcrystalball.utils import check_fit_before_predict
 
 class BaseSmoothingWrapper(TSModelWrapper, metaclass=ABCMeta):
     """BaseWrapper for smoothing models from `statsmodels.tsa.holtwinters`
-    
-    Currently supported ones are `~statsmodels.tsa.holtwinters.ExponentialSmoothing`, 
+
+    Currently supported ones are `~statsmodels.tsa.holtwinters.ExponentialSmoothing`,
     `~statsmodels.tsa.holtwinters.SimpleExpSmoothing`, `~statsmodels.tsa.holtwinters.Holt`
     """
 
@@ -32,19 +32,20 @@ class BaseSmoothingWrapper(TSModelWrapper, metaclass=ABCMeta):
     @staticmethod
     def _transform_data_to_tsmodel_input_format(X, y=None):
         """Trasnform data into `statsmodels.tsa.api` required format
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : array_like, (1d)
             Target vector.
-        
+
         Returns
         -------
-        pandas.Series/int, 
-            If y is None,  length of input to `predict` method is returned otherwise series with X.index in index and y in values
+        pandas.Series/int,
+            If y is None, length of input to `predict` method is returned
+            otherwise series with X.index in index and y in values
         """
         if y is not None:
             return pd.Series(y, index=X.index)
@@ -56,15 +57,15 @@ class BaseSmoothingWrapper(TSModelWrapper, metaclass=ABCMeta):
     def fit(self, X, y):
         """Transform data to `statsmodels.tsa.api` required format
         and fit the model.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : array_like, (1d)
             Target vector.
-        
+
         Returns
         -------
         self
@@ -79,15 +80,15 @@ class BaseSmoothingWrapper(TSModelWrapper, metaclass=ABCMeta):
     @check_fit_before_predict
     def predict(self, X):
         """Transform data to `statsmodels.tsa.api` required format and provide predictions.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-                   
+
         Returns
         -------
-        pandas.DataFrame            
+        pandas.DataFrame
             Prediction stored in column with name being the `name` of the wrapper.
         """
         horizon = self._transform_data_to_tsmodel_input_format(X)
@@ -97,20 +98,20 @@ class BaseSmoothingWrapper(TSModelWrapper, metaclass=ABCMeta):
 
 
 class ExponentialSmoothingWrapper(BaseSmoothingWrapper):
-    """Wrapper for `statsmodels.tsa.holtwinters.ExponentialSmoothing` (see other parameters there)   
-    
+    """Wrapper for `statsmodels.tsa.holtwinters.ExponentialSmoothing` (see other parameters there)
+
     Parameters
     ----------
     name: str
         Name of the model instance, used also as column name for returned prediction
 
     fit_params: dict
-        Parameters passed to `~hcrystalball.wrappers.ExponentialSmoothingWrapper.fit` method of model. 
+        Parameters passed to `~hcrystalball.wrappers.ExponentialSmoothingWrapper.fit` method of model.
         For mode details see `statsmodels.tsa.holtwinters.ExponentialSmoothing.fit`
 
     clip_predictions_lower: float
         Minimal value allowed for predictions - predictions will be clipped to this value.
-            
+
     clip_predictions_upper: float
         Maximum value allowed for predictions - predictions will be clipped to this value.
     """
@@ -125,13 +126,13 @@ class ExponentialSmoothingWrapper(BaseSmoothingWrapper):
         clip_predictions_lower=None,
         clip_predictions_upper=None,
     ):
-        """This constructor will be modified at runtime to accept 
+        """This constructor will be modified at runtime to accept
         all parameters of the ExponentialSmoothing class on top of the ones defined here!"""
         pass
 
 
 class SimpleSmoothingWrapper(BaseSmoothingWrapper):
-    """Wrapper for `statsmodels.tsa.holtwinters.SimpleExpSmoothing` (see other parameters there)    
+    """Wrapper for `statsmodels.tsa.holtwinters.SimpleExpSmoothing` (see other parameters there)
 
     Parameters
     ----------
@@ -139,12 +140,12 @@ class SimpleSmoothingWrapper(BaseSmoothingWrapper):
         Name of the model instance, used also as column name for returned prediction
 
     fit_params: dict
-        Parameters passed to `~hcrystalball.wrappers.SimpleSmoothingWrapper.fit` method of model. 
+        Parameters passed to `~hcrystalball.wrappers.SimpleSmoothingWrapper.fit` method of model.
         For more details see `statsmodels.tsa.holtwinters.SimpleExpSmoothing.fit`
 
     clip_predictions_lower: float
         Minimal value allowed for predictions - predictions will be clipped to this value.
-            
+
     clip_predictions_upper: float
         Maximum value allowed for predictions - predictions will be clipped to this value.
     """
@@ -159,7 +160,7 @@ class SimpleSmoothingWrapper(BaseSmoothingWrapper):
         clip_predictions_lower=None,
         clip_predictions_upper=None,
     ):
-        """This constructor will be modified at runtime to accept 
+        """This constructor will be modified at runtime to accept
         all parameters of the SimpleExpSmoothing class on top of the ones defined here!"""
         pass
 
@@ -173,13 +174,13 @@ class HoltSmoothingWrapper(BaseSmoothingWrapper):
         Name of the model instance, used also as column name for returned prediction
 
     fit_params: dict
-        Parameters passed to `~hcrystalball.wrappers.HoltSmoothingWrapper.fit` method of model. 
+        Parameters passed to `~hcrystalball.wrappers.HoltSmoothingWrapper.fit` method of model.
         For more details see `statsmodels.tsa.holtwinters.Holt.fit`
     clip_predictions_lower: float
         Minimal value allowed for predictions - predictions will be clipped to this value.
-            
+
     clip_predictions_upper: float
-        Maximum value allowed for predictions - predictions will be clipped to this value.    
+        Maximum value allowed for predictions - predictions will be clipped to this value.
     """
 
     model_cls = Holt
@@ -188,10 +189,9 @@ class HoltSmoothingWrapper(BaseSmoothingWrapper):
     def __init__(
         self, name="HoltSmoothing", fit_params=None, clip_predictions_lower=None, clip_predictions_upper=None
     ):
-        """This constructor will be modified at runtime to accept 
+        """This constructor will be modified at runtime to accept
         all parameters of the Holt class on top of the ones defined here!"""
         pass
 
 
 __all__ = ["ExponentialSmoothingWrapper", "SimpleSmoothingWrapper", "HoltSmoothingWrapper"]
-

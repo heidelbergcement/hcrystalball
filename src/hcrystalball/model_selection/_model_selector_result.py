@@ -12,9 +12,9 @@ load_model_selector_result = functools.partial(_load_file, expert_type="model_se
 
 class ModelSelectorResult:
     """Consolidate infromation/methods from cross validation for 1 time series
-    
+
     Store all relevant information about model selection and provide
-    utility methods (e.g. plot_model_performance) and data (e.g. df_plot) 
+    utility methods (e.g. plot_model_performance) and data (e.g. df_plot)
     for easier access to further insights.
 
     Parameters
@@ -96,7 +96,7 @@ class ModelSelectorResult:
         ----------
         attribute_name : str
             Name of the attribute to be stored - stores whole object
-        
+
         path: str
             Where to store the object or object attribute
             Creates file named as {partition_hash}.{attribute_name} by default at current working directory
@@ -113,7 +113,8 @@ class ModelSelectorResult:
         else:
             if attribute_name not in self._persist_attrs:
                 raise ValueError(
-                    f"Parameter attribute must be one of {self._persist_attrs}, but you provided {attribute_name}"
+                    f"Parameter attribute must be one of {self._persist_attrs}, "
+                    f"but you provided {attribute_name}"
                 )
 
             _persist_to_file(
@@ -126,7 +127,7 @@ class ModelSelectorResult:
     @property
     def df_plot(self):
         """Training data suitable for plotting.
-        
+
         Utility, that prepares data from model selection to be used for further model performance analysis
 
         Returns
@@ -165,17 +166,17 @@ class ModelSelectorResult:
         bool
             Whether cv_splits in training data contain overlap
         """
-        return sum(self.df_plot.reset_index().groupby("index")["cv_split"].count() > 1) > 0    
+        return sum(self.df_plot.reset_index().groupby("index")["cv_split"].count() > 1) > 0
 
     def plot_result(self, plot_from=None, **plot_params):
         """Plot model performance from given `plot_from` timestamp
 
         Parameters
-        ----------            
+        ----------
         plot_from : str
             date from which to show actuals, cv_forecast and forecast,
             Default behavior does not filter dates
-            
+
         plot_params : kwargs
             plotting parameters passed down to pandas.DataFrame.plot()
             dependent on your plotting backend
@@ -204,10 +205,10 @@ class ModelSelectorResult:
                 # get limits for shaded areas
                 min_y, max_y = plt.get_ylim()
 
-                plt_cv = df[plot_from:].loc[lambda x: x["cv_split"] == split, [cv_fcst_col, "cv_split_str"]]                
+                plt_cv = df[plot_from:].loc[lambda x: x["cv_split"] == split, [cv_fcst_col, "cv_split_str"]]
                 plt = plt_cv[[cv_fcst_col]].plot(
-                        ax=plt, title=f"{plt.get_title()} ({plt_cv['cv_split_str'].unique()[0]})"
-                    )
+                    ax=plt, title=f"{plt.get_title()} ({plt_cv['cv_split_str'].unique()[0]})"
+                )
                 if not plt_cv.empty:
                     plt.fill_between(
                         x=plt_cv.index,
@@ -217,7 +218,7 @@ class ModelSelectorResult:
                         color=["gray"],
                         label=plt_cv["cv_split_str"].unique()[0],
                     )
-                plt.legend(facecolor='white', framealpha=0.8, frameon=True)
+                plt.legend(facecolor="white", framealpha=0.8, frameon=True)
                 plts.append(plt)
             return plts
         else:
@@ -239,7 +240,7 @@ class ModelSelectorResult:
                         label=tmp_df["cv_split_str"].unique()[0],
                     )
             # include shaded area labels in the legend
-            plt.legend(facecolor='white', framealpha=0.8, frameon=True)
+            plt.legend(facecolor="white", framealpha=0.8, frameon=True)
 
             return plt
 
@@ -261,7 +262,7 @@ class ModelSelectorResult:
         # TODO add different error functions??
         df = self.df_plot
 
-        return df.dropna().groupby("cv_split_str")["error"].plot(legend=True, **plot_params)        
+        return df.dropna().groupby("cv_split_str")["error"].plot(legend=True, **plot_params)
 
     def __repr__(self):
         return (
@@ -273,13 +274,15 @@ class ModelSelectorResult:
             f"  country_code_column: {self.country_code_column}\n\n"
             f"  partition: {self.partition}\n"
             f"  partition_hash: {self.partition_hash}\n\n"
-            f"  df_plot: DataFrame of shape {self.df_plot.shape} suited for plotting cv results with .plot()\n"
-            f"  X_train: DataFrame of shape {self.X_train.shape} with training feature values\n"
-            f"  y_train: DataFrame of shape {self.y_train.shape} with training target values\n"
-            f"  cv_results: DataFrame of shape {self.cv_results.shape} with gridsearch cv info\n"
+            f"  df_plot: DataFrame {self.df_plot.shape} suited for plotting cv results with .plot()\n"
+            f"  X_train: DataFrame {self.X_train.shape} with training feature values\n"
+            f"  y_train: DataFrame {self.y_train.shape} with training target values\n"
+            f"  cv_results: DataFrame {self.cv_results.shape} with gridsearch cv info\n"
             f"  best_model_cv_results: Series with gridsearch cv info\n"
-            f"  cv_data: DataFrame of shape {self.cv_data.shape} with models predictions, split and true target values\n"
-            f"  best_model_cv_data: DataFrame of shape {self.best_model_cv_data.shape} with model predictions, split and true target values\n\n"
+            f"  cv_data: DataFrame {self.cv_data.shape} "
+            f"with models predictions, split and true target values\n"
+            f"  best_model_cv_data: DataFrame {self.best_model_cv_data.shape} "
+            f"with model predictions, split and true target values\n\n"
             f"  model_reprs: Dict of model_hash and model_reprs\n"
             f"  best_model_hash: {self.best_model_hash}\n"
             f"  best_model: {self.best_model}\n"

@@ -5,9 +5,9 @@ from sklearn.pipeline import Pipeline
 
 class TargetTransformer(TransformerMixin, BaseEstimator):
     """Enable transformation of the target.
-    
+
     Wrapper for applying an estimator to a transformed version of the target y
-    and automatically transforming back predictions    
+    and automatically transforming back predictions
     """
 
     def __init__(self, estimator, y_transformer, omit_inverse_transformation=False):
