@@ -54,7 +54,7 @@ jobs:
         run: twine upload dist/*
       - name: Install hcrystalball from PyPI
         shell: pwsh
-        run: pip install hcrystalball
+        run: pip install git hcrystalball
       - name: Publish to Conda
         uses: fcakyon/conda-publish-action@v1.3
         with:
