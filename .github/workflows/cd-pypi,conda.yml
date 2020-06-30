@@ -1,0 +1,50 @@
+# This workflows will upload a Python Package using Twine when a release is created
+# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+
+
+name: CD (pypi,conda)
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest'] #, 'windows-latest']
+        python-version: [3.7]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache conda
+        uses: actions/cache@v1
+        with:
+          path: ~/conda_pkgs_dir
+          key: conda-${{ matrix.os }}-python-${{ matrix.python-version }}-${{ hashFiles('environment.yml') }}
+      - name: Setup Miniconda
+        uses: goanpeca/setup-miniconda@v1
+        with:
+          auto-update-conda: true
+          auto-activate-base: false
+          activate-environment: hcrystalball
+          python-version: ${{ matrix.python-version }}
+          channels: defaults,conda-forge
+          environment-file: environment.yml
+          use-only-tar-bz2: true     
+      - name: Install from source
+        # This is required for the pre-commit tests
+        shell: pwsh
+        run: pip install .
+      - name: Conda list
+        shell: pwsh
+        run: conda list
+      - name: Build and publish
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
