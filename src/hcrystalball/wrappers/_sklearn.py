@@ -7,7 +7,7 @@ from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predi
 
 class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
     def __reduce__(self):
-        """Resorting to reduce for unpickling to sneak in 
+        """Resorting to reduce for unpickling to sneak in
         a class definition created at runtime (see _ClassInitializer below)
         """
         return (_ClassInitializer(), (self.model_class,), self.__dict__)
@@ -21,18 +21,18 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
 
         Shift is done in autoregressive format with `lags` columns based on prediction horizon which
         is derived from length of provided input data for `predict` call.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : array_like, (1d)
             Target vector
-        
+
         horizon: int
             Number of steps used to shift the data
-        
+
         Returns
         -------
         X, y
@@ -51,12 +51,12 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
     @staticmethod
     def _adjust_holidays(X):
         """Transform 'holiday' columns to binary feature.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features with 'holiday' column.
-        
+
         Returns
         -------
         pandas.DataFrame
@@ -70,18 +70,18 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
     @check_X_y
     def fit(self, X, y):
         """Store X in self._X and y in self._y and instantiate the model.
-        
+
         Actual model fitting is done in `predict` method since the way model is fitted
         depends on `prediction` horizon which is known only during `predict` call.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : array_like, (1d)
             Target vector.
-    
+
         Returns
         -------
         self
@@ -94,12 +94,12 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
     def _predict(self, X):
         """Transform stored training data to autoregressive form with `lags` features,
         fit the model and output prediction based on transformed X features.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-        
+
         Returns
         -------
         pandas.DataFrame
@@ -117,18 +117,18 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
 
     @check_fit_before_predict
     def predict(self, X):
-        """Predict using provided Sklearn compatible regressor. 
-        
+        """Predict using provided Sklearn compatible regressor.
+
         If `optimize_for_horizon` is set to True, then new model is created for
         each new horizon and fitted independently (i.e. len(X)=5 --> horizon=5 --> 5 models will be fitted).
         The final prediction is then combination of single point forecast of individual models
         for different horizons.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-        
+
         Returns
         -------
         pandas.DataFrame
@@ -151,18 +151,18 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
     def _add_lag_features(self, X, y, horizon=None):
         """Transform input data X, y into autoregressive form - shift
         them appropriately based on horizon and create `lags` columns.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : array_like, (1d)
             Target vector.
-        
+
         horizon : int
             length of X for `predict` method
-        
+
         Returns
         -------
         pandas.DataFrame
@@ -183,12 +183,12 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
 
 
 def _get_sklearn_wrapper(model_cls):
-    """Factory function returning the model specific SklearnWrapper with provided `model_cls` parameters. 
-    
+    """Factory function returning the model specific SklearnWrapper with provided `model_cls` parameters.
+
     This function is required for sklearn compatibility since our SklearnWrapper need to have all parameters of `model_cls`
     set already during SklearnWrapper definition time. This factory function is not needed in case of
     other wrappers since the regressor is already part of the wrapper.
-    
+
     Parameters
     ----------
     model_cls : class of sklearn compatible regressor
@@ -208,22 +208,22 @@ def _get_sklearn_wrapper(model_cls):
                min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None,
                name='sklearn', oob_score=False, optimize_for_horizon=False,
                random_state=None, verbose=0, warm_start=False)
-    
+
     Returns
     -------
     SklearnWrapper
     """
 
     class SklearnWrapper(BaseSklearnWrapper):
-        """"Wrapper for regressors compatible with Sklearn-API. 
-        
-        This wrapper allows you use Sklearn-API regressors as autoregressive models 
-        for time series predictions. All model specific parameters will be passed to provided 
-        regressor class (even thought there is no explicit *model_kwargs). 
-        One side effect of the current implementation is very quick `fit` method since 
+        """"Wrapper for regressors compatible with Sklearn-API.
+
+        This wrapper allows you use Sklearn-API regressors as autoregressive models
+        for time series predictions. All model specific parameters will be passed to provided
+        regressor class (even thought there is no explicit *model_kwargs).
+        One side effect of the current implementation is very quick `fit` method since
         all of the actual model fitting is done in `predict` method resulting
         in longer inference time.
-        
+
         Parameters
         ----------
 
@@ -266,20 +266,20 @@ def _get_sklearn_wrapper(model_cls):
 
 
 def get_sklearn_wrapper(model_cls, **model_params):
-    """Factory function returning the model specific SklearnWrapper with provided `model_cls` parameters. 
-    
-    This function is required for sklearn compatibility since our SklearnWrapper 
-    need to have all parameters of `model_cls` set already during SklearnWrapper definition time. 
-    This factory function is not needed in case of other wrappers since 
+    """Factory function returning the model specific SklearnWrapper with provided `model_cls` parameters.
+
+    This function is required for sklearn compatibility since our SklearnWrapper
+    need to have all parameters of `model_cls` set already during SklearnWrapper definition time.
+    This factory function is not needed in case of other wrappers since
     the regressor is already part of the wrapper.
-    
+
     Parameters
     ----------
     model_cls : class of sklearn compatible regressor
         i.e. LinearRegressor, GradientBoostingRegressor
 
     model_params:
-        `model_cls` specific parameters (e.g. max_depth) and/or 
+        `model_cls` specific parameters (e.g. max_depth) and/or
         SklearnWrapper specific parameters (e.g. clip_predictions_lower)
 
     Example
@@ -296,7 +296,7 @@ def get_sklearn_wrapper(model_cls, **model_params):
                min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None,
                name='sklearn', oob_score=False, optimize_for_horizon=False,
                random_state=None, verbose=0, warm_start=False)
-    
+
     Returns
     -------
     SklearnWrapper
@@ -307,13 +307,13 @@ def get_sklearn_wrapper(model_cls, **model_params):
 
 class _ClassInitializer:
     """Utility class helping with pickling/unpickling SklearnWrapper.
-    
-    This helper class is needed because the class definition of 
+
+    This helper class is needed because the class definition of
     a wrapped sklearn model is only created at runtime, when the
-    'get_sklearn_wrapper' function is invoked. Pickling/unpickilng such a class 
-    will fail since the object definition cannot be looked up when unpickling. 
-    This class serves as a dummy for unpickling, which creates an "empty" class 
-    and then replaces its code with a definition obtained from 'get_sklearn_wrapper'. 
+    'get_sklearn_wrapper' function is invoked. Pickling/unpickilng such a class
+    will fail since the object definition cannot be looked up when unpickling.
+    This class serves as a dummy for unpickling, which creates an "empty" class
+    and then replaces its code with a definition obtained from 'get_sklearn_wrapper'.
     https://stackoverflow.com/questions/19855156/whats-the-exact-usage-of-reduce-in-pickler
     """
 

@@ -31,17 +31,17 @@ def get_gridsearch(
     stacking_ensembles_train_n_splits=20,
     clip_predictions_lower=None,
     clip_predictions_upper=None,
-    exog_cols=None,    
+    exog_cols=None,
 ):
     """Get grid search object based on selection criteria.
-    
+
     Parameters
     ----------
     frequency : str
         Frequency of timeseries. Pandas compatible frequncies
 
     horizon : int
-        How many units of frequency (e.g. 4 quarters), should be used to find the best models        
+        How many units of frequency (e.g. 4 quarters), should be used to find the best models
 
     n_splits : int
         How many cross-validation folds should be used in model selection
@@ -56,11 +56,11 @@ def get_gridsearch(
 
     country_code_column : str
         Column in data, that contains country code in str (e.g. 'DE'). Used in holiday transformer.
-        Only one of `country_code_column` or `country_code` can be set. 
+        Only one of `country_code_column` or `country_code` can be set.
 
     country_code : str
-        Country code in str (e.g. 'DE'). Used in holiday transformer. 
-        Only one of `country_code_column` or `country_code` can be set. 
+        Country code in str (e.g. 'DE'). Used in holiday transformer.
+        Only one of `country_code_column` or `country_code` can be set.
 
     sklearn_models : bool
         Whether to consider sklearn models
@@ -131,7 +131,7 @@ def get_gridsearch(
 
     grid_search = GridSearchCV(
         estimator=estimator, param_grid=[], scoring=scoring, cv=cv, refit=False, error_score=np.nan,
-    )    
+    )
 
     if autosarimax_models:
         # adding autosarimax to param_grid might cause differently found models
@@ -140,7 +140,8 @@ def get_gridsearch(
         # and handled in `hcrystalball.model_seleciton.select_model` function in following way
         # 1. get best model for the data part on last split
         # 2. append this best model to original `param_grid`
-        # 3. run full grid search with `param_grid` containing sarimax model selected from autosarimax in point 1
+        # 3. run full grid search with `param_grid` containing
+        #    sarimax model selected from autosarimax in point 1
         from hcrystalball.wrappers import SarimaxWrapper
 
         if autoarima_dict is None:
@@ -171,13 +172,13 @@ def get_gridsearch(
         from hcrystalball.feature_extraction import SeasonalityTransformer
 
         sklearn_model = get_sklearn_wrapper(
-            RandomForestRegressor,            
+            RandomForestRegressor,
             clip_predictions_lower=clip_predictions_lower,
             clip_predictions_upper=clip_predictions_upper,
         )
 
         sklearn_model_pipeline = Pipeline(
-            [("seasonality", SeasonalityTransformer(auto=True, freq=frequency)), ("model", sklearn_model),]
+            [("seasonality", SeasonalityTransformer(auto=True, freq=frequency)), ("model", sklearn_model)]
         )
         # TODO make sure naming here works as expected
         sklearn_model_pipeline.name = f"seasonality_{sklearn_model.name}"
@@ -201,7 +202,7 @@ def get_gridsearch(
                 "model__seasonality__weekly": [True, False],
                 "model__model": list(models.values()),
                 # TODO change add once HistGradientBoostingRegressor is back
-                # "model__model": list(models.values()) + [sklearn_model] 
+                # "model__model": list(models.values()) + [sklearn_model]
                 "model__model__optimize_for_horizon": optimize_for_horizon,
                 "model__model__lags": [3, 7, 10, 14],
             }
@@ -416,14 +417,14 @@ def get_gridsearch(
 
 def add_model_to_gridsearch(model, grid_search):
     """Extends gridsearch with provided model.
-    
+
     Adds given model or list of models to the gridsearch under 'model' step
 
     Parameters
     ----------
     model : sklearn compatible model or list of sklearn compatible models
         model(s) to be added to provided grid search
-        
+
     grid_search : sklearn.model_selection.GridSearchCV
         grid search, that has 'model' step as the last step
 

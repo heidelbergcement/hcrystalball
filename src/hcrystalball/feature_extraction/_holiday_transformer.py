@@ -5,15 +5,15 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 class HolidayTransformer(TransformerMixin, BaseEstimator):
     """Generate holiday feature based on provided ISO code
-    
+
     Parameters
     ----------
     country_code: str
         ISO code if country/region
-        
+
     country_code_column: str
         name of the column which have the ISO code of the country/region
-                                
+
     Please be aware that you cannot provide both country_code and country_code_column
     during initialization since this would be ambuguious. If you provide `country_code_column`
     instead of `country_code` the ISO code found in the column will be assigned into `country_code` column.
@@ -45,16 +45,16 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
 
     def fit(self, X, y=None):
         """Check if `date_col` has daily frequency
-        
+
         This check is in `fit` method since pandas.infer_freq is used which requires at least 3 observations.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : Any
-            Ignored              
+            Ignored
 
         Returns
         -------
@@ -64,7 +64,7 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
         Raises
         ------
         ValueError
-            in case daily frequency is not used or very few datapoints are provided in X     
+            in case daily frequency is not used or very few datapoints are provided in X
         """
         if pd.infer_freq(X.index) != "D":
             raise ValueError(
@@ -103,7 +103,8 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
         if self.country_code_column:
             if self.country_code_column not in X.columns:
                 raise KeyError(
-                    f"Column {self.country_code_column} provided as `country_code_column` is not in dataframe!"
+                    f"Column {self.country_code_column} provided as "
+                    f"`country_code_column` is not in dataframe!"
                 )
             if X[self.country_code_column].nunique() != 1:
                 raise ValueError(

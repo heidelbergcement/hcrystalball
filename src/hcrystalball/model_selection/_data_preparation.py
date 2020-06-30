@@ -3,10 +3,10 @@ import numpy as np
 
 
 def partition_data(df, partition_by):
-    """Partition data by values found in one or more columns. 
-    
+    """Partition data by values found in one or more columns.
+
     For each of the selected columns the unique values will
-    be determined and a selection will be made for each element 
+    be determined and a selection will be made for each element
     in the cross product of the unique values.
 
     Parameters
@@ -22,7 +22,8 @@ def partition_data(df, partition_by):
     dict
         Partition dictionary with keys:
 
-        * labels : Tuple of dictionaries whose keys are the column names and values are the actual values in the column
+        * labels : Tuple of dictionaries whose keys are the column names
+                   and values are the actual values in the column
         * data   : Tuple of pandas.DataFrame objects holding the subset of the data with
     """
     labels = []
@@ -37,8 +38,8 @@ def partition_data(df, partition_by):
 
 
 def partition_data_by_values(df, column, partition_values, default_df=None):
-    """Partition data by one column and a fixed set ov values within that column. 
-    
+    """Partition data by one column and a fixed set ov values within that column.
+
     If a value is not present, optionally provide default data for the partition.
 
     Parameters
@@ -60,7 +61,8 @@ def partition_data_by_values(df, column, partition_values, default_df=None):
     dict
         Partition dictionary with keys:
 
-        * labels : Tuple of dictionaries whose keys are the column names and values are the actual values in the column
+        * labels : Tuple of dictionaries whose keys are the column names
+                   and values are the actual values in the column
         * data   : Tuple of pandas.DataFrame objects holding the subset of the data with
     """
     labels = []
@@ -78,7 +80,7 @@ def partition_data_by_values(df, column, partition_values, default_df=None):
 
 def filter_data(df, include_rules=None, exclude_rules=None):
     """Filter provided dataframe by {column:value} rules.
-    
+
     Parameters
     ----------
     df : pandas.DataFrame
@@ -140,8 +142,9 @@ def prepare_data_for_training(
     df, frequency, partition_columns, parallel_over_columns=None, country_code_column=None
 ):
     """Prepare data for model selection.
-    
-    Transforms data to a form handled by model selection / training, ensuring correct frequency and filling NaN
+
+    Transforms data to a form handled by model selection / training,
+    ensuring correct frequency and filling NaN
 
     Parameters
     ----------
@@ -153,7 +156,7 @@ def prepare_data_for_training(
 
     parallel_over_columns: list
         column(s) which define logical segmentation of data for training
-        
+
     country_code_column : str
         name of columns from which to take holiday ISO information
 

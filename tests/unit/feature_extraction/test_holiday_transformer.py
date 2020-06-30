@@ -36,7 +36,13 @@ from hcrystalball.feature_extraction import HolidayTransformer
             None,
             ValueError,
         ),  # cannot have country_code and country_code_column in the same time
-        ("series_with_freq_D", "LALA", None, None, ValueError),  # country_code needs to be proper country
+        (
+            "series_with_freq_D",
+            "LALA",
+            None,
+            None,
+            ValueError,
+        ),  # country_code needs to be proper country
         (
             "series_with_freq_D",
             None,
@@ -48,7 +54,11 @@ from hcrystalball.feature_extraction import HolidayTransformer
     indirect=["X_y_with_freq"],
 )
 def test_holiday_transformer_inputs(
-    X_y_with_freq, country_code, country_code_column, country_code_column_value, extected_error
+    X_y_with_freq,
+    country_code,
+    country_code_column,
+    country_code_column_value,
+    extected_error,
 ):
 
     X, _ = X_y_with_freq
@@ -68,7 +78,7 @@ def test_holiday_transformer_inputs(
             X[country_code_column] = country_code_column_value
         holiday_transformer.fit_transform(X)
 
-        if country_code_column:            
+        if country_code_column:
             assert holiday_transformer.get_params()["country_code"] == None
 
 
@@ -76,8 +86,12 @@ def test_holiday_transformer_inputs(
     "country_code, country_code_column, country_code_column_value",
     [("CZ", None, None), (None, "holiday_col", "CZ")],
 )
-def test_holiday_transformer_transform(country_code, country_code_column, country_code_column_value):
-    expected = {"holiday": ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""]}
+def test_holiday_transformer_transform(
+    country_code, country_code_column, country_code_column_value
+):
+    expected = {
+        "holiday": ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""]
+    }
     X = pd.DataFrame(index=pd.date_range(start="2019-05-01", periods=10))
     df_expected = pd.DataFrame(expected, index=X.index)
     if country_code_column:

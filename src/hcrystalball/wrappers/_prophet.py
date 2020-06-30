@@ -28,35 +28,35 @@ class ProphetWrapper(TSModelWrapper):
 
     Bring fbprophet to sklearn time-series compatible interface and puts fit parameters
     to initialization stage.
-    
+
     Parameters
     ----------
     name : str
         Name of the model instance, used also as column name for returned prediction.
-        
+
     conf_int : bool
         Whether confidence intervals should be also outputed.
-        
+
     full_prophet_output: bool
         Whether the `predict` method should output the full fbprophet.Prophet dataframe.
-        
+
     extra_seasonalities : list of dicts
         Dictionary will be passed to fbprophet.Prophet add_regressor method.
-        
+
     extra_regressors : list or list of dicts
         Dictionary will be passed to fbprophet.Prophet add_seasonality method.
-        
+
     extra_holidays : dict of dict
         Dict with name of the holiday and values as another dict with required
         'lower_window' key and 'upper_window' key and optional 'prior_scale' key
         i.e.{'holiday_name': {'lower_window':1, 'upper_window:1, 'prior_scale: 10}}.
-        
+
     fit_params : dict
         Parameters passed to `fit` fbprophet.Prophet model.
-        
+
     clip_predictions_lower : float
         Minimal value allowed for predictions - predictions will be clipped to this value.
-        
+
     clip_predictions_upper : float
         Maximum value allowed for predictions - predictions will be clipped to this value.
     """
@@ -74,19 +74,19 @@ class ProphetWrapper(TSModelWrapper):
         clip_predictions_lower=None,
         clip_predictions_upper=None,
     ):
-        """This constructor will be modified at runtime to accept all 
+        """This constructor will be modified at runtime to accept all
         parameters of the Prophet class on top of the ones defined here!"""
         pass
 
     @staticmethod
     def _transform_data_to_tsmodel_input_format(X, y=None):
         """Trasnform data into `Prophet.model` required format
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features with required 'date' column.
-            
+
         y : array_like, (1d)
             Target vector
 
@@ -101,12 +101,12 @@ class ProphetWrapper(TSModelWrapper):
 
     def _set_model_extra_params(self, model):
         """Add `extra_seasonalities` and `extra_regressors` to `Prophet.model`
-        
+
         Parameters
         ----------
         model : Prophet.model
             model to be extended with extra seasonalities and regressors
-        
+
         Returns
         -------
         Prophet.model
@@ -125,17 +125,17 @@ class ProphetWrapper(TSModelWrapper):
 
     def _adjust_holidays(self, X):
         """Add `holidays` to `Prophet.model`
-        
+
         Doing that in required form and drop the 'holiday' column from X
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features with 'holiday' column.
-        
+
         Returns
         -------
-        pandas.DataFrame 
+        pandas.DataFrame
             Input features without 'holiday' column
         """
 
@@ -146,8 +146,8 @@ class ProphetWrapper(TSModelWrapper):
 
             if missing_holidays:
                 logging.warning(
-                    f"""Following holidays weren't found in data; thus not being 
-                        used {missing_holidays}. Available holidays for this data: 
+                    f"""Following holidays weren't found in data; thus not being
+                        used {missing_holidays}. Available holidays for this data:
                         {unique_holiday}"""
                 )
 
@@ -169,15 +169,15 @@ class ProphetWrapper(TSModelWrapper):
     @check_X_y
     def fit(self, X, y):
         """Transform input data to `Prophet.model` required format and fit the model.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : array_like, (1d)
             Target vector.
-    
+
         Returns
         -------
         self
@@ -193,18 +193,18 @@ class ProphetWrapper(TSModelWrapper):
 
     @check_fit_before_predict
     def predict(self, X):
-        """Adjust holidays, transform data to required format and provide predictions.        
-        
+        """Adjust holidays, transform data to required format and provide predictions.
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         Returns
         -------
         pandas.DataFrame with pandas.DatetimeIndex
-            Prediction is stored in column with name being the `name` of the wrapper. 
-            If `conf_int` attribute is set to True, the returned DataFrame will have three columns, 
+            Prediction is stored in column with name being the `name` of the wrapper.
+            If `conf_int` attribute is set to True, the returned DataFrame will have three columns,
             with the second and third (named 'name'_lower and 'name'_upper).
             If `full_prophet_output` is set to True, then full Prophet.model.predict output is returned.
         """

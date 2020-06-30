@@ -59,7 +59,12 @@ def test_partition_data_by_values(test_data_raw):
         column="Plant",
         partition_values=["plant_0", "plant_23"],
         default_df=pd.DataFrame(
-            {"Plant": ["dummy"], "Region": ["dummy"], "Product": ["dummy"], "Quantity": [0.0]}
+            {
+                "Plant": ["dummy"],
+                "Region": ["dummy"],
+                "Product": ["dummy"],
+                "Quantity": [0.0],
+            }
         ),
     )
     assert res["labels"][0]["Plant"] == "plant_0"
@@ -103,7 +108,9 @@ def test_filter_data_include_and_exclude(test_data_raw):
     include_rules = {"Plant": ["plant_0"]}
     exclude_rules = {"Region": ["region_0"]}
 
-    df = filter_data(test_data_raw, include_rules=include_rules, exclude_rules=exclude_rules)
+    df = filter_data(
+        test_data_raw, include_rules=include_rules, exclude_rules=exclude_rules
+    )
 
     assert isinstance(df, pd.DataFrame)
     for key, value in exclude_rules.items():
@@ -123,7 +130,9 @@ def test_filter_data_include_and_exclude_overlapping_conditions(test_data_raw):
     exclude_rules = {"Plant": ["plant_1"], "Region": ["region_0"]}
 
     with pytest.raises(ValueError):
-        _ = filter_data(test_data_raw, include_rules=include_rules, exclude_rules=exclude_rules)
+        _ = filter_data(
+            test_data_raw, include_rules=include_rules, exclude_rules=exclude_rules
+        )
 
 
 @pytest.mark.parametrize(

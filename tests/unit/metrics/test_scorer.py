@@ -53,7 +53,9 @@ class MockModel(ReprMixin):
         (True, True, ValueError),
     ],
 )
-def test_make_ts_scorer(greater_is_better, needs_proba, needs_threshold, expected_error):
+def test_make_ts_scorer(
+    greater_is_better, needs_proba, needs_threshold, expected_error
+):
 
     if expected_error is None:
         scorer = make_ts_scorer(
@@ -97,8 +99,13 @@ def model4persistence(request):
 
     elif request.param == "two_estimators":
         estimator = [MockModel(factor=1.0, shift=0.0), MockModel(factor=1.0, shift=3.0)]
-        estimator_repr = ["MockModel(factor=1.0,shift=0.0)", "MockModel(factor=1.0,shift=3.0)"]
-        estimator_hash = [hashlib.md5(r.encode("utf-8")).hexdigest() for r in estimator_repr]
+        estimator_repr = [
+            "MockModel(factor=1.0,shift=0.0)",
+            "MockModel(factor=1.0,shift=3.0)",
+        ]
+        estimator_hash = [
+            hashlib.md5(r.encode("utf-8")).hexdigest() for r in estimator_repr
+        ]
         estimator_ids = dict(zip(estimator_hash, estimator_repr))
         estimator_index = {h: i for i, h in enumerate(estimator_hash)}
 
@@ -122,7 +129,10 @@ def test_save_model_repr_and_hash(X_y_linear_trend, model4persistence):
     X, y = X_y_linear_trend
 
     test_scorer = make_ts_scorer(
-        mean_absolute_error, greater_is_better=False, needs_proba=False, needs_threshold=False
+        mean_absolute_error,
+        greater_is_better=False,
+        needs_proba=False,
+        needs_threshold=False,
     )
 
     estimators, expected_model_ids, _ = model4persistence

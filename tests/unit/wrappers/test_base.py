@@ -22,4 +22,3 @@ def test_clip_predictions(X_y_linear_trend, wrapper_instance_capped):
     UPPER = 99.0
     y_pred = wrapper_instance_capped.fit(X[:-10], y[:-10]).predict(X[-10:])
     assert y_pred[wrapper_instance_capped.name].between(LOWER, UPPER).all()
-

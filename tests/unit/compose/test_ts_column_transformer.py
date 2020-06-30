@@ -32,7 +32,7 @@ def column_transformer_and_cols(request):
                 ("scaler", StandardScaler(), ["trend"]),
             ]
         )
-        cols = ["x0_1", "x0_2", "x0_3", "x0_4","one_hot", "trend"]
+        cols = ["x0_1", "x0_2", "x0_3", "x0_4", "one_hot", "trend"]
 
     return tran, cols
 

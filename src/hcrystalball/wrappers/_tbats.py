@@ -22,15 +22,15 @@ class BaseTBATSWrapper(TSModelWrapper, metaclass=ABCMeta):
     @check_X_y
     def fit(self, X, y):
         """Fit the model.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : array_like, (1d)
             Target vector.
-        
+
         Returns
         -------
         self
@@ -42,16 +42,16 @@ class BaseTBATSWrapper(TSModelWrapper, metaclass=ABCMeta):
 
     @check_fit_before_predict
     def predict(self, X):
-        """Transform data to tbats required format and run the predictions.        
-        
+        """Transform data to tbats required format and run the predictions.
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-                   
+
         Returns
         -------
-        pandas.DataFrame            
+        pandas.DataFrame
             Prediction stored in column with name being the `name` of the wrapper.
         """
         if self.conf_int:
@@ -67,32 +67,32 @@ class BaseTBATSWrapper(TSModelWrapper, metaclass=ABCMeta):
 
 class BATSWrapper(BaseTBATSWrapper):
     """Wrapper for BATS model
-    
+
     https://github.com/intive-DataScience/tbats
 
     Brings BATS to sklearn time-series compatible interface and puts fit parameters
     to initialization stage.
-    
+
     Parameters
     ----------
     name : str
         Name of the model instance, used also as column name for returned prediction.
-        
+
     fit_params : dict
         Parameters passed to `fit` BATS model.
-        
+
     conf_int : bool
         Whether confidence intervals should be also outputed.
-        
+
     conf_int_level : float
         Confidence level of returned confidence interval
-        
+
     clip_predictions_lower : float
         Minimal value allowed for predictions - predictions will be clipped to this value.
-        
+
     clip_predictions_upper : float
         Maximum value allowed for predictions - predictions will be clipped to this value.
-        
+
     Notes
     -----
     Fitting the model might take significant time. You might consider advices from the author
@@ -112,39 +112,39 @@ class BATSWrapper(BaseTBATSWrapper):
         clip_predictions_lower=None,
         clip_predictions_upper=None,
     ):
-        """This constructor will be modified at runtime to accept 
+        """This constructor will be modified at runtime to accept
         all parameters of the BATS class on top of the ones defined here!"""
         pass
 
 
 class TBATSWrapper(BaseTBATSWrapper):
-    """Wrapper for TBATS model 
-    
+    """Wrapper for TBATS model
+
     https://github.com/intive-DataScience/tbats
 
     Brings TBATS to sklearn time-series compatible interface and puts fit parameters
     to initialization stage.
-    
+
     Parameters
     ----------
     name : str
         Name of the model instance, used also as column name for returned prediction.
-        
+
     fit_params : dict
         Parameters passed to `fit` TBATS model.
-        
+
     conf_int : bool
         Whether confidence intervals should be also outputed.
-        
+
     conf_int_level : float
         Confidence level of returned confidence interval
-        
+
     clip_predictions_lower : float
         Minimal value allowed for predictions - predictions will be clipped to this value.
-        
+
     clip_predictions_upper : float
         Maximum value allowed for predictions - predictions will be clipped to this value.
-        
+
     Notes
     -----
     Fitting the model might take significant time. You might consider advices from the author
@@ -164,7 +164,7 @@ class TBATSWrapper(BaseTBATSWrapper):
         clip_predictions_lower=None,
         clip_predictions_upper=None,
     ):
-        """This constructor will be modified at runtime to accept 
+        """This constructor will be modified at runtime to accept
         all parameters of the TBATS class on top of the ones defined here!"""
         pass
 

@@ -15,34 +15,34 @@ from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predi
 
 class SarimaxWrapper(TSModelWrapper):
     """Wrapper for `pmdarima.arima.ARIMA` and `pmdarima.arima.AutoARIMA`
-    
+
     Search for optimal order of SARIMAX type model or instantiate one
     in case you provide specific order.
-    
+
     Parameters
     ----------
     name : str
         Name of the model instance, used also as column name for returned prediction.
-        
+
     conf_int: bool
         Whether confidence intervals should be also outputed.
-        
+
     init_with_autoarima: bool
         Whether you want to leverage automated search of pmdarima.arima.AutoARIMA.
-        
+
     autoarima_dict: dict
         If `init_with_autoarima` is set to True, then `autoarima_dict` is used for instantiation
         of pmdarima.arima.AutoARIMA class, thus it serves as configuration of AutoARIMA search.
-        
+
     always_search_model: bool
         If `init_with_autoarima` is set to True and `always_search_model` is set to True, then
         the optimal model will be searched for during each `fit` call. On the other hand in most
         cases the desired behaviour is to search for optimal model just for first `fit` call and
         reused this already found model on subsequent `fit` calls (i.e. during cross validation).
-        
+
     clip_predictions_lower: float
         Minimal value allowed for predictions - predictions will be clipped to this value.
-        
+
     clip_predictions_upper: float
         Maximum value allowed for predictions - predictions will be clipped to this value.
     """
@@ -58,22 +58,22 @@ class SarimaxWrapper(TSModelWrapper):
         clip_predictions_lower=None,
         clip_predictions_upper=None,
     ):
-        """This constructor will be modified at runtime to accept 
+        """This constructor will be modified at runtime to accept
         all parameters of the ARIMA class on top of the ones defined here!"""
         pass
 
     @staticmethod
     def _transform_data_to_tsmodel_input_format(X, y=None):
         """Trasnform data into Prophet.model required format
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : array_like, (1d)
             Target vector.
-        
+
         Returns
         -------
         endog, exog
@@ -91,12 +91,12 @@ class SarimaxWrapper(TSModelWrapper):
     @staticmethod
     def _adjust_holidays(X):
         """Transform holiday to binary feature.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-        
+
         Returns
         -------
         pandas.DataFrame
@@ -109,15 +109,15 @@ class SarimaxWrapper(TSModelWrapper):
     @check_X_y
     def fit(self, X, y):
         """Transform input data to `pmdarima.arima.ARIMA` required format and fit the model.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         y : array_like, (1d)
             Target vector.
-            
+
         Returns
         -------
         self
@@ -140,17 +140,17 @@ class SarimaxWrapper(TSModelWrapper):
     @check_fit_before_predict
     def predict(self, X):
         """Transform data to required format and provide predictions.
-        
+
         Parameters
         ----------
         X : pandas.DataFrame
             Input features.
-            
+
         Returns
         -------
         pandas.DataFrame
-            Prediction is stored in column with name being the `name` of the wrapper. 
-            If `conf_int` attribute is set to True, the returned DataFrame will have three columns, 
+            Prediction is stored in column with name being the `name` of the wrapper.
+            If `conf_int` attribute is set to True, the returned DataFrame will have three columns,
             with the second and third (named 'name'_lower and 'name'_upper).
         """
         if "holiday" in X.columns:
