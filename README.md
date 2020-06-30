@@ -1,3 +1,4 @@
+[![Documentation Status](https://readthedocs.org/projects/hcrystalball/badge/?version=latest)](https://hcrystalball.readthedocs.io/en/latest/?badge=latest)
 ![License](https://img.shields.io/github/license/heidelbergcement/hcrystalball)
 ![Contributors](https://img.shields.io/github/contributors/heidelbergcement/hcrystalball)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -29,7 +30,7 @@ forecasting in the Python ecosystem.</i>
    and add convenient layer over whole process (access to results, plots, storage, ...)
 
 ## Documentation
-See examples, tutorials, contribution, API and more on the documentation [site](https://hcrystalball.readthedocs.io/en/lastest) or browse [example notebooks](https://github.com/heidelbergcement/hcrystalball/tree/master/docs/examples) directly.
+See examples, tutorials, contribution, API and more on the documentation [site](https://hcrystalball.readthedocs.io/en/latest) or browse [example notebooks](https://github.com/heidelbergcement/hcrystalball/tree/master/docs/examples) directly.
 
 ## Core Installation
 
