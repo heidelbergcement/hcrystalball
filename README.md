@@ -6,12 +6,6 @@
 ![Contributors](https://img.shields.io/github/contributors/heidelbergcement/hcrystalball)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-TODO
-[shields]
- - downloads
- - conda forge version
- - python versions
-
 # HCrystal Ball
 
 <div>
