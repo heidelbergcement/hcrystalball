@@ -1,4 +1,4 @@
-![Build Status](https://img.shields.io/github/workflow/status/heidelbergcement/hcrystalball/CI%20(conda))
+![CI (conda)](https://github.com/heidelbergcement/hcrystalball/workflows/CI%20(conda)/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/hcrystalball/badge/?version=latest)](https://hcrystalball.readthedocs.io/en/latest/?badge=latest)
 ![License](https://img.shields.io/github/license/heidelbergcement/hcrystalball)
 ![Contributors](https://img.shields.io/github/contributors/heidelbergcement/hcrystalball)
@@ -6,8 +6,6 @@
 
 TODO
 [shields]
- - tests
- - docs
  - downloads
  - pypi version
  - conda forge version
