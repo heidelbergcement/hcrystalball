@@ -52,6 +52,9 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         shell: pwsh
         run: twine upload dist/*
+      - name: Install hcrystalball from PyPI
+        shell: pwsh
+        run: pip install hcrystalball
       - name: Publish to Conda
         uses: fcakyon/conda-publish-action@v1.3
         with:
