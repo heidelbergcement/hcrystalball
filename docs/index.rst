@@ -18,9 +18,13 @@ The library consists of two main parts:
 #. :ref:`model_selection` - to enable gridsearch over wrappers, general or custom made transformers
    and add convenient layer over whole process (access to results, plots, storage, ...)
 
+|code| |license| 
 
-* Code: https://github.com/heidelbergcement/hcrystalball
-* License: MIT
+.. |code| image:: https://img.shields.io/badge/github-code-lightgrey
+    :alt: code    
+    :target: https://github.com/heidelbergcement/hcrystalball
+.. |license| image:: https://img.shields.io/github/license/heidelbergcement/hcrystalball
+    :alt: license
 
 Quick Installation:
 *******************
