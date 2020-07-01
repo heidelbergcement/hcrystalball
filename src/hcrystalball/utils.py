@@ -299,9 +299,7 @@ def get_sales_data(n_dates=100, n_assortments=2, n_states=3, n_stores=3):
 
     if len(data) != n_assortments * n_states * n_stores * n_dates:
         raise ValueError(
-            f"There are not enough data for valid combinations of "
-            f"stores, store_types and states"
-            f"{data}"
+            f"There are not enough data for valid combinations of stores, store_types and states {data}"
         )
 
     return data
