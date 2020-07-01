@@ -15,7 +15,7 @@ def test_prefect_executors(train_data, grid_search, parallel_columns):
         from prefect.engine.executors import LocalDaskExecutor
         from prefect.engine.executors import LocalExecutor
         from dask.distributed import Client
-    except:
+    except Exception:
         print("`prefect` not installed, skipping the test...")
         pass
     else:

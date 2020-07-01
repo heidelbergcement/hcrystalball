@@ -79,7 +79,7 @@ def test_holiday_transformer_inputs(
         holiday_transformer.fit_transform(X)
 
         if country_code_column:
-            assert holiday_transformer.get_params()["country_code"] == None
+            assert holiday_transformer.get_params()["country_code"] is None
 
 
 @pytest.mark.parametrize(

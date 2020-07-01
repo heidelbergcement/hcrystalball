@@ -471,9 +471,6 @@ def pipeline_instance_model_in_pipeline(request):
         return None
 
 
-################ CONFTEST FOR MODEL SELECTION #############
-
-
 @pytest.fixture()
 def test_data_raw():
     n_dates = 10
@@ -561,7 +558,6 @@ def grid_search(request):
     from hcrystalball.metrics import make_ts_scorer
     from sklearn.metrics import mean_absolute_error
 
-    holidays_code = "NL"
     scoring = make_ts_scorer(mean_absolute_error, greater_is_better=False)
 
     bad_dummy = get_sklearn_wrapper(
