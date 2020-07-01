@@ -4,7 +4,9 @@ import numpy as np
 from hcrystalball.wrappers import SarimaxWrapper
 
 
-@pytest.mark.parametrize("X_with_holidays", [(""), (""), ("")], indirect=["X_with_holidays"])
+@pytest.mark.parametrize(
+    "X_with_holidays", [(""), (""), ("")], indirect=["X_with_holidays"]
+)
 def test_sarimax_adjust_holidays(X_with_holidays):
 
     sarimax = SarimaxWrapper(order=(1, 1, 0))
@@ -13,7 +15,10 @@ def test_sarimax_adjust_holidays(X_with_holidays):
     assert "holiday" in result.columns.tolist()
     assert "holiday" in result.select_dtypes(include=[np.number]).columns
     assert (result["holiday"] == "").sum() == 0
-    assert X_with_holidays[X_with_holidays["holiday"] != ""].shape[0] == result["holiday"].sum()
+    assert (
+        X_with_holidays[X_with_holidays["holiday"] != ""].shape[0]
+        == result["holiday"].sum()
+    )
 
 
 @pytest.mark.parametrize(
@@ -39,7 +44,9 @@ def test_sarimax_transform_data_to_tsmodel_input_format(X_y_optional, additional
         assert exog is None
 
 
-@pytest.mark.parametrize("X_y_linear_trend", [("more_cols_freq_D"),], indirect=["X_y_linear_trend"])
+@pytest.mark.parametrize(
+    "X_y_linear_trend", [("more_cols_freq_D"),], indirect=["X_y_linear_trend"]
+)
 def test_autoarima_init(X_y_linear_trend):
 
     X, y = X_y_linear_trend
@@ -55,10 +62,17 @@ def test_autoarima_init(X_y_linear_trend):
     "X_y_linear_trend, init_params",
     [
         ("more_cols_freq_D", {"order": (1, 1, 1), "seasonal_order": (0, 0, 0, 2)}),
-        ("more_cols_freq_D", {"init_with_autoarima": True, "autoarima_dict": {"D": 1, "m": 2}}),
         (
             "more_cols_freq_D",
-            {"always_search_model": True, "autoarima_dict": {"D": 1, "m": 2}, "init_with_autoarima": True},
+            {"init_with_autoarima": True, "autoarima_dict": {"D": 1, "m": 2}},
+        ),
+        (
+            "more_cols_freq_D",
+            {
+                "always_search_model": True,
+                "autoarima_dict": {"D": 1, "m": 2},
+                "init_with_autoarima": True,
+            },
         ),
     ],
     indirect=["X_y_linear_trend"],

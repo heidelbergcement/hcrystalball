@@ -8,7 +8,13 @@ from hcrystalball.wrappers import ProphetWrapper
 @pytest.mark.parametrize(
     "X_with_holidays, extra_holidays",
     [
-        ("", {"New year": {"prior_scale": 100}, "Whit Monday": {"lower_window": 2, "prior_scale": 10}}),
+        (
+            "",
+            {
+                "New year": {"prior_scale": 100},
+                "Whit Monday": {"lower_window": 2, "prior_scale": 10},
+            },
+        ),
         ("", {"New year": {"prior_scale": 100, "lower_window": 1}}),
         ("", None),
     ],
@@ -27,14 +33,20 @@ def test_prophet_adjust_holidays(X_with_holidays, extra_holidays):
     max_holiday_len = (
         0
         if prophet.extra_holidays is None
-        else max([len(prophet.extra_holidays[key]) for key in prophet.extra_holidays.keys()], default=0)
+        else max(
+            [len(prophet.extra_holidays[key]) for key in prophet.extra_holidays.keys()],
+            default=0,
+        )
     )
     assert holidays.shape[1] == len(["ds", "holiday"]) + max_holiday_len
     if extra_holidays:
         for holiday_name, holiday_params in extra_holidays.items():
             for params_key, params_values in holiday_params.items():
                 assert (
-                    holidays.loc[holidays["holiday"] == holiday_name, params_key].values[0] == params_values
+                    holidays.loc[
+                        holidays["holiday"] == holiday_name, params_key
+                    ].values[0]
+                    == params_values
                 )
 
 

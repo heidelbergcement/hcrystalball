@@ -1,14 +1,20 @@
-# Extracted by https://gist.github.com/mwouts/9842452d020c08faf9e84a3bba38a66f
-name: CI (conda)
-on: [push]
+# This workflows will upload a Python Package using Twine when a release is created
+# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+
+name: CD (PyPI)
+
+on:
+  release:
+    types: [published,updated]
 
 jobs:
-  build:
+  deploy:
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macos-latest'] #, 'windows-latest']
+        os: ['ubuntu-latest']
         python-version: [3.7]
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,10 +32,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           channels: defaults,conda-forge
           environment-file: environment.yml
-          use-only-tar-bz2: true
-      - name: Lint with flake8
-        shell: pwsh
-        run: flake8 .
+          use-only-tar-bz2: true     
       - name: Install from source
         # This is required for the pre-commit tests
         shell: pwsh
@@ -37,14 +40,14 @@ jobs:
       - name: Conda list
         shell: pwsh
         run: conda list
-      - name: Test with pytest
+      - name: Build
         shell: pwsh
         run: |
-          if("${{ matrix.os }}" -eq "windows-latest"){
-             pytest
-          } else {
-             pytest --cov=./ --cov-report=xml
-          }
-      - name: Upload coverage
-        uses: codecov/codecov-action@v1
-        if: ${{ matrix.os != 'windows-latest' }}
+          pip install twine
+          python setup.py sdist bdist_wheel
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        shell: pwsh
+        run: twine upload dist/*

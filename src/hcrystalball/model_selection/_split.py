@@ -2,11 +2,11 @@ import numpy as np
 
 
 class FinerTimeSplit:
-    """Time series cross-validator. 
-    
-    Provide train/test indices to split data in train/test sets. 
-    The corresponding training set consists only of observations that occurred prior 
-    to the observation that forms the test set. Thus, no future observations 
+    """Time series cross-validator.
+
+    Provide train/test indices to split data in train/test sets.
+    The corresponding training set consists only of observations that occurred prior
+    to the observation that forms the test set. Thus, no future observations
     can be used in constructing the forecast.
 
 
@@ -29,8 +29,8 @@ class FinerTimeSplit:
 
     def split(self, X, y=None, groups=None):
         """Generate indices to split the data into training and test sets.
-        
-        Similar to scikit-learn API split. It takes n_splits*horizon from the tail of the 
+
+        Similar to scikit-learn API split. It takes n_splits*horizon from the tail of the
         data and use it for sequential generator of train/test indices.
 
         Parameters
@@ -51,14 +51,14 @@ class FinerTimeSplit:
 
     def _split(self, data):
         """Generate indices to split the data into training and test sets.
-        
-        Similar to scikit-learn API split. It takes n_splits*horizon from the tail of the 
+
+        Similar to scikit-learn API split. It takes n_splits*horizon from the tail of the
         data and use it for sequential generator of train/test indices.
 
         Parameters
         ----------
         data: array-like
-            Data container to be splitted to train and test data    
+            Data container to be splitted to train and test data
 
         Yields
         ------
@@ -93,9 +93,7 @@ class FinerTimeSplit:
         indices = np.arange(n_samples)
         if self.between_split_lag is not None:
             test_starts = range(
-                n_samples
-                - (self.between_split_lag * self.n_splits)
-                - (self.horizon - self.between_split_lag),
+                n_samples - (self.between_split_lag * self.n_splits) - (self.horizon - self.between_split_lag),
                 n_samples - (self.horizon - self.between_split_lag),
                 self.between_split_lag,
             )
@@ -103,11 +101,11 @@ class FinerTimeSplit:
             test_starts = range(n_samples - (self.horizon * self.n_splits), n_samples, self.horizon)
 
         for test_start in test_starts:
-            yield (indices[:test_start], indices[test_start : test_start + self.horizon])
+            yield (indices[:test_start], indices[test_start:test_start + self.horizon])
 
     def get_n_splits(self, X=None, y=None, groups=None):
-        """Return number of splits regarles of provided parameters        
-        
+        """Return number of splits regarles of provided parameters
+
         Returns
         -------
         int

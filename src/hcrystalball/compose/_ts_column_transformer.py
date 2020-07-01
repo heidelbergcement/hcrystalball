@@ -7,8 +7,8 @@ import pandas as pd
 
 
 class TSColumnTransformer(ColumnTransformer):
-    """Time Series compatible ColumnTransformer. 
-    
+    """Time Series compatible ColumnTransformer.
+
     Allow usage of hcrystalball wrappers and index based transformers.
     See also: `sklearn.compose.ColumnTransformer`
 
@@ -21,7 +21,7 @@ class TSColumnTransformer(ColumnTransformer):
     ------
     ValueError
         If `remainder=='passthrough'` is set. Use `passthrough` as an identity estimator
-        If sparse output is requested, but not all columns are numeric    
+        If sparse output is requested, but not all columns are numeric
     """
 
     @property
@@ -89,21 +89,21 @@ class TSColumnTransformer(ColumnTransformer):
 
     def _hstack(self, Xs):
         """Stack Xs horizontally.
-        
+
         This allows subclasses to control the stacking behavior, while reusing
         everything else from ColumnTransformer and returning pandas.DataFrame
         version of data at the end.
-        
+
         Parameters
         ----------
         Xs : List
             List of numpy arrays, sparse arrays, or DataFrames
-        
+
         Returns
         -------
         pandas.DataFrame
             Stacked data with correct column names
-        
+
         Raises
         ------
         ValueError

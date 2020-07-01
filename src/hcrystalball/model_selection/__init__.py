@@ -19,7 +19,7 @@ __all__ = [
     "filter_data",
     "FinerTimeSplit",
     "get_gridsearch",
-    "load_best_model",    
+    "load_best_model",
     "load_model_selector",
     "load_model_selector_result",
     "ModelSelector",

@@ -13,10 +13,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 # ensure correct usage/skip of progress bar
 def make_progress_bar(*args, **kwargs):
     """Create iterable as progress bar if available.
-    
+
     Ensure simple loop is returned or tqdm_notebook progress bar when prerequisities met
 
     Returns
@@ -28,7 +29,7 @@ def make_progress_bar(*args, **kwargs):
         from tqdm.notebook import tqdm_notebook
 
         pbar = tqdm_notebook(*args, **kwargs)
-    except:
+    except Exception:
         logging.warning("No prerequisites installed for interactive progress bar, continuing without one.")
         return args[0]
 
@@ -65,13 +66,13 @@ def select_model(
         (e.g. {'Region':'Africa'})
 
     frequency : str
-        Frequency at which model selection was done. 
+        Frequency at which model selection was done.
         It is mainly for bookeeping purposes and later used to instantiate result objects
 
     country_code_column : str
         Name of the column with ISO code of country/region, which can be used for supplying holiday.
         e.g. 'State' with values like 'DE', 'CZ' or 'Region' with values like 'DE-NW', 'DE-HE', etc.
-    
+
     Returns
     -------
     list:
@@ -81,7 +82,10 @@ def select_model(
     results = []
 
     if len(partition_columns) == 0:
-        df_cv = {"labels": tuple([{"no_partition_label": ""}],), "data": tuple([df,])}
+        df_cv = {
+            "labels": tuple([{"no_partition_label": ""}],),
+            "data": tuple([df,]),
+        }
     else:
         df_cv = partition_data(df, list(set(partition_columns).difference(parallel_partition)))
 
@@ -126,8 +130,8 @@ def select_model(
 
 def _define_model_selection_flow():
     """Define flow that runs model selection.
-    
-    Specifically data filtering, partitioning and model selection 
+
+    Specifically data filtering, partitioning and model selection
     and optional persistence on a given dataset
 
     Returns
@@ -214,7 +218,7 @@ def run_model_selection(
     executor=None,
 ):
     """Run parallel cross validation on data and select best model
-    
+
     Best models are selected for each timeseries and if wanted persisted.'
 
     Parameters
@@ -230,22 +234,22 @@ def run_model_selection(
         Name of target column
 
     frequency : str
-        Temporal frequency of data. 
+        Temporal frequency of data.
         Data with different frequency will be resampled to this frequency.
 
     partition_columns : list, tuple
-        Column names based on which the data should be split up / partitioned        
+        Column names based on which the data should be split up / partitioned
 
     parallel_over_columns : list, tuple
-        Subset of partition_columns, that are used to parallel split.        
+        Subset of partition_columns, that are used to parallel split.
 
     include_rules : dict
         Dictionary with keys being column names and values being list of values to include in
-        the output. 
+        the output.
 
     exclude_rules : dict
         Dictionary with keys being column names and values being list of values to exclude
-        from the output. 
+        from the output.
 
     country_code_column : str
         Name of the column with country code, which can be used for supplying holiday
@@ -256,27 +260,27 @@ def run_model_selection(
         Path to directory for storing the output, default is cwd
 
     persist_cv_results  : bool
-        If True cv_results of sklearn.model_selection.GridSearchCV 
+        If True cv_results of sklearn.model_selection.GridSearchCV
         as pandas df will be saved as pickle for each partition
 
     persist_cv_data : bool
-        If True the pandas df detail cv data 
+        If True the pandas df detail cv data
         will be saved as pickle for each partition
 
     persist_model_reprs : bool
-        If True model reprs 
+        If True model reprs
         will be saved as json for each partition
 
     persist_best_model : bool
-        If True best model 
+        If True best model
         will be saved as pickle for each partition
 
     persist_partition : bool
-        If True dictionary of partition label 
-        will be saved as json for each partition 
+        If True dictionary of partition label
+        will be saved as json for each partition
 
     persist_model_selector_results : bool
-        If True ModelSelectoResults with all important information 
+        If True ModelSelectoResults with all important information
         will be saved as pickle for each partition
 
     visualize_success : bool
@@ -345,23 +349,23 @@ def select_model_general(
     """Run cross validation on data and select best model
 
     Best models are selected for each timeseries and if wanted persisted.
-    
+
     Parameters
     ----------
     df : pandas.DataFrame
         Container holding historical data for training
-    
+
     grid_search : sklearn.model_selection.GridSearchCV
         Preconfigured grid search definition which determines which models
         and parameters will be tried
-    
+
     target_col_name : str
         Name of target column
 
     frequency : str
-        Temporal frequency of data. 
+        Temporal frequency of data.
         Data with different frequency will be resampled to this frequency.
-    
+
     partition_columns : list, tuple
         Column names based on which the data should be split up / partitioned
 
@@ -369,31 +373,31 @@ def select_model_general(
         Subset of partition_columns, that are used to parallel split.
 
     executor : prefect.engine.executors
-        Provide prefect's executor. Only valid when `parallel_over_columns` is set. 
+        Provide prefect's executor. Only valid when `parallel_over_columns` is set.
         For more information see https://docs.prefect.io/api/latest/engine/executors.html
 
     include_rules : dict
         Dictionary with keys being column names and values being list of values to include in
-        the output. 
+        the output.
 
     exclude_rules : dict
         Dictionary with keys being column names and values being list of values to exclude
-        from the output. 
+        from the output.
 
     country_code_column : str
         Name of the column with country code, which can be used for supplying holiday
         (i.e. having gridsearch with HolidayTransformer with argument `country_code_column`
         set to this one).
 
-    output_path : str 
+    output_path : str
         Path to directory for storing the output, default behavior is current working directory
 
     persist_cv_results  : bool
-        If True cv_results of sklearn.model_selection.GridSearchCV as pandas df 
+        If True cv_results of sklearn.model_selection.GridSearchCV as pandas df
         will be saved as pickle for each partition
 
     persist_cv_data : bool
-        If True the pandas df detail cv data 
+        If True the pandas df detail cv data
         will be saved as pickle for each partition
 
     persist_model_reprs : bool
@@ -406,7 +410,7 @@ def select_model_general(
         If True dictionary of partition label will be saved as json for each partition
 
     persist_model_selector_results : bool
-        If True ModelSelectoResults with all important information 
+        If True ModelSelectoResults with all important information
         will be saved as pickle for each partition
 
     Returns
