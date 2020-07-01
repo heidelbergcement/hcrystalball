@@ -22,10 +22,11 @@ dependencies:
 - sphinx_rtd_theme # to build docs
 - sphinx-gallery # to build docs
 - black # to format the code
+- flake8 # to format the code
 # - prefect # to execute model selection in parallel
 - pip
 
-- pip: 
+- pip:
   - pmdarima==1.5.3 # SarimaxWrapper, version 1.6.1 downloads cython and makes prophet fail
   - tbats==1.0.10 #(T)BATSWrapper, pinning patch version needed to to change in 1.0.3
   - pytest # to run tests
