@@ -3,7 +3,10 @@ import numpy as np
 from sklearn.base import BaseEstimator
 
 from hcrystalball.model_selection import FinerTimeSplit
-from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict, get_estimator_name
+from hcrystalball.utils import check_X_y
+from hcrystalball.utils import enforce_y_type
+from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import get_estimator_name
 from hcrystalball.exceptions import DuplicatedModelNameError
 
 
@@ -145,7 +148,7 @@ class StackingEnsemble(BaseEstimator):
         """
 
         prediction = pd.DataFrame(
-            index=X.index, columns=[get_estimator_name(model) for model in self.base_learners]
+            index=X.index, columns=[get_estimator_name(model) for model in self.base_learners],
         )
 
         for model in self.base_learners:
@@ -207,7 +210,7 @@ class StackingEnsemble(BaseEstimator):
 
             n_train_meta = self.train_n_splits * self.train_horizon
             X_meta = pd.DataFrame(
-                index=X.index[-n_train_meta:], columns=[get_estimator_name(bl) for bl in self.base_learners]
+                index=X.index[-n_train_meta:], columns=[get_estimator_name(bl) for bl in self.base_learners],
             )
             y_meta = y[-n_train_meta:]
             # Get base learners predictions
@@ -233,7 +236,7 @@ class StackingEnsemble(BaseEstimator):
                 )
             if self.weekdays_as_features:
                 X_meta = pd.concat(
-                    [X_meta, self._create_weekdays_as_features(cross_results_index=X_meta.index)], axis=1
+                    [X_meta, self._create_weekdays_as_features(cross_results_index=X_meta.index),], axis=1,
                 )
 
             self._fit_columns = X_meta.columns
@@ -264,7 +267,7 @@ class StackingEnsemble(BaseEstimator):
         miss_cols = list(self._fit_columns.difference(X.columns))
         if len(miss_cols) > 0:
             miss_data = pd.DataFrame(
-                data=np.zeros((len(X.index), len(miss_cols))), columns=miss_cols, index=X.index
+                data=np.zeros((len(X.index), len(miss_cols))), columns=miss_cols, index=X.index,
             )
             data = X.join(miss_data)
 
@@ -296,14 +299,14 @@ class StackingEnsemble(BaseEstimator):
                 [
                     X_meta,
                     self._create_horizons_as_features(
-                        cross_results_index=X_meta.index, horizon=len(X_meta), n_splits=1
+                        cross_results_index=X_meta.index, horizon=len(X_meta), n_splits=1,
                     ),
                 ],
                 axis=1,
             )
         if self.weekdays_as_features:
             X_meta = pd.concat(
-                [X_meta, self._create_weekdays_as_features(cross_results_index=X_meta.index)], axis=1
+                [X_meta, self._create_weekdays_as_features(cross_results_index=X_meta.index),], axis=1,
             )
         X_meta = self._ensure_pred_and_train_cols_equals(X_meta)
         y_pred[self.name] = self.meta_model.predict(X_meta.values)

@@ -94,9 +94,7 @@ def test_check_X_y(X, y, expected_error):
             assert_array_equal(res_y, y)
 
 
-@pytest.mark.parametrize(
-    "model_is_fitted, expected_error", [(True, None), (False, PredictWithoutFitError)]
-)
+@pytest.mark.parametrize("model_is_fitted, expected_error", [(True, None), (False, PredictWithoutFitError)])
 def test_check_fit_before_predict(model_is_fitted, expected_error):
     class DummyModel:
         def __init__(self, name="dummy_model", fitted=False):
@@ -122,45 +120,25 @@ def test_check_fit_before_predict(model_is_fitted, expected_error):
 
 @pytest.mark.parametrize(
     "wrapper_instance",
-    [
-        "sklearn",
-        "stacking_ensemble",
-        "simple_ensemble",
-        "smoothing",
-        "sarimax",
-        "prophet",
-        "tbats",
-    ],
+    ["sklearn", "stacking_ensemble", "simple_ensemble", "smoothing", "sarimax", "prophet", "tbats",],
     indirect=["wrapper_instance"],
 )
 def test_get_model_repr_single_model(wrapper_instance):
 
     model_repr = get_estimator_repr(wrapper_instance)
     assert model_repr.find("...") == -1
-    assert model_repr == wrapper_instance.__repr__(N_CHAR_MAX=10000).replace(
-        "\n", ""
-    ).replace(" ", "")
+    assert model_repr == wrapper_instance.__repr__(N_CHAR_MAX=10000).replace("\n", "").replace(" ", "")
 
 
 @pytest.mark.parametrize(
     "pipeline_instance_model_in_pipeline",
-    [
-        "sklearn",
-        "stacking_ensemble",
-        "simple_ensemble",
-        "smoothing",
-        "sarimax",
-        "prophet",
-        "tbats",
-    ],
+    ["sklearn", "stacking_ensemble", "simple_ensemble", "smoothing", "sarimax", "prophet", "tbats",],
     indirect=["pipeline_instance_model_in_pipeline"],
 )
-def test_get_model_repr_pipeline_instance_model_in_pipeline(
-    pipeline_instance_model_in_pipeline,
-):
+def test_get_model_repr_pipeline_instance_model_in_pipeline(pipeline_instance_model_in_pipeline,):
 
     model_repr = get_estimator_repr(pipeline_instance_model_in_pipeline)
     assert model_repr.find("...") == -1
-    assert model_repr == pipeline_instance_model_in_pipeline.__repr__(
-        N_CHAR_MAX=10000
-    ).replace("\n", "").replace(" ", "")
+    assert model_repr == pipeline_instance_model_in_pipeline.__repr__(N_CHAR_MAX=10000).replace(
+        "\n", ""
+    ).replace(" ", "")

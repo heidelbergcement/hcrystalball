@@ -10,8 +10,7 @@ from hcrystalball.exceptions import DuplicatedModelNameError
 
 
 @pytest.fixture(
-    scope="module",
-    params=["with_duplicates", "no_duplicates", "no_duplicates_with_pipeline"],
+    scope="module", params=["with_duplicates", "no_duplicates", "no_duplicates_with_pipeline"],
 )
 def base_learners(request):
     class DummyModel:
@@ -27,9 +26,7 @@ def base_learners(request):
 
         def predict(self, X):
 
-            return pd.DataFrame(
-                np.ones(len(X)) * self.alpha, columns=["dummy"], index=X.index
-            )
+            return pd.DataFrame(np.ones(len(X)) * self.alpha, columns=["dummy"], index=X.index)
 
     if request.param == "with_duplicates":
         return [DummyModel(name="model", alpha=5), DummyModel(name="model", alpha=20)]
@@ -57,19 +54,9 @@ def base_learners(request):
     [
         ("no_duplicates", StackingEnsemble, {"meta_model": LinearRegression()}, None),
         ("no_duplicates", SimpleEnsemble, {}, None),
-        (
-            "with_duplicates",
-            StackingEnsemble,
-            {"meta_model": LinearRegression()},
-            DuplicatedModelNameError,
-        ),
+        ("with_duplicates", StackingEnsemble, {"meta_model": LinearRegression()}, DuplicatedModelNameError,),
         ("with_duplicates", SimpleEnsemble, {}, DuplicatedModelNameError),
-        (
-            "no_duplicates_with_pipeline",
-            StackingEnsemble,
-            {"meta_model": LinearRegression()},
-            None,
-        ),
+        ("no_duplicates_with_pipeline", StackingEnsemble, {"meta_model": LinearRegression()}, None,),
         ("no_duplicates_with_pipeline", SimpleEnsemble, {}, None),
         (
             "with_duplicates_with_pipeline",
@@ -127,9 +114,7 @@ def test_ensemble_func(base_learners, ensemble_func, expected_error):
         assert_frame_equal(exp_result, model.predict(X))
 
 
-@pytest.mark.parametrize(
-    "base_learners", [("no_duplicates")], indirect=["base_learners"]
-)
+@pytest.mark.parametrize("base_learners", [("no_duplicates")], indirect=["base_learners"])
 def test_ensembles_stackingensemble_create_horizons_as_features(base_learners):
 
     n_splits = 2
@@ -143,16 +128,12 @@ def test_ensembles_stackingensemble_create_horizons_as_features(base_learners):
     )
 
     cross_result_index = np.arange(horizon * n_splits, dtype=int)
-    df = model._create_horizons_as_features(
-        cross_result_index, horizon=horizon, n_splits=n_splits
-    )
+    df = model._create_horizons_as_features(cross_result_index, horizon=horizon, n_splits=n_splits)
     assert isinstance(df, pd.DataFrame)
     assert df.shape == (n_splits * horizon, horizon)
 
 
-@pytest.mark.parametrize(
-    "base_learners", [("no_duplicates")], indirect=["base_learners"]
-)
+@pytest.mark.parametrize("base_learners", [("no_duplicates")], indirect=["base_learners"])
 def test_ensembles_stackingensemble_create_weekdays_as_features(base_learners):
 
     n_splits = 2

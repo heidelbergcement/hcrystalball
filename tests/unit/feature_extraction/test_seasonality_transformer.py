@@ -41,18 +41,14 @@ months = list(calendar.month_name)[1:]
         ),
     ],
 )
-def test_seasonality_transformer(
-    X_start, X_len, weekdays, weeks, months, quarter, year
-):
+def test_seasonality_transformer(X_start, X_len, weekdays, weeks, months, quarter, year):
 
     X = pd.DataFrame(index=pd.date_range(X_start, periods=X_len, freq="D"))
     y = pd.Series(np.arange(len(X)), name="values", index=X.index)
 
     freq = pd.infer_freq(X.index)
 
-    df = pd.concat(
-        [X, y, SeasonalityTransformer(freq=freq).fit(X, y).transform(X)], axis=1
-    )
+    df = pd.concat([X, y, SeasonalityTransformer(freq=freq).fit(X, y).transform(X)], axis=1)
 
     assert set(weekdays).issubset(df.columns)
     assert set(weeks).issubset(df.columns)
@@ -64,10 +60,7 @@ def test_seasonality_transformer(
     cols_with_ones = first_row[first_row[first_row.columns[0]] == 1].index
 
     single_date_cols = (
-        SeasonalityTransformer(freq=freq)
-        .fit(X.head(1), y.head(1))
-        .transform(X.head(1))
-        .columns
+        SeasonalityTransformer(freq=freq).fit(X.head(1), y.head(1)).transform(X.head(1)).columns
     )
 
     assert set(cols_with_ones) == set(single_date_cols)

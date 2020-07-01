@@ -10,15 +10,15 @@
 
 <div>
 <a href="https://hcrystalball.readthedocs.io/en/latest/"><img src="docs/_static/hcrystal_ball_logo_green.png" width="150px" align="left" /></a>
-<i><br>A time series library that unifies the API for most commonly <br> 
-used libraries and modelling techniques for time-series <br> 
+<i><br>A time series library that unifies the API for most commonly <br>
+used libraries and modelling techniques for time-series <br>
 forecasting in the Python ecosystem.</i>
 </div>
 <br><br><br>
 
 **HCrystal Ball** consists of two main parts:
 
-* **Wrappers** - which bring different 3rd party 
+* **Wrappers** - which bring different 3rd party
    libraries to time series compatible sklearn API
 * **Model Selection** - to enable gridsearch over wrappers, general or custom made transformers
    and add convenient layer over whole process (access to results, plots, storage, ...)
@@ -95,25 +95,25 @@ y_pred
 from hcrystalball.utils import generate_multiple_tsdata
 from hcrystalball.model_selection import ModelSelector
 
-df = generate_multiple_tsdata(n_dates=200, 
-                              n_regions=1, 
-                              n_plants=1, 
+df = generate_multiple_tsdata(n_dates=200,
+                              n_regions=1,
+                              n_plants=1,
                               n_products=2,
                               )
 
-ms = ModelSelector(horizon=10, 
-                   frequency="D", 
+ms = ModelSelector(horizon=10,
+                   frequency="D",
                    country_code_column="Country",
                    )
 
-ms.create_gridsearch(n_splits=2, 
-                     sklearn_models=True, 
-                     prophet_models=False, 
+ms.create_gridsearch(n_splits=2,
+                     sklearn_models=True,
+                     prophet_models=False,
                      exog_cols=["Raining"],
                      )
 
-ms.select_model(df=df, 
-                target_col_name="Quantity", 
+ms.select_model(df=df,
+                target_col_name="Quantity",
                 partition_columns=["Region", "Plant", "Product"],
                 )
 

@@ -123,7 +123,7 @@ def get_gridsearch(
         holiday = "passthrough"
 
     estimator = Pipeline(
-        [("exog_passthrough", exog_passthrough), ("holiday", holiday), ("model", "passthrough")]
+        [("exog_passthrough", exog_passthrough), ("holiday", holiday), ("model", "passthrough"),]
     )
 
     scoring = get_scorer(scoring)
@@ -165,6 +165,7 @@ def get_gridsearch(
     if stacking_ensembles or average_ensembles or sklearn_models:
         from sklearn.linear_model import ElasticNet
         from sklearn.ensemble import RandomForestRegressor
+
         # TODO when scoring time is fixed, add HistGradientBoostingRegressor
         # from sklearn.experimental import enable_hist_gradient_boosting
         # from sklearn.ensemble import HistGradientBoostingRegressor
@@ -178,7 +179,7 @@ def get_gridsearch(
         )
 
         sklearn_model_pipeline = Pipeline(
-            [("seasonality", SeasonalityTransformer(auto=True, freq=frequency)), ("model", sklearn_model)]
+            [("seasonality", SeasonalityTransformer(auto=True, freq=frequency)), ("model", sklearn_model),]
         )
         # TODO make sure naming here works as expected
         sklearn_model_pipeline.name = f"seasonality_{sklearn_model.name}"

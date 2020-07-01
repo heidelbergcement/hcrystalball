@@ -36,12 +36,8 @@ def test_cv_finertimesplit_split_pandas_container_data(ts_data, expected_error):
             assert len(isplit) == 2
             assert len(isplit[0]) == len(ts_data) - (n_splits - i) * horizon
             assert len(isplit[1]) == horizon
-            assert np.array_equal(
-                isplit[0], np.arange(len(ts_data) - (n_splits - i) * horizon)
-            )
-            assert np.array_equal(
-                isplit[1], np.arange(horizon) + len(ts_data) - (n_splits - i) * horizon
-            )
+            assert np.array_equal(isplit[0], np.arange(len(ts_data) - (n_splits - i) * horizon))
+            assert np.array_equal(isplit[1], np.arange(horizon) + len(ts_data) - (n_splits - i) * horizon)
     else:
         with pytest.raises(expected_error):
             _ = list(fts.split(ts_data))
@@ -49,12 +45,7 @@ def test_cv_finertimesplit_split_pandas_container_data(ts_data, expected_error):
 
 @pytest.mark.parametrize(
     "test_data, expected_error",
-    [
-        (np.arange(6), None),
-        ([0, 1, 2, 3, 4, 5], None),
-        ((0, 1, 2, 3, 4, 5), None),
-        (13, TypeError),
-    ],
+    [(np.arange(6), None), ([0, 1, 2, 3, 4, 5], None), ((0, 1, 2, 3, 4, 5), None), (13, TypeError),],
 )
 def test_cv_finertimesplit_split_input_data_types(test_data, expected_error):
 
@@ -68,13 +59,8 @@ def test_cv_finertimesplit_split_input_data_types(test_data, expected_error):
             assert len(isplit) == 2
             assert len(isplit[0]) == len(test_data) - (n_splits - i) * horizon
             assert len(isplit[1]) == horizon
-            assert np.array_equal(
-                isplit[0], np.arange(len(test_data) - (n_splits - i) * horizon)
-            )
-            assert np.array_equal(
-                isplit[1],
-                np.arange(horizon) + len(test_data) - (n_splits - i) * horizon,
-            )
+            assert np.array_equal(isplit[0], np.arange(len(test_data) - (n_splits - i) * horizon))
+            assert np.array_equal(isplit[1], np.arange(horizon) + len(test_data) - (n_splits - i) * horizon,)
     else:
         with pytest.raises(expected_error):
             _ = list(fts.split(test_data))

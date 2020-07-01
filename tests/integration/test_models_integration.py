@@ -26,9 +26,7 @@ from hcrystalball.feature_extraction import HolidayTransformer
 )
 def test_model_fit_predict(X_y_linear_trend, wrapper_instance, horizon):
     X, y = X_y_linear_trend
-    assert (not hasattr(wrapper_instance, "fitted")) or (
-        wrapper_instance.fitted is False
-    )
+    assert (not hasattr(wrapper_instance, "fitted")) or (wrapper_instance.fitted is False)
 
     wrapper_instance.fit(X[:-horizon], y[:-horizon])
     assert wrapper_instance.fitted is True
@@ -50,17 +48,11 @@ def pipeline(request):
         )
     if "col_name_clash" in request.param:
         return TSColumnTransformer(
-            transformers=[
-                ("raw_cols_1", "passthrough", ["trend"]),
-                ("scaler", StandardScaler(), ["trend"]),
-            ]
+            transformers=[("raw_cols_1", "passthrough", ["trend"]), ("scaler", StandardScaler(), ["trend"]),]
         )
     if "more_dimensions_with_get_feature_names" in request.param:
         return TSColumnTransformer(
-            transformers=[
-                ("raw_cols_1", "passthrough", ["trend"]),
-                ("scaler", OneHotEncoder(), ["one_hot"]),
-            ]
+            transformers=[("raw_cols_1", "passthrough", ["trend"]), ("scaler", OneHotEncoder(), ["one_hot"]),]
         )
     if "less_dimensions_without_get_feature_names" in request.param:
         return TSColumnTransformer(
@@ -108,10 +100,7 @@ def pipeline(request):
                 ),
             ]
         )
-    if (
-        "more_layers_custom_transformers_same_level_country_code_country_col"
-        in request.param
-    ):
+    if "more_layers_custom_transformers_same_level_country_code_country_col" in request.param:
         return Pipeline(
             [
                 (
@@ -169,11 +158,7 @@ def pipeline(request):
                     TSColumnTransformer(
                         transformers=[
                             ("raw_cols_1", "passthrough", ["trend", "country"]),
-                            (
-                                "holiday",
-                                HolidayTransformer(country_code_column="country"),
-                                ["country"],
-                            ),
+                            ("holiday", HolidayTransformer(country_code_column="country"), ["country"],),
                             ("scaler", StandardScaler(), ["trend", "one_hot"]),
                         ]
                     ),
@@ -201,11 +186,7 @@ def pipeline(request):
             "more_dimensions_with_get_feature_names",
             ["trend", "x0_1", "x0_2", "x0_3", "x0_4"],
         ),
-        (
-            "more_cols_freq_D",
-            "less_dimensions_without_get_feature_names",
-            ["trend", "pca_0"],
-        ),
+        ("more_cols_freq_D", "less_dimensions_without_get_feature_names", ["trend", "pca_0"],),
         ("more_cols_freq_D", "with_model", ["ExponentialSmoothing"]),
         ("more_cols_freq_D", "more_layers_builtin_transformers", ["trend", "x0_1"]),
         (

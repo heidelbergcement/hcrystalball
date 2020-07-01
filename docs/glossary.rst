@@ -8,8 +8,8 @@ To make it easier for further package navigation, these are important
 terms mentioned throughout the package.
 
 .. list-table::
-   :header-rows: 1 
-   :widths: 40, 100, 50   
+   :header-rows: 1
+   :widths: 40, 100, 50
 
    * - Term
      - Meaning
@@ -21,7 +21,7 @@ terms mentioned throughout the package.
    * - Horizon
      - Number of datapoints within defined data frequency that are predicted
      - Steps-ahead
-   * - Cross-validation 
+   * - Cross-validation
      - Procedure to run model's fitting and predicting on several test/train data splits in order to assess model ability to predict out-of-sample
      - CV
    * - Split
