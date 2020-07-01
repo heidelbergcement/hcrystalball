@@ -6,22 +6,22 @@ HCrystal Ball
         <img src="_static/hcrystal_ball_logo_black.svg" alt="HCrystalBall Logo" style="float:left;width:100px;height:75px;margin-right:15px;">
         <div>
            </br></br>
-           <i>A time series library that unifies the API for most commonly used libraries 
+           <i>A time series library that unifies the API for most commonly used libraries
            and modelling techniques for time-series forecasting in the Python ecosystem.</i>
-        </div>        
-   </div>   
+        </div>
+   </div>
 
 The library consists of two main parts:
 
-#. :ref:`wrappers` - which bring different 3rd party 
+#. :ref:`wrappers` - which bring different 3rd party
    libraries to time series compatible sklearn API
 #. :ref:`model_selection` - to enable gridsearch over wrappers, general or custom made transformers
    and add convenient layer over whole process (access to results, plots, storage, ...)
 
-|code| |license| 
+|code| |license|
 
 .. |code| image:: https://img.shields.io/badge/github-code-lightgrey
-    :alt: code    
+    :alt: code
     :target: https://github.com/heidelbergcement/hcrystalball
 .. |license| image:: https://img.shields.io/github/license/heidelbergcement/hcrystalball
     :alt: license
@@ -39,8 +39,7 @@ For full installation notes, see :ref:`install`
 
 .. note::
 
-   In case of any questions, please use GitHub issues with appropriate label.
-   If you wish to contribute, please use GitHub pull requests.
+   For questions and contributions, please use |code|
 
 .. toctree::
    :maxdepth: 2
@@ -48,15 +47,15 @@ For full installation notes, see :ref:`install`
 
    install
    glossary
-   data_format  
+   data_format
    model_selection
    wrappers
-   
-      
+
+
 .. nbgallery::
     :caption: Examples:
     :name: notebook-gallery
-    :glob:    
+    :glob:
 
     examples/*
 
@@ -68,7 +67,7 @@ For full installation notes, see :ref:`install`
 
 .. toctree::
    :caption: Meta:
-   
+
    contribution
    changelog
 

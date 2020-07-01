@@ -3,16 +3,11 @@
 Installation
 ============
 
-**HCrystalBall** was designed to have soft dependencies on the wrapped libraries 
+**HCrystalBall** was designed to have soft dependencies on the wrapped libraries
 giving you the opportunity to define your own subset of wrappers that are to be used.
 
-Ideally your application should pin dependencies for wrapped libraries along with 
-hcrystalball and other dependencies. 
-
-.. note::
-
-    In case you are having issues with dependencies setup, installing conda environment 
-    from `environment.yml` (see :ref:`contribution` for details) will ensure you have evertyhing that is needed.
+Ideally your application should pin dependencies for wrapped libraries along with
+hcrystalball and other dependencies.
 
 Install core **HCrystalBall** from pip
 ***************************************
@@ -41,3 +36,22 @@ For parallel execution
 .. code-block:: bash
 
     conda install -c conda-forge prefect
+
+Typical Installation
+********************
+
+Very often you will want to use more wrappers, than just Sklearn, run examples in jupyterlab,
+or execute model selection in parallel. Getting such dependencies to play together nicely
+might be cumbersome, so checking `envrionment.yml` might give you faster start.
+
+.. code-block:: bash
+
+    # get dependencies file
+    curl -O https://raw.githubusercontent.com/heidelbergcement/hcrystalball/blob/master/environment.yml
+    # check comments in environment.yml, keep or remove as requested, than execute
+    conda env create -f environment.yml
+    conda activate hcrystalball
+    # if you want to see progress bar in jupyterlab, execut also
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager
+    # install the library
+    pip install hcrystalball
