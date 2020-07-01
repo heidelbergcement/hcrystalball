@@ -71,9 +71,7 @@ def test_prefect_executors(train_data, grid_search, parallel_columns):
                 persist_model_selector_results=False,
             )
 
-            assert len(results) == len(
-                train_data[parallel_columns + ["Product"]].drop_duplicates()
-            )
+            assert len(results) == len(train_data[parallel_columns + ["Product"]].drop_duplicates())
             assert isinstance(results[0], ModelSelectorResult)
 
             if executor_name == "dask_already_running":

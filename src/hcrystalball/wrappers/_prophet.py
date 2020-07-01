@@ -1,4 +1,5 @@
-from hcrystalball.wrappers._base import TSModelWrapper, tsmodel_wrapper_constructor_factory
+from hcrystalball.wrappers._base import TSModelWrapper
+from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
 
 # redirect prophets and pystans output to the console
 import logging

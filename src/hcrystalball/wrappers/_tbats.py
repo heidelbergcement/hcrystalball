@@ -2,7 +2,8 @@ from abc import ABCMeta, abstractmethod
 import pandas as pd
 from tbats import BATS
 from tbats import TBATS
-from hcrystalball.wrappers._base import TSModelWrapper, tsmodel_wrapper_constructor_factory
+from hcrystalball.wrappers._base import TSModelWrapper
+from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
 from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict
 
 
@@ -61,7 +62,7 @@ class BaseTBATSWrapper(TSModelWrapper, metaclass=ABCMeta):
             preds[f"{self.name}_lower"] = conf_ints["lower_bound"]
             preds[f"{self.name}_upper"] = conf_ints["upper_bound"]
         else:
-            preds = pd.DataFrame(self.model.forecast(steps=X.shape[0]), index=X.index, columns=[self.name])
+            preds = pd.DataFrame(self.model.forecast(steps=X.shape[0]), index=X.index, columns=[self.name],)
         return self._clip_predictions(preds)
 
 

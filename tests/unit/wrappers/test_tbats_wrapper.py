@@ -5,18 +5,14 @@ from tbats import TBATS
 from pandas.testing import assert_frame_equal
 
 
-@pytest.mark.parametrize(
-    "X_y_linear_trend", [("freq_D")], indirect=["X_y_linear_trend"]
-)
+@pytest.mark.parametrize("X_y_linear_trend", [("freq_D")], indirect=["X_y_linear_trend"])
 def test_conf_int(X_y_linear_trend):
 
     HORIZON = 5
     X, y = X_y_linear_trend
 
     model = TBATS(use_arma_errors=False, use_box_cox=False)
-    model_wrapped = TBATSWrapper(
-        use_arma_errors=False, use_box_cox=False, conf_int=True, conf_int_level=0.95
-    )
+    model_wrapped = TBATSWrapper(use_arma_errors=False, use_box_cox=False, conf_int=True, conf_int_level=0.95)
     model = model.fit(y[:-HORIZON])
     model_wrapped = model_wrapped.fit(X[:-HORIZON], y[:-HORIZON])
 

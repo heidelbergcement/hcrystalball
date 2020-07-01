@@ -24,7 +24,7 @@ API
 .. automodapi:: hcrystalball.preprocessing
     :include-all-objects:
     :no-inheritance-diagram:
-    
+
 .. automodapi:: hcrystalball.metrics
     :include-all-objects:
     :no-inheritance-diagram:

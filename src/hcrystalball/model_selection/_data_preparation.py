@@ -138,7 +138,7 @@ def filter_data(df, include_rules=None, exclude_rules=None):
 
 
 def prepare_data_for_training(
-    df, frequency, partition_columns, parallel_over_columns=None, country_code_column=None
+    df, frequency, partition_columns, parallel_over_columns=None, country_code_column=None,
 ):
     """Prepare data for model selection.
 

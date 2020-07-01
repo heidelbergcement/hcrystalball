@@ -14,9 +14,7 @@ def test_model_selector(tmp_path):
     target_col_name = "Quantity"
     persist_path = os.path.join(tmp_path, "results")
 
-    df = generate_multiple_tsdata(
-        n_dates=200, n_regions=n_regions, n_plants=n_plants, n_products=n_products
-    )
+    df = generate_multiple_tsdata(n_dates=200, n_regions=n_regions, n_plants=n_plants, n_products=n_products)
     ms = ModelSelector(frequency="D", horizon=1, country_code_column="Country")
     assert ms.horizon == 1
     ms.create_gridsearch(
@@ -34,9 +32,7 @@ def test_model_selector(tmp_path):
     assert hasattr(ms, "grid_search")
     ms.add_model_to_gridsearch(get_sklearn_wrapper(LinearRegression))
     ms.select_model(
-        df=df,
-        target_col_name=target_col_name,
-        partition_columns=["Region", "Plant", "Product"],
+        df=df, target_col_name=target_col_name, partition_columns=["Region", "Plant", "Product"],
     )
 
     assert len(ms.results) == n_regions * n_plants * n_products

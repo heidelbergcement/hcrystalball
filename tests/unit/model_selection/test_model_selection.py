@@ -32,9 +32,7 @@ def test_select_model(train_data, grid_search, parallel_over_dict):
             .to_dict(orient="records")
         )
     else:
-        partitions = (
-            train_data[partition_columns].drop_duplicates().to_dict(orient="records")
-        )
+        partitions = train_data[partition_columns].drop_duplicates().to_dict(orient="records")
 
     assert len(results) == len(partitions)
 

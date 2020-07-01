@@ -19,19 +19,14 @@ def bench_all_notebooks():
     timings = []
     for path in paths:
         time = bench_notebook(path)
-        timings.append({
-            "notebook": str(path.name),
-            "walltime": time,
-        })
+        timings.append(
+            {"notebook": str(path.name), "walltime": time,}
+        )
 
     return pd.DataFrame(timings)
 
 
-if __name__ == '__main__':
-    timings = (
-        bench_all_notebooks()
-        .sort_values("walltime", ascending=False)
-        .round(1)
-    )
+if __name__ == "__main__":
+    timings = bench_all_notebooks().sort_values("walltime", ascending=False).round(1)
     print(timings.to_string(index=False))
     timings.to_csv("hcrystalball_notebook_execution_speed.csv", index=False)

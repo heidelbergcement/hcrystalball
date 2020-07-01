@@ -300,7 +300,8 @@ def get_sales_data(n_dates=100, n_assortments=2, n_states=3, n_stores=3):
     if len(data) != n_assortments * n_states * n_stores * n_dates:
         raise ValueError(
             f"There are not enough data for valid combinations of "
-            f"stores, store_types and states" f"{data}"
+            f"stores, store_types and states"
+            f"{data}"
         )
 
     return data
@@ -387,7 +388,7 @@ def generate_multiple_tsdata(
     dfs = []
     for region in regions:
         df_tmp = pd.DataFrame(
-            columns=["Date", "Region", "Plant", "Product", "Country", "Raining", "Quantity"],
+            columns=["Date", "Region", "Plant", "Product", "Country", "Raining", "Quantity",],
             index=range(len(str_index)),
         )
         df_tmp.loc[:, "Region"] = region

@@ -10,21 +10,9 @@ from hcrystalball.wrappers import ProphetWrapper
     [
         ("series_with_freq_D", "sklearn", "optimize_for_horizon", True, False),
         ("series_with_freq_D", "sklearn", "fit_intercept", False, True),
-        (
-            "series_with_freq_D",
-            "prophet",
-            "extra_holidays",
-            {"Whit Monday": {"lower_window": 2}},
-            False,
-        ),
+        ("series_with_freq_D", "prophet", "extra_holidays", {"Whit Monday": {"lower_window": 2}}, False,),
         ("series_with_freq_D", "prophet", "holidays_prior_scale", 20, True),
-        (
-            "series_with_freq_D",
-            "smoothing",
-            "fit_params",
-            {"smoothing_level": 0.2},
-            False,
-        ),
+        ("series_with_freq_D", "smoothing", "fit_params", {"smoothing_level": 0.2}, False,),
         ("series_with_freq_D", "smoothing", "trend", "add", True),
         ("series_with_freq_D", "tbats", "conf_int", True, False),
         ("series_with_freq_D", "tbats", "use_box_cox", True, True),
@@ -34,9 +22,7 @@ from hcrystalball.wrappers import ProphetWrapper
     ],
     indirect=["X_y_linear_trend", "wrapper_instance"],
 )
-def test_set_params(
-    X_y_linear_trend, wrapper_instance, param, param_value, model_param
-):
+def test_set_params(X_y_linear_trend, wrapper_instance, param, param_value, model_param):
     X, y = X_y_linear_trend
     wrapper_instance.set_params(**{param: param_value})
     assert wrapper_instance.get_params()[param] == param_value
