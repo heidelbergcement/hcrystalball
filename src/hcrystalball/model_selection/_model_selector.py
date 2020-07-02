@@ -420,9 +420,14 @@ class ModelSelector:
         ----------
         title : str
             Title of the plot
+
+        Returns
+        -------
+        matplotlib.axes._subplots.AxesSubplot
+            Plot of most selected wrapper classes
         """
         no_of_best_wrapper_classes = Counter([res.best_model_name for res in self.results])
-        pd.Series(no_of_best_wrapper_classes).plot(kind="barh", title=title, **plot_params)
+        return pd.Series(no_of_best_wrapper_classes).plot(kind="barh", title=title, **plot_params)
 
     def plot_results(self, partitions=None, plot_from=None, **plot_params):
         """Plot training data and cv forecasts for each of the partition
@@ -435,12 +440,22 @@ class ModelSelector:
         plot_from : str
             Date from which to show the plot
             e.g. '2019-12-31', '2019', or '2019-12'
+
+        Returns
+        -------
+        list
+            List of `matplotlib.axes._subplots.AxesSubplot` for each partition
         """
         partitions = partitions if partitions is not None else self.partitions
+        plts = []
 
         for partition in partitions:
             partition_result = self.get_result_for_partition(partition)
-            partition_result.plot_result(plot_from=plot_from, title=str(partition), **plot_params)
+            plts.append(
+                partition_result.plot_result(plot_from=plot_from, title=str(partition), **plot_params)
+            )
+
+        return plts
 
     def __repr__(self):
         r = "ModelSelector\n"
