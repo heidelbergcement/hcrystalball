@@ -3,7 +3,7 @@
 Model Selection
 ===============
 
-Throughout different areas, many of us have been dealing with predicting not just one, 
+Throughout different areas, many of us have been dealing with predicting not just one,
 but rather multiple time series at a given point in time. Having different regions, countries,
 plants, it would have been great to have a tool, that takes state of the art models and for each
 partition of the data picks the best model.
@@ -14,20 +14,20 @@ At first, it unifies interface of different libraries under sklearn compatible o
 Having such interface enables to build conveniant layer on top using sklearn's model selection pieces and few
 custom made additions to make sure, that such task is done in a very pleasant way.
 
-Main interface is `~hcrystalball.model_selection.ModelSelector` class, that aims to cover functionality 
-around all data partitions. It brings together definition of search space 
-(`~hcrystalball.model_selection.create_gridsearch`, `~hcrystalball.model_selection.add_model_to_gridsearch`), 
-runs model selection for each data partition within data (`~hcrystalball.model_selection.select_model`), 
-provides way how to plot models performance (`~hcrystalball.model_selection.ModelSelector.plot_results`) 
+Main interface is `~hcrystalball.model_selection.ModelSelector` class, that aims to cover functionality
+around all data partitions. It brings together definition of search space
+(`~hcrystalball.model_selection.create_gridsearch`, `~hcrystalball.model_selection.add_model_to_gridsearch`),
+runs model selection for each data partition within data (`~hcrystalball.model_selection.select_model`),
+provides way how to plot models performance (`~hcrystalball.model_selection.ModelSelector.plot_results`)
 and enables load and persistance in unified manner for later reference.
 
-When `~hcrystalball.model_selection.ModelSelector.select_model` is finished, results are stored in 
-`~hcrystalball.model_selection.ModelSelector.results` - a list of `~hcrystalball.model_selection.ModelSelectorResult` objects, 
+When `~hcrystalball.model_selection.ModelSelector.select_model` is finished, results are stored in
+`~hcrystalball.model_selection.ModelSelector.results` - a list of `~hcrystalball.model_selection.ModelSelectorResult` objects,
 that are connected with each of the data partition.
 
 Accessing such objects is best done via `~hcrystalball.model_selection.ModelSelector.get_result_for_partition`.
 
-`~hcrystalball.model_selection.ModelSelectorResult` contains majority of information 
+`~hcrystalball.model_selection.ModelSelectorResult` contains majority of information
 you would expect to find from model selection process.
 
 .. code-block:: python
@@ -92,27 +92,27 @@ you would expect to find from model selection process.
 Plotting
 ********
 
-On top, `~hcrystalball.model_selection.ModelSelectorResult` provides also convenient plotting functions 
-(`~hcrystalball.model_selection.ModelSelectorResultplot_result`, `~hcrystalball.model_selection.ModelSelectorResult.plot_error`) 
+On top, `~hcrystalball.model_selection.ModelSelectorResult` provides also convenient plotting functions
+(`~hcrystalball.model_selection.ModelSelectorResultplot_result`, `~hcrystalball.model_selection.ModelSelectorResult.plot_error`)
 and access to the data behind the plots (`~hcrystalball.model_selection.ModelSelectorResult.df_plot`).
 
 Parallel execution
 ******************
 
-Model selection itself can also run in parallel using prefect. For such case ``parallel_over_columns`` 
-must include some categorical columns, that are subset of ``partition_columns``. 
+Model selection itself can also run in parallel using prefect. For such case ``parallel_over_columns``
+must include some categorical columns, that are subset of ``partition_columns``.
 Depending on your data, parallel execution might bring unnecessary overhead, so you should treat it carefully.
 
 Predefined parameter grid
 *************************
 
-Another built-in method of `~hcrystalball.model_selection.ModelSelector` is `~hcrystalball.model_selection.ModelSelector.create_gridsearch`, 
+Another built-in method of `~hcrystalball.model_selection.ModelSelector` is `~hcrystalball.model_selection.ModelSelector.create_gridsearch`,
 that stores fine-tuned grid to `~hcrystalball.model_selection.ModelSelector.grid_search`
 and is by default used in `~hcrystalball.model_selection.ModelSelector.select_model`.
 
-This grid takes care of creation of **holidays** in correct form for each wrapper, 
-typical set of **seasonality features** like day of the week, ensures, that if passed, 
-**exogenous columns** are passed correctly and last but not least, 
+This grid takes care of creation of **holidays** in correct form for each wrapper,
+typical set of **seasonality features** like day of the week, ensures, that if passed,
+**exogenous columns** are passed correctly and last but not least,
 defines set of **models**, that turned out to be useful.
 
 Extending the parameter grid is more than welcomed, as this default might not cover your needs.
@@ -126,7 +126,7 @@ There are two ways how data can be split in hcrystalball (both are under the hoo
 Default ``between_split_lag=None`` shifts splits by prediction horizon
 
 .. raw:: html
-    
+
     <center><img src="_static/FinerTimeSplit.svg" alt="FinerTimeSplit"></center></br>
 
 In case ``between_split_lag`` is defined, it determines the splitting shift as shown below
@@ -134,4 +134,3 @@ In case ``between_split_lag`` is defined, it determines the splitting shift as s
 .. raw:: html
 
     <center><img src="_static/FinerTimeSplitOverlap.svg" alt="FinerTimeSplitOverlap"></center>
-    

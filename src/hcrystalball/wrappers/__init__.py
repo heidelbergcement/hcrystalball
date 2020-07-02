@@ -35,9 +35,17 @@ except Exception:
 
 
 try:
-    from ._smoothing import ExponentialSmoothingWrapper, SimpleSmoothingWrapper, HoltSmoothingWrapper
+    from ._smoothing import (
+        ExponentialSmoothingWrapper,
+        SimpleSmoothingWrapper,
+        HoltSmoothingWrapper,
+    )
 
-    __all__ += ["ExponentialSmoothingWrapper", "SimpleSmoothingWrapper", "HoltSmoothingWrapper"]
+    __all__ += [
+        "ExponentialSmoothingWrapper",
+        "SimpleSmoothingWrapper",
+        "HoltSmoothingWrapper",
+    ]
 except Exception:
 
     class ExponentialSmoothingWrapper:

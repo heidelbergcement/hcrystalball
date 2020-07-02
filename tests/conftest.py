@@ -23,9 +23,7 @@ tm.K = 1  # 1 column
 def wrapper_instance(request):
 
     if request.param == "prophet":
-        return ProphetWrapper(
-            daily_seasonality=False, weekly_seasonality=False, yearly_seasonality=False
-        )
+        return ProphetWrapper(daily_seasonality=False, weekly_seasonality=False, yearly_seasonality=False)
     elif request.param == "smoothing":
         return ExponentialSmoothingWrapper(trend="add")
     elif request.param == "tbats":
@@ -136,9 +134,7 @@ def X_y_linear_trend(request):
     if request.param[-1] not in ("D", "W", "M", "Q", "Y"):
         raise ValueError("Invalid `X_y_with_freq` fixture param.")
     X = pd.DataFrame(
-        pd.date_range(
-            start="2019-01-01", periods=100, freq=request.param.split("freq_")[1][0]
-        ),
+        pd.date_range(start="2019-01-01", periods=100, freq=request.param.split("freq_")[1][0]),
         columns=["date"],
     )
 
@@ -275,9 +271,7 @@ def pipeline_instance_model_only(request):
                 (
                     "regressor",
                     ProphetWrapper(
-                        daily_seasonality=False,
-                        weekly_seasonality=False,
-                        yearly_seasonality=False,
+                        daily_seasonality=False, weekly_seasonality=False, yearly_seasonality=False,
                     ),
                 )
             ]
@@ -286,22 +280,13 @@ def pipeline_instance_model_only(request):
         return Pipeline([("regressor", ExponentialSmoothingWrapper(trend="add"))])
 
     elif request.param == "tbats":
-        return Pipeline(
-            [("regressor", TBATSWrapper(use_arma_errors=False, use_box_cox=False))]
-        )
+        return Pipeline([("regressor", TBATSWrapper(use_arma_errors=False, use_box_cox=False))])
 
     elif request.param == "sklearn":
         return Pipeline([("regressor", get_sklearn_wrapper(LinearRegression, lags=4))])
 
     elif request.param == "sarimax":
-        return Pipeline(
-            [
-                (
-                    "regressor",
-                    SarimaxWrapper(order=(1, 1, 0), seasonal_order=(1, 1, 1, 1)),
-                )
-            ]
-        )
+        return Pipeline([("regressor", SarimaxWrapper(order=(1, 1, 0), seasonal_order=(1, 1, 1, 1)),)])
 
     elif request.param == "stacking_ensemble":
         return Pipeline(
@@ -362,42 +347,16 @@ def pipeline_instance_model_in_pipeline(request):
         )
 
     elif request.param == "smoothing":
-        return Pipeline(
-            [
-                (
-                    "model",
-                    Pipeline([("regressor", ExponentialSmoothingWrapper(trend="add"))]),
-                )
-            ]
-        )
+        return Pipeline([("model", Pipeline([("regressor", ExponentialSmoothingWrapper(trend="add"))]),)])
 
     elif request.param == "tbats":
         return Pipeline(
-            [
-                (
-                    "model",
-                    Pipeline(
-                        [
-                            (
-                                "regressor",
-                                TBATSWrapper(use_arma_errors=False, use_box_cox=False),
-                            )
-                        ]
-                    ),
-                )
-            ]
+            [("model", Pipeline([("regressor", TBATSWrapper(use_arma_errors=False, use_box_cox=False),)]),)]
         )
 
     elif request.param == "sklearn":
         return Pipeline(
-            [
-                (
-                    "model",
-                    Pipeline(
-                        [("regressor", get_sklearn_wrapper(LinearRegression, lags=4))]
-                    ),
-                )
-            ]
+            [("model", Pipeline([("regressor", get_sklearn_wrapper(LinearRegression, lags=4))]),)]
         )
 
     elif request.param == "sarimax":
@@ -405,16 +364,7 @@ def pipeline_instance_model_in_pipeline(request):
             [
                 (
                     "model",
-                    Pipeline(
-                        [
-                            (
-                                "regressor",
-                                SarimaxWrapper(
-                                    order=(1, 1, 0), seasonal_order=(1, 1, 1, 1)
-                                ),
-                            )
-                        ]
-                    ),
+                    Pipeline([("regressor", SarimaxWrapper(order=(1, 1, 0), seasonal_order=(1, 1, 1, 1)),)]),
                 )
             ]
         )
@@ -430,9 +380,7 @@ def pipeline_instance_model_in_pipeline(request):
                                 "regressor",
                                 StackingEnsemble(
                                     base_learners=[
-                                        ExponentialSmoothingWrapper(
-                                            name="smoot_exp1", trend="add"
-                                        ),
+                                        ExponentialSmoothingWrapper(name="smoot_exp1", trend="add"),
                                         ExponentialSmoothingWrapper(name="smoot_exp2"),
                                     ],
                                     meta_model=LinearRegression(),
@@ -455,9 +403,7 @@ def pipeline_instance_model_in_pipeline(request):
                                 "regressor",
                                 SimpleEnsemble(
                                     base_learners=[
-                                        ExponentialSmoothingWrapper(
-                                            name="smoot_exp1", trend="add"
-                                        ),
+                                        ExponentialSmoothingWrapper(name="smoot_exp1", trend="add"),
                                         ExponentialSmoothingWrapper(name="smoot_exp2"),
                                     ]
                                 ),
@@ -486,8 +432,7 @@ def test_data_raw():
     dfs = []
     for region in regions:
         df_tmp = pd.DataFrame(
-            columns=["date", "Region", "Plant", "Product", "Quantity"],
-            index=range(len(dates)),
+            columns=["date", "Region", "Plant", "Product", "Quantity"], index=range(len(dates)),
         )
         df_tmp.loc[:, "Region"] = region
         for plant in plants:
@@ -498,11 +443,7 @@ def test_data_raw():
                 df_tmp.loc[:, "Quantity"] = random_state.random_sample(n_dates)
                 dfs.append(df_tmp.copy())
 
-    return (
-        pd.concat(dfs)
-        .assign(date=lambda x: pd.to_datetime(x["date"]))
-        .set_index("date")
-    )
+    return pd.concat(dfs).assign(date=lambda x: pd.to_datetime(x["date"])).set_index("date")
 
 
 @pytest.fixture
@@ -520,8 +461,7 @@ def train_data(request):
 
     dfs = []
     df_tmp = pd.DataFrame(
-        columns=["date", "Region", "Product", "Holidays_code", "Quantity"],
-        index=range(len(df0.index)),
+        columns=["date", "Region", "Product", "Holidays_code", "Quantity"], index=range(len(df0.index)),
     )
     for region in regions:
         df_tmp.loc[:, "Region"] = region
@@ -533,11 +473,7 @@ def train_data(request):
 
             dfs.append(df_tmp.copy())
 
-    df = (
-        pd.concat(dfs)
-        .assign(date=lambda x: pd.to_datetime(x["date"]))
-        .set_index("date")
-    )
+    df = pd.concat(dfs).assign(date=lambda x: pd.to_datetime(x["date"])).set_index("date")
 
     if "two_regions" not in request.param:
         return df[df["Region"] == regions[0]].drop(["Region"], axis=1)
@@ -563,17 +499,11 @@ def grid_search(request):
     bad_dummy = get_sklearn_wrapper(
         DummyRegressor, strategy="constant", constant=42, name="bad_dummy", lags=2
     )
-    good_dummy = get_sklearn_wrapper(
-        DummyRegressor, strategy="mean", name="good_dummy", lags=2
-    )
+    good_dummy = get_sklearn_wrapper(DummyRegressor, strategy="mean", name="good_dummy", lags=2)
 
     parameters = [
         {"model": [good_dummy]},
-        {
-            "model": [bad_dummy],
-            "model__strategy": ["constant"],
-            "model__constant": [42],
-        },
+        {"model": [bad_dummy], "model__strategy": ["constant"], "model__constant": [42],},
     ]
 
     holiday_model = Pipeline(

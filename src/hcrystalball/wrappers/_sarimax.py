@@ -9,7 +9,8 @@ logging.getLogger("py.warnings").addHandler(sys_out)
 import pandas as pd
 from pmdarima.arima import AutoARIMA, ARIMA
 
-from hcrystalball.wrappers._base import TSModelWrapper, tsmodel_wrapper_constructor_factory
+from hcrystalball.wrappers._base import TSModelWrapper
+from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
 from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict
 
 
@@ -160,7 +161,7 @@ class SarimaxWrapper(TSModelWrapper):
         preds = pd.DataFrame(preds, index=X.index, columns=[self.name])
         if self.conf_int:
             conf_ints = pd.DataFrame(
-                conf_ints, columns=[f"{self.name}_lower", f"{self.name}_upper"], index=X.index
+                conf_ints, columns=[f"{self.name}_lower", f"{self.name}_upper"], index=X.index,
             )
             preds = pd.concat([preds, conf_ints], axis=1)
 

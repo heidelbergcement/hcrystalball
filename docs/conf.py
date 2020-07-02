@@ -3,9 +3,7 @@ import os
 import inspect
 import hcrystalball
 
-__location__ = os.path.join(
-    os.getcwd(), os.path.dirname(inspect.getfile(inspect.currentframe()))
-)
+__location__ = os.path.join(os.getcwd(), os.path.dirname(inspect.getfile(inspect.currentframe())))
 
 extensions = [
     "sphinx_automodapi.automodapi",

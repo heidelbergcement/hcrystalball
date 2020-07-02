@@ -35,16 +35,10 @@ def estimators(request):
         "prophet": [
             (
                 "prophet",
-                ProphetWrapper(
-                    daily_seasonality=False,
-                    weekly_seasonality=False,
-                    yearly_seasonality=False,
-                ),
+                ProphetWrapper(daily_seasonality=False, weekly_seasonality=False, yearly_seasonality=False,),
             )
         ],
-        "sarimax": [
-            ("sarimax", SarimaxWrapper(order=(1, 1, 1), seasonal_order=(1, 1, 1, 2)))
-        ],
+        "sarimax": [("sarimax", SarimaxWrapper(order=(1, 1, 1), seasonal_order=(1, 1, 1, 2)))],
         "smoothing": [("smoothing", ExponentialSmoothingWrapper())],
         "sklearn": [("sklearn", get_sklearn_wrapper(LinearRegression))],
         "tbats": [("tbats", TBATSWrapper(use_arma_errors=False, use_box_cox=False))],

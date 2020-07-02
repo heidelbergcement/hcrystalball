@@ -93,7 +93,9 @@ class FinerTimeSplit:
         indices = np.arange(n_samples)
         if self.between_split_lag is not None:
             test_starts = range(
-                n_samples - (self.between_split_lag * self.n_splits) - (self.horizon - self.between_split_lag),
+                n_samples
+                - (self.between_split_lag * self.n_splits)
+                - (self.horizon - self.between_split_lag),
                 n_samples - (self.horizon - self.between_split_lag),
                 self.between_split_lag,
             )
@@ -101,7 +103,10 @@ class FinerTimeSplit:
             test_starts = range(n_samples - (self.horizon * self.n_splits), n_samples, self.horizon)
 
         for test_start in test_starts:
-            yield (indices[:test_start], indices[test_start:test_start + self.horizon])
+            yield (
+                indices[:test_start],
+                indices[test_start : test_start + self.horizon],
+            )
 
     def get_n_splits(self, X=None, y=None, groups=None):
         """Return number of splits regarles of provided parameters

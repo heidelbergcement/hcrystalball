@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
 import pandas as pd
 from hcrystalball.exceptions import InsufficientDataLengthError
-from hcrystalball.wrappers._base import TSModelWrapper, tsmodel_wrapper_constructor_factory
+from hcrystalball.wrappers._base import TSModelWrapper
+from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
 from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict
 
 
@@ -40,7 +41,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
             y - numpy.ndarray
         """
         if y is not None:
-            y = self._y[self.lags + horizon - 1:]
+            y = self._y[self.lags + horizon - 1 :]
         X = self._add_lag_features(X, self._y, horizon)
         if "holiday" in X.columns:
             X = self._adjust_holidays(X)
@@ -171,7 +172,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         """
         lag_features = []
         shift = horizon if horizon else 0
-        y = y if horizon else y[-(len(X) + self.lags - 1):]
+        y = y if horizon else y[-(len(X) + self.lags - 1) :]
 
         for i in range(0, self.lags):
             lag_features.append(pd.Series(y, name=f"lag_{i}").shift(i + shift))

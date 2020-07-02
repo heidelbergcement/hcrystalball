@@ -19,14 +19,14 @@ Along with that we enforce following rules:
 - ``X_test`` shares same format as ``X_train``, while it's length determines for how many steps ahead the wrapper will be predicting.
 - ``y_pred`` is always a `pandas.Series` with a `pandas.DatetimeIndex` named after wrapper's name for convenient plotting and pipelining
 
-Following example creates dummy data in the right format with `~hcrystalball.utils.generate_tsdata` 
+Following example creates dummy data in the right format with `~hcrystalball.utils.generate_tsdata`
 and uses it in `~hcrystalball.wrappers.ProphetWrapper`.
 
 .. code-block:: python
 
     from hcrystalball.utils import generate_tsdata
     from hcrystalball.wrappers import ProphetWrapper
-    
+
     X, y = generate_tsdata(n_dates=365*2)
     X_train, y_train, X_test, y_test = X[:-10], y[:-10], X[-10:], y[-10:]
 
@@ -48,7 +48,7 @@ and uses it in `~hcrystalball.wrappers.ProphetWrapper`.
     2017-01-03    7.676185
     2017-01-04    8.447134
     2017-01-05    8.638612
-                    ...   
+                    ...
     2018-12-27    5.824521
     2018-12-28    5.359175
     2018-12-29    5.093221
@@ -66,13 +66,13 @@ and uses it in `~hcrystalball.wrappers.ProphetWrapper`.
 Model selection
 ***************
 
-More general model selection interface expects single `pandas.DataFrame`, that must contain at minimum 
-an index of type `pandas.DatetimeIndex` and a numeric target column. In this case the target is ``Quantity``, index can have a name, 
-but it is never used 
+More general model selection interface expects single `pandas.DataFrame`, that must contain at minimum
+an index of type `pandas.DatetimeIndex` and a numeric target column. In this case the target is ``Quantity``, index can have a name,
+but it is never used
 
 Other columns:
 
-- columns serving to **partition** data (``Region``, ``Plant``, ``Product``), 
+- columns serving to **partition** data (``Region``, ``Plant``, ``Product``),
   that will effectively cut the original data to single time series (similar to X,y format of the wrapper layer)
 - **exogenous columns** that add extra information to the autoregressive nature of target prediction (``Raining``)
 - a column with ISO code of country/region (``Country``), that is later used to create **holidays** as additional features
