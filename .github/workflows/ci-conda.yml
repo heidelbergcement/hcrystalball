@@ -1,6 +1,12 @@
 # Extracted by https://gist.github.com/mwouts/9842452d020c08faf9e84a3bba38a66f
 name: CI (conda)
-on: [push]
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
 
 jobs:
   build:
@@ -50,4 +56,4 @@ jobs:
         run: python setup.py build_sphinx
       - name: Upload coverage
         uses: codecov/codecov-action@v1
-        if: ${{ matrix.os != 'windows-latest' }}
+        if: ${{ matrix.os == 'ubuntu-latest' }}
