@@ -12,7 +12,7 @@
 
 <div>
     <a href="https://hcrystalball.readthedocs.io/en/latest/">
-        <img src="https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/docs/_static//hcrystal_ball_logo_green.png"    width="150px" align="left" /></a>
+        <img src="https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/docs/_static/hcrystal_ball_logo_green.png"    width="150px" align="left" /></a>
     <i><br>A time series library that unifies the API for most commonly <br>
     used libraries and modelling techniques for time-series <br>
     forecasting in the Python ecosystem.</i>
@@ -102,100 +102,38 @@ y_pred
 ### Model Selection
 
 ```python
-from hcrystalball.utils import generate_multiple_tsdata
+import pandas as pd
+import matplotlib.pyplot as plt
+plt.style.use('seaborn')
+plt.rcParams['figure.figsize'] = [12, 6]
+
+from hcrystalball.utils import get_sales_data
 from hcrystalball.model_selection import ModelSelector
 
-df = generate_multiple_tsdata(n_dates=200,
-                              n_regions=1,
-                              n_plants=1,
-                              n_products=2,
-                              )
+df = get_sales_data(n_dates=200,
+                    n_assortments=1,
+                    n_states=2,
+                    n_stores=2)
 
 ms = ModelSelector(horizon=10,
                    frequency="D",
-                   country_code_column="Country",
+                   country_code_column="HolidayCode",
                    )
 
 ms.create_gridsearch(n_splits=2,
                      sklearn_models=True,
                      prophet_models=False,
-                     exog_cols=["Raining"],
+                     exog_cols=["Open","Promo","SchoolHoliday","Promo2"],
                      )
 
 ms.select_model(df=df,
-                target_col_name="Quantity",
-                partition_columns=["Region", "Plant", "Product"],
+                target_col_name="Sales",
+                partition_columns=["Assortment", "State","Store"],
                 )
 
-# Model Selector is updated with results
-ms
-
-ModelSelector
--------------
-  frequency: D
-  horizon: 10
-  country_code_column: Country
-  results: List of 2 ModelSelectorResults
-  paritions: List of 2 partitions
-     {'Plant': 'plant_0', 'Product': 'product_0', 'Region': 'region_0'}
-     {'Plant': 'plant_0', 'Product': 'product_1', 'Region': 'region_0'}
--------------
-
-# Accessing result for 1 partition showcases rich representation
-ms.results[0]
-
-ModelSelectorResult
--------------------
-  best_model_name: sklearn
-  frequency: D
-  horizon: 10
-
-  country_code_column: None
-
-  partition: {'Plant': 'plant_0', 'Product': 'product_0', 'Region': 'region_0'}
-  partition_hash: 094a99e51ce41bad546788ddb8380ac1
-
-  df_plot: DataFrame of shape (200, 6) suited for plotting cv results with .plot()
-  X_train: DataFrame of shape (200, 2) with training feature values
-  y_train: DataFrame of shape (200,) with training target values
-  cv_results: DataFrame of shape (18, 16) with gridsearch cv info
-  best_model_cv_results: Series with gridsearch cv info
-  cv_data: DataFrame of shape (20, 20) with models predictions, split and true target values
-  best_model_cv_data: DataFrame of shape (20, 3) with model predictions, split and true target values
-
-  model_reprs: Dict of model_hash and model_reprs
-  best_model_hash: cbc68abad45e02bec6b2de157bc8c396
-  best_model: Pipeline(memory=None,
-         steps=[('exog_passthrough',
-                 TSColumnTransformer(n_jobs=None, remainder='drop',
-                                     sparse_threshold=0.3,
-                                     transformer_weights=None,
-                                     transformers=[('raw_cols', 'passthrough',
-                                                    ['Raining'])],
-                                     verbose=False)),
-                ('holiday', 'passthrough'),
-                ('model',
-                 Pipeline(memory=None,
-                          steps=[('seasonality',
-                                  SeasonalityTransformer(auto=True, freq='D',
-                                                         monthly=None,
-                                                         quar...
-                                  SklearnWrapper(alpha=1.0,
-                                                 clip_predictions_lower=None,
-                                                 clip_predictions_upper=None,
-                                                 copy_X=True,
-                                                 fit_intercept=True,
-                                                 fit_params=None, l1_ratio=0.5,
-                                                 lags=14, max_iter=1000,
-                                                 name='sklearn',
-                                                 normalize=False,
-                                                 optimize_for_horizon=False,
-                                                 positive=False,
-                                                 precompute=False,
-                                                 random_state=None,
-                                                 selection='cyclic', tol=0.0001,
-                                                 warm_start=False))],
-                          verbose=False))],
-         verbose=False)
--------------------
+ms.plot_results(plot_from="2015-06-01",
+                partitions=[{"Assortment":"a","State":"NW","Store":335}]
+               )
 ```
+
+<img src="https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/docs/_static/forecast.png" width="100%" align="left"/>
