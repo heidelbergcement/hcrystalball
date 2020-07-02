@@ -45,6 +45,9 @@ jobs:
           } else {
              pytest --cov=./ --cov-report=xml
           }
+      - name: Build docs
+        shell: pwsh
+        run: python setup.py build_sphinx
       - name: Upload coverage
         uses: codecov/codecov-action@v1
         if: ${{ matrix.os != 'windows-latest' }}
