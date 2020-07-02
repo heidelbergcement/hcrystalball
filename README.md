@@ -47,7 +47,7 @@ Very often you will want to use more wrappers, than just Sklearn, run examples i
 
 ```bash
 # get dependencies file, e.g. using curl
-curl -O https://raw.githubusercontent.com/heidelbergcement/hcrystalball/blob/master/environment.yml
+curl -O https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/environment.yml
 # check comments in environment.yml, keep or remove as requested, than create environment using
 conda env create -f environment.yml
 # activate the environment
