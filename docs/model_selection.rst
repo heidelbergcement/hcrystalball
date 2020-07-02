@@ -127,10 +127,10 @@ Default ``between_split_lag=None`` shifts splits by prediction horizon
 
 .. raw:: html
 
-    <center><img src="_static/FinerTimeSplit.svg" alt="FinerTimeSplit"></center></br>
+    <center><img src="https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/docs/_static/FinerTimeSplit.svg" alt="FinerTimeSplit"></center></br>
 
 In case ``between_split_lag`` is defined, it determines the splitting shift as shown below
 
 .. raw:: html
 
-    <center><img src="_static/FinerTimeSplitOverlap.svg" alt="FinerTimeSplitOverlap"></center>
+    <center><img src="https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/docs/_static/FinerTimeSplitOverlap.svg" alt="FinerTimeSplitOverlap"></center>
