@@ -52,23 +52,13 @@ environment variable to `never`. Default behavior is `auto`.
 
 Pre-commit hooks
 ****************
-We are using pre-commit_ hooks
-defined by `.pre-commit-config.yaml`_.
 
-To check how pre-commit would work on all files, run
-.. code-block:: bash
-    pre-commit run --all-files
-
-Pre-commit hooks
-****************
-We are using pre-commit_ hooks
-defined by `.pre-commit-config.yaml`_.
+We are using pre-commit_ hooks defined in `.pre-commit-config.yaml`_.
 
 To check how pre-commit would work on all files, run
 .. code-block:: bash
 
     pre-commit run --all-files
-
 
 Running tests
 *************
@@ -87,11 +77,8 @@ Creating new release
 Publishing new package version to PyPI and conda-forge is done withing continuous deployment, that is setup on the creation of new release.
 Even that some steps are automated, make sure to go through following checklist to ensure the best outcome of a new release.
 
-  #. Fork the original repository
-  #. Make changes to the code within forked repository
-  #. Create pull request against the original repository
-  #. Repeat until all things that you wanted in the release are merged to the master
-  #. If CHANGELOG.rst was not updated, make sure you update it with a new version
+  #. Check open issues and pull requests, process ones that should be part of the release
+  #. Update CHANGELOG.rst for respective new version with new commit on the master branch.
   #. Create `new release`_ from master with new tag (e.g. v0.2.1).
      Keep the description blank to have single source of truth in CHANGELOG.rst
   #. Check the results of workflows in `GitHub Actions`_

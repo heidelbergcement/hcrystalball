@@ -28,10 +28,8 @@ Install other libraries you want to wrap
     conda install -c conda-forge statsmodels
     conda install -c conda-forge fbprophet
     conda install -c conda-forge scikit-learn
-    conda install -c conda-forge xgboost
 
-    conda install -c alkaline-ml pmdarima
-
+    pip install pmdarima
     pip install tbats
 
 For parallel execution
@@ -51,7 +49,7 @@ might be cumbersome, so checking `envrionment.yml` might give you faster start.
 .. code-block:: bash
 
     # get dependencies file, e.g. using curl
-    curl -O https://raw.githubusercontent.com/heidelbergcement/hcrystalball/blob/master/environment.yml
+    curl -O https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/environment.yml
     # check comments in environment.yml, keep or remove as requested, than create environment using
     conda env create -f environment.yml
     # activate the environment
