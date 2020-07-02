@@ -9,7 +9,6 @@ Contribution
 
 Development installation
 ************************
-
 Our tool of choice for dependencies management is conda mainly due to conflicting requirements of third party packages.
 The `environment.yml` from which the environment is build is rather rich and may contain things you might not necessarily need,
 so you can comment out some parts or just take it as an inspiration to build your own.
@@ -26,7 +25,6 @@ so you can comment out some parts or just take it as an inspiration to build you
 
 Building documentation
 **********************
-
 Documentation includes examples in form of executable jupyter notebooks and its execution
 might take several minutes.
 
@@ -52,6 +50,14 @@ environment variable to `never`. Default behavior is `auto`.
    # execute notebooks that do not have any output cell
    export NBSPHINX_EXECUTE=auto
 
+Pre-commit hooks
+****************
+We are using pre-commit_ hooks
+defined by `.pre-commit-config.yaml`_.
+
+To check how pre-commit would work on all files, run
+.. code-block:: bash
+    pre-commit run --all-files
 
 Running tests
 *************
@@ -75,9 +81,16 @@ Even that some steps are automated, make sure to go through following checklist 
   #. Create pull request against the original repository
   #. Repeat until all things that you wanted in the release are merged to the master
   #. If CHANGELOG.rst was not updated, make sure you update it with a new version
-  #. Create `new release <https://help.github.com/en/enterprise/2.13/user/articles/creating-releases>`_ from master with new tag (e.g. v0.2.1).
+  #. Create `new release`_ from master with new tag (e.g. v0.2.1).
      Keep the description blank to have single source of truth in CHANGELOG.rst
-  #. Check the results of workflows in `GitHub Actions <https://github.com/heidelbergcement/hcrystalball/actions>`_
-  #. Check the new release is available on `PyPI <https://pypi.org/project/hcrystalball/>`_
-  #. After 1 hour check that conda-forge bot published the new release on `conda-forge <https://conda-forge.org/feedstocks/>`_
+  #. Check the results of workflows in `GitHub Actions`_
+  #. Check the new release is available on PyPI_
+  #. After 1 hour check that conda-forge bot published the new release on conda-forge_
   #. Take some rest with your favorite drink
+
+.. _pre-commit: https://pre-commit.com
+.. _.pre-commit-config.yaml: https://github.com/heidelbergcement/hcrystalball/blob/master/.pre-commit-config.yaml
+.. _new release: https://help.github.com/en/enterprise/2.13/user/articles/creating-releases
+.. _GitHub Actions: https://github.com/heidelbergcement/hcrystalball/actions
+.. _PyPI: https://pypi.org/project/hcrystalball
+.. _conda-forge: https://conda-forge.org/feedstocks
