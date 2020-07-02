@@ -12,7 +12,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macos-latest'] #, 'windows-latest']
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         python-version: [3.7]
     runs-on: ${{ matrix.os }}
     steps:
@@ -51,6 +51,10 @@ jobs:
           } else {
              pytest --cov=./ --cov-report=xml
           }
+      - name: Build docs
+        shell: pwsh
+        run: python setup.py build_sphinx
+        if: ${{ matrix.os != 'windows-latest' }}
       - name: Upload coverage
         uses: codecov/codecov-action@v1
         if: ${{ matrix.os == 'ubuntu-latest' }}

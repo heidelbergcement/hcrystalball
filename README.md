@@ -2,6 +2,7 @@
 [![CD (PyPI)](https://github.com/heidelbergcement/hcrystalball/workflows/CD%20(PyPI)/badge.svg)](https://pypi.org/project/hcrystalball/)
 [![Documentation Status](https://readthedocs.org/projects/hcrystalball/badge/?version=latest)](https://hcrystalball.readthedocs.io/en/latest/?badge=latest)
 [![PyPI Version](https://img.shields.io/pypi/v/hcrystalball)](https://pypi.org/project/hcrystalball/)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/hcrystalball)](https://anaconda.org/conda-forge/hcrystalball)
 [![Code Coverage](https://codecov.io/gh/heidelbergcement/hcrystalball/branch/master/graph/badge.svg)](https://codecov.io/gh/heidelbergcement/hcrystalball)
 ![License](https://img.shields.io/github/license/heidelbergcement/hcrystalball)
 ![Contributors](https://img.shields.io/github/contributors/heidelbergcement/hcrystalball)
@@ -10,10 +11,11 @@
 # HCrystal Ball
 
 <div>
-<a href="https://hcrystalball.readthedocs.io/en/latest/"><img src="docs/_static/hcrystal_ball_logo_green.png" width="150px" align="left" /></a>
-<i><br>A time series library that unifies the API for most commonly <br>
-used libraries and modelling techniques for time-series <br>
-forecasting in the Python ecosystem.</i>
+    <a href="https://hcrystalball.readthedocs.io/en/latest/">
+        <img src="https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/docs/_static//hcrystal_ball_logo_green.png"    width="150px" align="left" /></a>
+    <i><br>A time series library that unifies the API for most commonly <br>
+    used libraries and modelling techniques for time-series <br>
+    forecasting in the Python ecosystem.</i>
 </div>
 <br><br><br>
 
