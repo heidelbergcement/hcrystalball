@@ -4,6 +4,7 @@ from hcrystalball.wrappers import get_sklearn_wrapper
 from sklearn.linear_model import LinearRegression
 from hcrystalball.model_selection import load_model_selector
 import os
+import pytest
 
 
 def test_model_selector(tmp_path):
@@ -16,7 +17,17 @@ def test_model_selector(tmp_path):
 
     df = generate_multiple_tsdata(n_dates=200, n_regions=n_regions, n_plants=n_plants, n_products=n_products)
     ms = ModelSelector(frequency="D", horizon=1, country_code_column="Country")
+
+    with pytest.raises(ValueError):
+        ms.results
+    with pytest.raises(ValueError):
+        ms.partitions
+    with pytest.raises(ValueError):
+        ms.stored_path
+    with pytest.raises(ValueError):
+        ms.get_result_for_partition(partition="non existing partition")
     assert ms.horizon == 1
+
     ms.create_gridsearch(
         n_splits=1,
         prophet_models=True,
@@ -56,3 +67,16 @@ def test_model_selector(tmp_path):
     )
     assert ms.horizon == ms_load.horizon
     assert ms.frequency == ms_load.frequency
+
+    ms.plot_best_wrapper_classes()
+    ms.plot_results()
+    assert "ModelSelector" in repr(ms)
+    assert "ModelSelectorResults" in repr(ms)
+    assert "ModelSelectorResult" in repr(ms.results[0])
+
+    with pytest.raises(ValueError):
+        ms.results[0].persist(attribute_name="non_existing_attribute")
+
+    assert ms.results[0].cv_splits_overlap is False
+
+    ms.results[0].plot_error()
