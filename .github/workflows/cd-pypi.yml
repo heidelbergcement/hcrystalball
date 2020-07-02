@@ -5,7 +5,7 @@ name: CD (PyPI)
 
 on:
   release:
-    types: [published,updated]
+    types: [published]
 
 jobs:
   deploy:

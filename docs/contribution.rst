@@ -59,6 +59,17 @@ To check how pre-commit would work on all files, run
 .. code-block:: bash
     pre-commit run --all-files
 
+Pre-commit hooks
+****************
+We are using pre-commit_ hooks
+defined by `.pre-commit-config.yaml`_.
+
+To check how pre-commit would work on all files, run
+.. code-block:: bash
+
+    pre-commit run --all-files
+
+
 Running tests
 *************
 
