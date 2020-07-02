@@ -2,6 +2,13 @@
 Changelog
 =========
 
+Version 0.1.4
+=============
+
+- More informative error messages when trying to use wrappers without installed dependent packages
+- Adding Windows distribution
+- Other internal fixes (CI, CD, conda distribution, pre-commit, code cleanup, test coverage)
+
 Version 0.1.3
 =============
 
