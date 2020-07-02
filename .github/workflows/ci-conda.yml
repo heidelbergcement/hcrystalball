@@ -47,7 +47,7 @@ jobs:
         shell: pwsh
         run: |
           if("${{ matrix.os }}" -eq "windows-latest"){
-             pytest
+             pytest --no-cov
           } else {
              pytest --cov=./ --cov-report=xml
           }
