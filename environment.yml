@@ -32,4 +32,4 @@ dependencies:
   - tbats==1.0.10 #(T)BATSWrapper, pinning patch version needed to to change in 1.0.3
   - pytest # to run tests
   - pytest-cov # to run tests
-  - . # for the docs build
+  - . # for the docs build, remove when not having cloned git repository and run `pip install hcrystalball` or `conda install -c conda-forge hcrystalball` instead

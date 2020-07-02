@@ -9,12 +9,16 @@ giving you the opportunity to define your own subset of wrappers that are to be 
 Ideally your application should pin dependencies for wrapped libraries along with
 hcrystalball and other dependencies.
 
-Install core **HCrystalBall** from pip
-***************************************
+Install core **HCrystalBall** from pip or from conda-forge
+**********************************************************
 
 .. code-block:: bash
 
-   pip install hcrystalball
+    pip install hcrystalball
+
+.. code-block:: bash
+
+    conda install -c conda-forge hcrystalball
 
 Install other libraries you want to wrap
 *****************************************
@@ -46,12 +50,15 @@ might be cumbersome, so checking `envrionment.yml` might give you faster start.
 
 .. code-block:: bash
 
-    # get dependencies file
+    # get dependencies file, e.g. using curl
     curl -O https://raw.githubusercontent.com/heidelbergcement/hcrystalball/blob/master/environment.yml
-    # check comments in environment.yml, keep or remove as requested, than execute
+    # check comments in environment.yml, keep or remove as requested, than create environment using
     conda env create -f environment.yml
+    # activate the environment
     conda activate hcrystalball
-    # if you want to see progress bar in jupyterlab, execut also
+    # if you want to see progress bar in jupyterlab, execute also
     jupyter labextension install @jupyter-widgets/jupyterlab-manager
-    # install the library
+    # install the library from pip
     pip install hcrystalball
+    # or from conda
+    conda install -c conda-forge hcrystalball

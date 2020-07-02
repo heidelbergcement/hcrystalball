@@ -31,10 +31,14 @@ See examples, tutorials, contribution, API and more on the documentation [site](
 
 ## Core Installation
 
-If you want really minimal installation, you can install from pip
+If you want really minimal installation, you can install from pip or from conda-forge
 
 ```bash
 pip install hcrystalball
+```
+
+```bash
+conda install -c conda-forge hcrystalball
 ```
 
 ## Typical Installation
@@ -42,15 +46,18 @@ pip install hcrystalball
 Very often you will want to use more wrappers, than just Sklearn, run examples in jupyterlab, or execute model selection in parallel. Getting such dependencies to play together nicely might be cumbersome, so checking `envrionment.yml` might give you faster start.
 
 ```bash
-# get dependencies file
+# get dependencies file, e.g. using curl
 curl -O https://raw.githubusercontent.com/heidelbergcement/hcrystalball/blob/master/environment.yml
-# check comments in environment.yml, keep or remove as requested, than execute
+# check comments in environment.yml, keep or remove as requested, than create environment using
 conda env create -f environment.yml
+# activate the environment
 conda activate hcrystalball
-# if you want to see progress bar in jupyterlab, execut also
+# if you want to see progress bar in jupyterlab, execute also
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
-# install the library
+# install the library from pip
 pip install hcrystalball
+# or from conda
+conda install -c conda-forge hcrystalball
 ```
 
 ## Development Installation:
