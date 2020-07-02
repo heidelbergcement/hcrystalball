@@ -329,12 +329,10 @@ def get_gridsearch(
             {
                 "model": [
                     SimpleSmoothingWrapper(
-                        freq=frequency,
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
                     ),
                     HoltSmoothingWrapper(
-                        freq=frequency,
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
                     ),
