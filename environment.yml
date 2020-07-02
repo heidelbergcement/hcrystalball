@@ -24,7 +24,7 @@ dependencies:
 - black # to format the code
 - flake8 # to format the code
 - pre-commit # to run pre-commit hooks
-# - prefect # to execute model selection in parallel
+- prefect # to execute model selection in parallel
 - pip
 
 - pip:
