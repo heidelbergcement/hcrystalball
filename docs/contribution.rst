@@ -22,6 +22,8 @@ so you can comment out some parts or just take it as an inspiration to build you
    # ensures interactive progress bar will work in example notebooks
    jupyter labextension install @jupyter-widgets/jupyterlab-manager
    python setup.py develop
+   # install git hooks, can take several minutes (one time setting)
+   pre-commit install
 
 Building documentation
 **********************
@@ -57,16 +59,6 @@ defined by `.pre-commit-config.yaml`_.
 
 To check how pre-commit would work on all files, run
 .. code-block:: bash
-    pre-commit run --all-files
-
-Pre-commit hooks
-****************
-We are using pre-commit_ hooks
-defined by `.pre-commit-config.yaml`_.
-
-To check how pre-commit would work on all files, run
-.. code-block:: bash
-
     pre-commit run --all-files
 
 
