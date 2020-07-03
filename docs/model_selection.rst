@@ -32,9 +32,9 @@ you would expect to find from model selection process.
 
 .. code-block:: python
 
-    >>> from hcrystalball.model_selection import load_model_selector_result
-    >>> msr = load_model_selector_result(partition_hash='fb452abd91f5c3bcb8afa4162c6452c2')
-    >>> msr
+    from hcrystalball.model_selection import load_model_selector_result
+    msr = load_model_selector_result(partition_hash='fb452abd91f5c3bcb8afa4162c6452c2')
+    msr
     ModelSelectorResult
     -------------------
     best_model_name: sklearn

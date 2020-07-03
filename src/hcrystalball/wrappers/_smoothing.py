@@ -19,7 +19,7 @@ from hcrystalball.utils import check_fit_before_predict
 
 
 class BaseSmoothingWrapper(TSModelWrapper, metaclass=ABCMeta):
-    """BaseWrapper for smoothing models from `statsmodels.tsa.holtwinters`
+    """BaseWrapper for smoothing models from `~statsmodels.tsa.holtwinters`
 
     Currently supported ones are `~statsmodels.tsa.holtwinters.ExponentialSmoothing`,
     `~statsmodels.tsa.holtwinters.SimpleExpSmoothing`, `~statsmodels.tsa.holtwinters.Holt`
@@ -98,7 +98,7 @@ class BaseSmoothingWrapper(TSModelWrapper, metaclass=ABCMeta):
 
 
 class ExponentialSmoothingWrapper(BaseSmoothingWrapper):
-    """Wrapper for `statsmodels.tsa.holtwinters.ExponentialSmoothing` (see other parameters there)
+    """Wrapper for `~statsmodels.tsa.holtwinters.ExponentialSmoothing` (see other parameters there)
 
     Parameters
     ----------
@@ -107,7 +107,7 @@ class ExponentialSmoothingWrapper(BaseSmoothingWrapper):
 
     fit_params: dict
         Parameters passed to `~hcrystalball.wrappers.ExponentialSmoothingWrapper.fit` method of model.
-        For mode details see `statsmodels.tsa.holtwinters.ExponentialSmoothing.fit`
+        For more details see `statsmodels.tsa.holtwinters.ExponentialSmoothing.fit`
 
     clip_predictions_lower: float
         Minimal value allowed for predictions - predictions will be clipped to this value.
@@ -132,7 +132,7 @@ class ExponentialSmoothingWrapper(BaseSmoothingWrapper):
 
 
 class SimpleSmoothingWrapper(BaseSmoothingWrapper):
-    """Wrapper for `statsmodels.tsa.holtwinters.SimpleExpSmoothing` (see other parameters there)
+    """Wrapper for `~statsmodels.tsa.holtwinters.SimpleExpSmoothing` (see other parameters there)
 
     Parameters
     ----------
@@ -166,7 +166,7 @@ class SimpleSmoothingWrapper(BaseSmoothingWrapper):
 
 
 class HoltSmoothingWrapper(BaseSmoothingWrapper):
-    """Wrapper for `statsmodels.tsa.holtwinters.Holt` (see other parameters there)
+    """Wrapper for `~statsmodels.tsa.holtwinters.Holt` (see other parameters there)
 
     Parameters
     ----------
@@ -176,6 +176,7 @@ class HoltSmoothingWrapper(BaseSmoothingWrapper):
     fit_params: dict
         Parameters passed to `~hcrystalball.wrappers.HoltSmoothingWrapper.fit` method of model.
         For more details see `statsmodels.tsa.holtwinters.Holt.fit`
+        
     clip_predictions_lower: float
         Minimal value allowed for predictions - predictions will be clipped to this value.
 

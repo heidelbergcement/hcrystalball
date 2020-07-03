@@ -36,13 +36,13 @@ and uses it in `~hcrystalball.wrappers.ProphetWrapper`.
 
 .. code-block:: python
 
-    >>> X.head()
+    X.head()
     Empty DataFrame
     Columns: []
     Index: [2017-01-01 00:00:00, 2017-01-02 00:00:00, 2017-01-03 00:00:00, 2017-01-04 00:00:00, 2017-01-05 00:00:00]
 
     [730 rows x 0 columns]
-    >>> y
+    y
     2017-01-01    4.154750
     2017-01-02    6.361124
     2017-01-03    7.676185
@@ -87,19 +87,12 @@ This time, dummy data is created with `~hcrystalball.utils.generate_multiple_tsd
     df = generate_multiple_tsdata(n_dates=200, n_regions=2, n_plants=2, n_products=2)
 
     ms = ModelSelector(horizon=10, frequency="D", country_code_column="Country")
-    ms.create_gridsearch(
-        n_splits=2,
-        sklearn_models=True,
-        prophet_models=False,
-        exog_cols=["Raining"],
-    )
-    ms.select_model(
-        df=df, target_col_name="Quantity", partition_columns=["Region", "Plant", "Product"]
-    )
+    ms.create_gridsearch(n_splits=2, sklearn_models=True, prophet_models=False, exog_cols=["Raining"])
+    ms.select_model(df=df, target_col_name="Quantity", partition_columns=["Region", "Plant", "Product"])
 
 .. code-block:: python
 
-    >>> df.head()
+    df.head()
                 Region    Plant    Product   Country  Raining   Quantity
     Date
     2018-01-01  region_0  plant_0  product_0      DE    False   5.551729
