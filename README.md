@@ -28,7 +28,7 @@
    and add convenient layer over whole process (access to results, plots, storage, ...)
 
 ## Documentation
-See examples, tutorials, contribution, API and more on the documentation [site](https://hcrystalball.readthedocs.io/en/latest) or browse [example notebooks](https://github.com/heidelbergcement/hcrystalball/tree/master/docs/examples) directly.
+See examples, tutorials, contribution, API and more on the documentation [site](https://hcrystalball.readthedocs.io/en/latest) try notebooks on [binder](https://mybinder.org/v2/gh/heidelbergcement/hcrystalball/master) or browse [example notebooks](https://github.com/heidelbergcement/hcrystalball/tree/master/docs/examples) directly.
 
 ## Core Installation
 
