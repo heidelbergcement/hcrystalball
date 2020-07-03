@@ -5,7 +5,7 @@
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/hcrystalball)](https://anaconda.org/conda-forge/hcrystalball)
 [![Code Coverage](https://codecov.io/gh/heidelbergcement/hcrystalball/branch/master/graph/badge.svg)](https://codecov.io/gh/heidelbergcement/hcrystalball)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/heidelbergcement/hcrystalball/master)
-[![License](https://img.shields.io/github/license/heidelbergcement/hcrystalball)(https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/LICENSE.txt)
+[![License](https://img.shields.io/github/license/heidelbergcement/hcrystalball)](https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/LICENSE.txt)
 [![Contributors](https://img.shields.io/github/contributors/heidelbergcement/hcrystalball)](https://github.com/heidelbergcement/hcrystalball/graphs/contributors)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
