@@ -1,11 +1,12 @@
-![CI (conda)](https://github.com/heidelbergcement/hcrystalball/workflows/CI%20(conda)/badge.svg)
+[![CI (conda)](https://github.com/heidelbergcement/hcrystalball/workflows/CI%20(conda)/badge.svg)](https://anaconda.org/conda-forge/hcrystalball)
 [![CD (PyPI)](https://github.com/heidelbergcement/hcrystalball/workflows/CD%20(PyPI)/badge.svg)](https://pypi.org/project/hcrystalball/)
 [![Documentation Status](https://readthedocs.org/projects/hcrystalball/badge/?version=latest)](https://hcrystalball.readthedocs.io/en/latest/?badge=latest)
 [![PyPI Version](https://img.shields.io/pypi/v/hcrystalball)](https://pypi.org/project/hcrystalball/)
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/hcrystalball)](https://anaconda.org/conda-forge/hcrystalball)
 [![Code Coverage](https://codecov.io/gh/heidelbergcement/hcrystalball/branch/master/graph/badge.svg)](https://codecov.io/gh/heidelbergcement/hcrystalball)
-![License](https://img.shields.io/github/license/heidelbergcement/hcrystalball)
-![Contributors](https://img.shields.io/github/contributors/heidelbergcement/hcrystalball)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/heidelbergcement/hcrystalball/master)
+[![License](https://img.shields.io/github/license/heidelbergcement/hcrystalball)](https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/LICENSE.txt)
+[![Contributors](https://img.shields.io/github/contributors/heidelbergcement/hcrystalball)](https://github.com/heidelbergcement/hcrystalball/graphs/contributors)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # HCrystal Ball
@@ -47,7 +48,7 @@ Very often you will want to use more wrappers, than just Sklearn, run examples i
 
 ```bash
 # get dependencies file, e.g. using curl
-curl -O https://raw.githubusercontent.com/heidelbergcement/hcrystalball/blob/master/environment.yml
+curl -O https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/environment.yml
 # check comments in environment.yml, keep or remove as requested, than create environment using
 conda env create -f environment.yml
 # activate the environment

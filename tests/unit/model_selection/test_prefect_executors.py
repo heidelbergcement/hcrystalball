@@ -25,7 +25,8 @@ def test_prefect_executors(train_data, grid_search, parallel_columns):
             "dask_already_running": DaskExecutor(address=client.scheduler.address),
             "local": LocalExecutor(),
             "local_dask": LocalDaskExecutor(),
-            "dask_create_on_call": DaskExecutor(),  # this spins up LocalDaskExecutor, but just to check the interface
+            # this spins up LocalDaskExecutor, but just to check the interface
+            "dask_create_on_call": DaskExecutor(),
         }
 
         for executor_name, executor in executors.items():

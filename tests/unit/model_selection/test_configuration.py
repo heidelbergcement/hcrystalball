@@ -93,7 +93,7 @@ def test_get_gridsearch(gridsearch_params, expected_estimator, expected_error):
 
 
 def test_add_model_to_gridsearch():
-    gs = get_gridsearch(frequency="D", prophet_models=False)
+    gs = get_gridsearch(frequency="D", sklearn_models=False)
 
     model = ProphetWrapper()
     gs = add_model_to_gridsearch(model, gs)
@@ -101,7 +101,7 @@ def test_add_model_to_gridsearch():
     assert len(gs.param_grid) == 1
     assert str(gs.param_grid[0]["model"][0].get_params()) == str(model.get_params())
 
-    gs = get_gridsearch(frequency="D", prophet_models=False)
+    gs = get_gridsearch(frequency="D", sklearn_models=False)
 
     model = [ProphetWrapper(), ProphetWrapper(clip_predictions_lower=0.0)]
 
