@@ -1,6 +1,6 @@
 # from https://discourse.jupyter.org/t/how-to-reduce-mybinder-org-repository-startup-time/4956/2
 # Speeds ut repository start-up time
-name: Build Notebook Container
+name: Build Binder Notebook Container
 
 on:
   push:

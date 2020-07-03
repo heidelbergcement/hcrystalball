@@ -15,11 +15,9 @@ except Exception:
     class ProphetWrapper:
         """This is just helper class to inform user about missing dependencies at init time"""
 
-        def __init__(self):
+        def __init__(self, **kwargs):
             # this always fails
             from ._prophet import ProphetWrapper
-
-    ProphetWrapper()
 
 
 try:
@@ -31,11 +29,9 @@ except Exception:
     class SarimaxWrapper:
         """This is just helper class to inform user about missing dependencies at init time"""
 
-        def __init__(self):
+        def __init__(self, **kwargs):
             # this always fails
             from ._sarimax import SarimaxWrapper
-
-    SarimaxWrapper()
 
 
 try:
@@ -47,11 +43,10 @@ except Exception:
     class ExponentialSmoothingWrapper:
         """This is just helper class to inform user about missing dependencies at init time"""
 
-        def __init__(self):
+        def __init__(self, **kwargs):
             # this always fails
             from ._smoothing import ExponentialSmoothingWrapper
 
-    ExponentialSmoothingWrapper()
 
 try:
     from ._smoothing import SimpleSmoothingWrapper
@@ -62,11 +57,10 @@ except Exception:
     class SimpleSmoothingWrapper:
         """This is just helper class to inform user about missing dependencies at init time"""
 
-        def __init__(self):
+        def __init__(self, **kwargs):
             # this always fails
             from ._smoothing import SimpleSmoothingWrapper
 
-    SimpleSmoothingWrapper()
 
 try:
     from ._smoothing import HoltSmoothingWrapper
@@ -77,11 +71,9 @@ except Exception:
     class HoltSmoothingWrapper:
         """This is just helper class to inform user about missing dependencies at init time"""
 
-        def __init__(self):
+        def __init__(self, **kwargs):
             # this always fails
             from ._smoothing import HoltSmoothingWrapper
-
-    HoltSmoothingWrapper()
 
 
 try:
@@ -93,11 +85,10 @@ except Exception:
     class TBATSWrapper:
         """This is just helper class to inform user about missing dependencies at init time"""
 
-        def __init__(self):
+        def __init__(self, **kwargs):
             # this always fails
             from ._tbats import TBATSWrapper
 
-    TBATSWrapper()
 
 try:
     from ._tbats import BATSWrapper
@@ -108,8 +99,6 @@ except Exception:
     class BATSWrapper:
         """This is just helper class to inform user about missing dependencies at init time"""
 
-        def __init__(self):
+        def __init__(self, **kwargs):
             # this always fails
             from ._tbats import BATSWrapper
-
-    BATSWrapper()
