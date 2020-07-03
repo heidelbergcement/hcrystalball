@@ -30,7 +30,11 @@ def make_progress_bar(*args, **kwargs):
 
         pbar = tqdm_notebook(*args, **kwargs)
     except Exception:
-        logging.warning("No prerequisites installed for interactive progress bar, continuing without one.")
+        logging.warning(
+            "No prerequisites (tqdm) installed for interactive progress bar, "
+            "continuing without one. See the output in the console "
+            "or check installation instructions"
+        )
         return args[0]
 
     return pbar

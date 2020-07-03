@@ -55,7 +55,8 @@ def test_model_selector(tmp_path):
 
     ms_load = load_model_selector(folder_path=persist_path)
 
-    # we do not ensure the same order of results and partitions after loading, thus checking they are all there
+    # we do not ensure the same order of results and partitions after loading,
+    # thus checking they are all there
     assert all([partition in ms_load.partitions for partition in ms.partitions])
     # TODO redefine __eq__ for ModelSelectorResult to str(MSR).__dict__?
     assert all(
