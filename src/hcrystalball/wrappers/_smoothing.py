@@ -176,7 +176,7 @@ class HoltSmoothingWrapper(BaseSmoothingWrapper):
     fit_params: dict
         Parameters passed to `~hcrystalball.wrappers.HoltSmoothingWrapper.fit` method of model.
         For more details see `statsmodels.tsa.holtwinters.Holt.fit`
-        
+
     clip_predictions_lower: float
         Minimal value allowed for predictions - predictions will be clipped to this value.
 
