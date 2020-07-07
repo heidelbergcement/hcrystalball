@@ -19,9 +19,7 @@ def bench_all_notebooks():
     timings = []
     for path in paths:
         time = bench_notebook(path)
-        timings.append(
-            {"notebook": str(path.name), "walltime": time,}
-        )
+        timings.append({"notebook": str(path.name), "walltime": time})
 
     return pd.DataFrame(timings)
 

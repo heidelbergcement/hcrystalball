@@ -6,7 +6,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LinearRegression
 
 from hcrystalball.feature_extraction import HolidayTransformer
-from hcrystalball.compose import TSColumnTransformer
 from hcrystalball.wrappers import ProphetWrapper
 from hcrystalball.wrappers import SarimaxWrapper
 from hcrystalball.wrappers import TBATSWrapper

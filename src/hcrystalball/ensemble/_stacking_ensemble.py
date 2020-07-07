@@ -236,7 +236,7 @@ class StackingEnsemble(BaseEstimator):
                 )
             if self.weekdays_as_features:
                 X_meta = pd.concat(
-                    [X_meta, self._create_weekdays_as_features(cross_results_index=X_meta.index),], axis=1,
+                    [X_meta, self._create_weekdays_as_features(cross_results_index=X_meta.index)], axis=1,
                 )
 
             self._fit_columns = X_meta.columns
@@ -306,7 +306,7 @@ class StackingEnsemble(BaseEstimator):
             )
         if self.weekdays_as_features:
             X_meta = pd.concat(
-                [X_meta, self._create_weekdays_as_features(cross_results_index=X_meta.index),], axis=1,
+                [X_meta, self._create_weekdays_as_features(cross_results_index=X_meta.index)], axis=1,
             )
         X_meta = self._ensure_pred_and_train_cols_equals(X_meta)
         y_pred[self.name] = self.meta_model.predict(X_meta.values)
