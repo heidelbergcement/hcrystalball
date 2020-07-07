@@ -48,11 +48,11 @@ def pipeline(request):
         )
     if "col_name_clash" in request.param:
         return TSColumnTransformer(
-            transformers=[("raw_cols_1", "passthrough", ["trend"]), ("scaler", StandardScaler(), ["trend"]),]
+            transformers=[("raw_cols_1", "passthrough", ["trend"]), ("scaler", StandardScaler(), ["trend"])]
         )
     if "more_dimensions_with_get_feature_names" in request.param:
         return TSColumnTransformer(
-            transformers=[("raw_cols_1", "passthrough", ["trend"]), ("scaler", OneHotEncoder(), ["one_hot"]),]
+            transformers=[("raw_cols_1", "passthrough", ["trend"]), ("scaler", OneHotEncoder(), ["one_hot"])]
         )
     if "less_dimensions_without_get_feature_names" in request.param:
         return TSColumnTransformer(

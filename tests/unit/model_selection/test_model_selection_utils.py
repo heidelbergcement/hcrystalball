@@ -5,7 +5,6 @@ import pickle
 import json
 import os
 import pytest
-import inspect
 
 
 @pytest.mark.parametrize("train_data, grid_search", [("", "")], indirect=["train_data", "grid_search"])

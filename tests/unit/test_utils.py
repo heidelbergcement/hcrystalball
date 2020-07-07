@@ -120,7 +120,7 @@ def test_check_fit_before_predict(model_is_fitted, expected_error):
 
 @pytest.mark.parametrize(
     "wrapper_instance",
-    ["sklearn", "stacking_ensemble", "simple_ensemble", "smoothing", "sarimax", "prophet", "tbats",],
+    ["sklearn", "stacking_ensemble", "simple_ensemble", "smoothing", "sarimax", "prophet", "tbats"],
     indirect=["wrapper_instance"],
 )
 def test_get_model_repr_single_model(wrapper_instance):
@@ -132,7 +132,7 @@ def test_get_model_repr_single_model(wrapper_instance):
 
 @pytest.mark.parametrize(
     "pipeline_instance_model_in_pipeline",
-    ["sklearn", "stacking_ensemble", "simple_ensemble", "smoothing", "sarimax", "prophet", "tbats",],
+    ["sklearn", "stacking_ensemble", "simple_ensemble", "smoothing", "sarimax", "prophet", "tbats"],
     indirect=["pipeline_instance_model_in_pipeline"],
 )
 def test_get_model_repr_pipeline_instance_model_in_pipeline(pipeline_instance_model_in_pipeline,):

@@ -386,7 +386,7 @@ def generate_multiple_tsdata(
     dfs = []
     for region in regions:
         df_tmp = pd.DataFrame(
-            columns=["Date", "Region", "Plant", "Product", "Country", "Raining", "Quantity",],
+            columns=["Date", "Region", "Plant", "Product", "Country", "Raining", "Quantity"],
             index=range(len(str_index)),
         )
         df_tmp.loc[:, "Region"] = region

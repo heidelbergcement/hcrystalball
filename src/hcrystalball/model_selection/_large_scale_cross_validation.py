@@ -87,8 +87,8 @@ def select_model(
 
     if len(partition_columns) == 0:
         df_cv = {
-            "labels": tuple([{"no_partition_label": ""}],),
-            "data": tuple([df,]),
+            "labels": tuple([{"no_partition_label": ""}]),
+            "data": tuple([df]),
         }
     else:
         df_cv = partition_data(df, list(set(partition_columns).difference(parallel_partition)))

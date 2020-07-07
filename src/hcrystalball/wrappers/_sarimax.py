@@ -15,7 +15,7 @@ from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predi
 
 
 class SarimaxWrapper(TSModelWrapper):
-    """Wrapper for `pmdarima.arima.ARIMA` and `pmdarima.arima.AutoARIMA`
+    """Wrapper for `~pmdarima.arima.ARIMA` and `~pmdarima.arima.AutoARIMA`
 
     Search for optimal order of SARIMAX type model or instantiate one
     in case you provide specific order.
@@ -33,7 +33,7 @@ class SarimaxWrapper(TSModelWrapper):
 
     autoarima_dict: dict
         If `init_with_autoarima` is set to True, then `autoarima_dict` is used for instantiation
-        of pmdarima.arima.AutoARIMA class, thus it serves as configuration of AutoARIMA search.
+        of `~pmdarima.arima.AutoARIMA` class, thus it serves as configuration of AutoARIMA search.
 
     always_search_model: bool
         If `init_with_autoarima` is set to True and `always_search_model` is set to True, then

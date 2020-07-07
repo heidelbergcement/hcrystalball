@@ -141,7 +141,7 @@ class ModelSelectorResult:
                 pd.merge(
                     self.y_train.rename("actuals"),
                     self.best_model_cv_data[["best_model", "split"]].rename(
-                        {"best_model": f"cv_forecast({self.best_model_name})", "split": "cv_split",}, axis=1,
+                        {"best_model": f"cv_forecast({self.best_model_name})", "split": "cv_split"}, axis=1,
                     ),
                     left_index=True,
                     right_index=True,

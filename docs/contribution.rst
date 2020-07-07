@@ -22,6 +22,8 @@ so you can comment out some parts or just take it as an inspiration to build you
    # ensures interactive progress bar will work in example notebooks
    jupyter labextension install @jupyter-widgets/jupyterlab-manager
    python setup.py develop
+   # install git hooks, can take several minutes (one time setting)
+   pre-commit install
 
 Building documentation
 **********************
@@ -52,6 +54,7 @@ environment variable to `never`. Default behavior is `auto`.
 
 Pre-commit hooks
 ****************
+
 
 We are using pre-commit_ hooks defined in `.pre-commit-config.yaml`_.
 

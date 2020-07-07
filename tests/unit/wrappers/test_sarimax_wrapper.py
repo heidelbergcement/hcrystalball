@@ -39,7 +39,7 @@ def test_sarimax_transform_data_to_tsmodel_input_format(X_y_optional, additional
         assert exog is None
 
 
-@pytest.mark.parametrize("X_y_linear_trend", [("more_cols_freq_D"),], indirect=["X_y_linear_trend"])
+@pytest.mark.parametrize("X_y_linear_trend", [("more_cols_freq_D")], indirect=["X_y_linear_trend"])
 def test_autoarima_init(X_y_linear_trend):
 
     X, y = X_y_linear_trend
@@ -58,7 +58,7 @@ def test_autoarima_init(X_y_linear_trend):
         ("more_cols_freq_D", {"init_with_autoarima": True, "autoarima_dict": {"D": 1, "m": 2}},),
         (
             "more_cols_freq_D",
-            {"always_search_model": True, "autoarima_dict": {"D": 1, "m": 2}, "init_with_autoarima": True,},
+            {"always_search_model": True, "autoarima_dict": {"D": 1, "m": 2}, "init_with_autoarima": True},
         ),
     ],
     indirect=["X_y_linear_trend"],

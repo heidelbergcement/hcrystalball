@@ -59,7 +59,7 @@ def test_partition_data_by_values(test_data_raw):
         column="Plant",
         partition_values=["plant_0", "plant_23"],
         default_df=pd.DataFrame(
-            {"Plant": ["dummy"], "Region": ["dummy"], "Product": ["dummy"], "Quantity": [0.0],}
+            {"Plant": ["dummy"], "Region": ["dummy"], "Product": ["dummy"], "Quantity": [0.0]}
         ),
     )
     assert res["labels"][0]["Plant"] == "plant_0"

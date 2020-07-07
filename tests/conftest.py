@@ -484,7 +484,6 @@ def train_data(request):
 @pytest.fixture()
 def grid_search(request):
     from hcrystalball.wrappers import get_sklearn_wrapper
-    from hcrystalball.compose import TSColumnTransformer
     from hcrystalball.feature_extraction import HolidayTransformer
     from hcrystalball.feature_extraction import SeasonalityTransformer
     from hcrystalball.model_selection import FinerTimeSplit
@@ -503,7 +502,7 @@ def grid_search(request):
 
     parameters = [
         {"model": [good_dummy]},
-        {"model": [bad_dummy], "model__strategy": ["constant"], "model__constant": [42],},
+        {"model": [bad_dummy], "model__strategy": ["constant"], "model__constant": [42]},
     ]
 
     holiday_model = Pipeline(

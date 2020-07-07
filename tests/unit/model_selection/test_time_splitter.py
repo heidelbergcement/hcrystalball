@@ -45,7 +45,7 @@ def test_cv_finertimesplit_split_pandas_container_data(ts_data, expected_error):
 
 @pytest.mark.parametrize(
     "test_data, expected_error",
-    [(np.arange(6), None), ([0, 1, 2, 3, 4, 5], None), ((0, 1, 2, 3, 4, 5), None), (13, TypeError),],
+    [(np.arange(6), None), ([0, 1, 2, 3, 4, 5], None), ((0, 1, 2, 3, 4, 5), None), (13, TypeError)],
 )
 def test_cv_finertimesplit_split_input_data_types(test_data, expected_error):
 

@@ -5,9 +5,12 @@ HCrystal Ball
    <div style="display:flex;margin-bottom:20px;">
         <img src="https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/docs/_static/hcrystal_ball_logo_black.svg" alt="HCrystalBall Logo" style="float:left;width:100px;height:75px;margin-right:15px;">
         <div>
-           </br></br>
-           <i>A time series library that unifies the API for most commonly used libraries
-           and modelling techniques for time-series forecasting in the Python ecosystem.</i>
+           </br>
+           </br>
+           <i>
+           A library that unifies the API for most commonly used libraries
+           and modelling techniques for time-series forecasting in the Python ecosystem.
+           </i>
         </div>
    </div>
 

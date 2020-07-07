@@ -8,7 +8,7 @@ from hcrystalball.wrappers import ProphetWrapper
 @pytest.mark.parametrize(
     "X_with_holidays, extra_holidays",
     [
-        ("", {"New year": {"prior_scale": 100}, "Whit Monday": {"lower_window": 2, "prior_scale": 10},},),
+        ("", {"New year": {"prior_scale": 100}, "Whit Monday": {"lower_window": 2, "prior_scale": 10}}),
         ("", {"New year": {"prior_scale": 100, "lower_window": 1}}),
         ("", None),
     ],
