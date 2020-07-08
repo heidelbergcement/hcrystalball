@@ -14,7 +14,7 @@
 <div>
     <a href="https://hcrystalball.readthedocs.io/en/latest/">
         <img src="https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/docs/_static/hcrystal_ball_logo_green.png"    width="150px" align="left" /></a>
-    <i><br>A time series library that unifies the API for most commonly <br>
+    <i><br>A library that unifies the API for most commonly <br>
     used libraries and modelling techniques for time-series <br>
     forecasting in the Python ecosystem.</i>
 </div>
