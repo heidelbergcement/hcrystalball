@@ -1,5 +1,6 @@
+# This workflow creates docker container from hcrystalball repository including jupyter
+# enabling fast start-up when launching binder to interactively explore code examples
 # from https://discourse.jupyter.org/t/how-to-reduce-mybinder-org-repository-startup-time/4956/2
-# Speeds ut repository start-up time
 name: Build Binder Notebook Container
 
 on:

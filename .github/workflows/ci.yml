@@ -1,5 +1,6 @@
-# Extracted by https://gist.github.com/mwouts/9842452d020c08faf9e84a3bba38a66f
-name: CI (conda)
+# This workflows will setup conda environment, lint the code, run test suite, ensure docs can be built and upload code coverage
+# Extracted from https://gist.github.com/mwouts/9842452d020c08faf9e84a3bba38a66f
+name: CI
 on:
   push:
     branches:

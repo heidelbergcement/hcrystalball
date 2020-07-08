@@ -1,5 +1,5 @@
-[![CI (conda)](https://github.com/heidelbergcement/hcrystalball/workflows/CI%20(conda)/badge.svg)](https://anaconda.org/conda-forge/hcrystalball)
-[![CD (PyPI)](https://github.com/heidelbergcement/hcrystalball/workflows/CD%20(PyPI)/badge.svg)](https://pypi.org/project/hcrystalball/)
+[![CI](https://github.com/heidelbergcement/hcrystalball/workflows/CI/badge.svg)](https://github.com/heidelbergcement/hcrystalball/actions/https://github.com/heidelbergcement/hcrystalball/actions?query=workflow%3ACI)
+[![CD](https://github.com/heidelbergcement/hcrystalball/workflows/CD/badge.svg)](https://github.com/heidelbergcement/hcrystalball/actions?query=workflow%3ACD)
 [![Documentation Status](https://readthedocs.org/projects/hcrystalball/badge/?version=latest)](https://hcrystalball.readthedocs.io/en/latest/?badge=latest)
 [![PyPI Version](https://img.shields.io/pypi/v/hcrystalball)](https://pypi.org/project/hcrystalball/)
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/hcrystalball)](https://anaconda.org/conda-forge/hcrystalball)
