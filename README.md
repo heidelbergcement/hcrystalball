@@ -1,4 +1,4 @@
-[![CI](https://github.com/heidelbergcement/hcrystalball/workflows/CI/badge.svg)](https://github.com/heidelbergcement/hcrystalball/actions/https://github.com/heidelbergcement/hcrystalball/actions?query=workflow%3ACI)
+[![CI](https://github.com/heidelbergcement/hcrystalball/workflows/CI/badge.svg)](https://github.com/heidelbergcement/hcrystalball/actions/?query=workflow%3ACI)
 [![CD](https://github.com/heidelbergcement/hcrystalball/workflows/CD/badge.svg)](https://github.com/heidelbergcement/hcrystalball/actions?query=workflow%3ACD)
 [![Documentation Status](https://readthedocs.org/projects/hcrystalball/badge/?version=latest)](https://hcrystalball.readthedocs.io/en/latest/?badge=latest)
 [![PyPI Version](https://img.shields.io/pypi/v/hcrystalball)](https://pypi.org/project/hcrystalball/)
