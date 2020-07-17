@@ -99,7 +99,7 @@ and access to the data behind the plots (`~hcrystalball.model_selection.ModelSel
 Parallel execution
 ******************
 
-Model selection itself can also run in parallel using prefect. For such case ``parallel_over_columns``
+Model selection itself can also run in parallel using prefect_. For such case ``parallel_over_columns``
 must include some categorical columns, that are subset of ``partition_columns``.
 Depending on your data, parallel execution might bring unnecessary overhead, so you should treat it carefully.
 
@@ -134,3 +134,5 @@ In case ``between_split_lag`` is defined, it determines the splitting shift as s
 .. raw:: html
 
     <center><img src="https://raw.githubusercontent.com/heidelbergcement/hcrystalball/master/docs/_static/FinerTimeSplitOverlap.svg" alt="FinerTimeSplitOverlap"></center>
+
+.. _prefect: https://docs.prefect.io/
