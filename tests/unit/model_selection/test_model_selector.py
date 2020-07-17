@@ -1,10 +1,36 @@
+from hcrystalball.model_selection import load_model_selector
 from hcrystalball.model_selection import ModelSelector
 from hcrystalball.utils import generate_multiple_tsdata
 from hcrystalball.wrappers import get_sklearn_wrapper
+from hcrystalball.feature_extraction import HolidayTransformer
+
 from sklearn.linear_model import LinearRegression
-from hcrystalball.model_selection import load_model_selector
 import os
 import pytest
+
+
+@pytest.mark.parametrize(
+    "country_code_column, country_code, holiday_step, error",
+    [
+        (None, None, str, None),
+        ("region", None, HolidayTransformer, None),
+        (None, "DE", HolidayTransformer, None),
+        ("region", "DE", None, ValueError),
+    ],
+)
+def test_model_selector_holidays(country_code_column, country_code, holiday_step, error):
+    ms = ModelSelector(frequency="D", horizon=1, country_code_column=country_code_column)
+
+    if error is not None:
+        with pytest.raises(error):
+            ms.create_gridsearch(country_code=country_code)
+    else:
+        ms.create_gridsearch(country_code=country_code)
+        assert isinstance(ms.grid_search.estimator.named_steps["holiday"], holiday_step)
+
+        if holiday_step is not str:
+            assert ms.grid_search.estimator.named_steps["holiday"].country_code == country_code
+            assert ms.grid_search.estimator.named_steps["holiday"].country_code_column == country_code_column
 
 
 def test_model_selector(tmp_path):
@@ -41,6 +67,8 @@ def test_model_selector(tmp_path):
         exog_cols=["Raining"],
     )
     assert hasattr(ms, "grid_search")
+    assert isinstance(ms.grid_search.estimator.named_steps["holiday"], HolidayTransformer)
+
     ms.add_model_to_gridsearch(get_sklearn_wrapper(LinearRegression))
     ms.select_model(
         df=df, target_col_name=target_col_name, partition_columns=["Region", "Plant", "Product"],

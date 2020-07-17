@@ -71,7 +71,6 @@ class ModelSelector:
         executor=None,
         include_rules=None,
         exclude_rules=None,
-        country_code_column=None,
         output_path="",
         persist_cv_results=False,
         persist_cv_data=False,
@@ -111,11 +110,6 @@ class ModelSelector:
             Dictionary with keys being column names and values being list of values to exclude
             from the output.
 
-        country_code_column : str
-            Name of the column with country code, which can be used for supplying holiday
-            (i.e. having gridsearch with HolidayTransformer with argument `country_code_column`
-            set to this one).
-
         output_path : str
             Path to directory for storing the output, default behavior is current working directory
 
@@ -146,14 +140,18 @@ class ModelSelector:
         """
 
         params = {k: v for k, v in locals().items() if k != "self"}
-        self.results = select_model_general(frequency=self.frequency, grid_search=self.grid_search, **params)
+        self.results = select_model_general(
+            frequency=self.frequency,
+            grid_search=self.grid_search,
+            country_code_column=self.country_code_column,
+            **params,
+        )
 
     def create_gridsearch(
         self,
         n_splits=5,
         between_split_lag=None,
         scoring="neg_mean_absolute_error",
-        country_code_column=None,
         country_code=None,
         sklearn_models=True,
         sklearn_models_optimize_for_horizon=False,
@@ -184,10 +182,6 @@ class ModelSelector:
         scoring : str, callable
             String of sklearn regression metric name, or hcrystalball compatible scorer. For creation
             of hcrystalball compatible scorer use `make_ts_scorer` function.
-
-        country_code_column : str
-            Column in data, that contains country code in str (e.g. 'DE'). Used in holiday transformer.
-            Only one of `country_code_column` or `country_code` can be set.
 
         country_code : str
             Country code in str (e.g. 'DE'). Used in holiday transformer.
@@ -233,7 +227,12 @@ class ModelSelector:
             List of columns to be used as exogenous variables
         """
         params = {k: v for k, v in locals().items() if k not in ["self"]}
-        self.grid_search = get_gridsearch(frequency=self.frequency, horizon=self.horizon, **params)
+        self.grid_search = get_gridsearch(
+            frequency=self.frequency,
+            horizon=self.horizon,
+            country_code_column=self.country_code_column,
+            **params,
+        )
 
     def add_model_to_gridsearch(self, model):
         """Extend `self.grid_search` parameter grid with provided model.
