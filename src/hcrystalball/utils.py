@@ -9,6 +9,46 @@ from hcrystalball.exceptions import InsufficientDataLengthError
 from hcrystalball.exceptions import PredictWithoutFitError
 
 
+def optional_import(module_path, class_name, caller_namespace):
+    """Imports optional dependencies.
+
+    Imports class from module if importable,
+    otherwise creates dummy class with the same name as requested class.
+    Dummy class fails on init with ModuleNotFound error for the missing
+    dependencies.
+
+    Parameters
+    ----------
+    module_name : str
+        Path to the module
+    class_name : str
+        Name of the class to import/mock
+    caller_namespace : dict, str
+        Namespace of the caller
+
+    Returns
+    -------
+    list
+        If importable [class_name] to extend __all__ of the calling module
+        otherwise empty list
+    """
+    dunder_all_extend = []
+    try:
+        exec(f"from {module_path} import {class_name}", {}, caller_namespace)
+        dunder_all_extend.append(class_name)
+    except Exception:
+        exec(
+            f"class {class_name}:\n"
+            f"    'This is just helper class to inform user about missing dependencies at init time'\n"
+            f"    def __init__(self, **kwargs):\n"
+            f"    # init always fails\n"
+            f"        from {module_path} import {class_name}\n",
+            {},
+            caller_namespace,
+        )
+    return dunder_all_extend
+
+
 def get_estimator_repr(model, n_char_max=10000):
     """Get the string representation of a model
 
@@ -412,4 +452,5 @@ __all__ = [
     "generate_multiple_tsdata",
     "generate_partition_hash",
     "generate_tsdata",
+    "optional_import",
 ]
