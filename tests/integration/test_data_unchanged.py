@@ -26,10 +26,7 @@ def transformers(request):
 
 
 @pytest.fixture(scope="module")
-def estimators(request):
-    if request.param is None:
-        return ["no_estimator"]
-
+def estimators():
     options = {
         "prophet": [
             (
@@ -66,26 +63,23 @@ def estimators(request):
         ],
     }
 
-    if "all" in request.param:
-        models = []
-        [models.extend(options[key]) for key in options]
-        return models
-    else:
-        return options[request.param]
+    models = []
+    [models.extend(options[key]) for key in options]
+    return models
 
 
 @pytest.mark.parametrize(
-    "X_y_linear_trend, transformers, estimators, exp_error",
+    "X_y_linear_trend, transformers",
     [
-        ("series_with_freq_D", "holiday", "all", None),
-        ("ndarray_with_freq_D", "holiday", "all", None),
+        ("series_with_freq_D", "holiday"),
+        ("ndarray_with_freq_D", "holiday"),
         # no transformers, all estimators, good data
-        ("ndarray_with_freq_D", None, "all", None),
-        ("series_with_freq_D", None, "all", None),
+        ("ndarray_with_freq_D", None),
+        ("series_with_freq_D", None),
     ],
-    indirect=["X_y_linear_trend", "transformers", "estimators"],
+    indirect=["X_y_linear_trend", "transformers"],
 )
-def test_data_unchanged(X_y_linear_trend, transformers, estimators, exp_error):
+def test_data_unchanged(X_y_linear_trend, transformers, estimators):
     X, y = X_y_linear_trend
     X_orig = X
     y_orig = y
@@ -94,32 +88,17 @@ def test_data_unchanged(X_y_linear_trend, transformers, estimators, exp_error):
         fit_transform = False
         if transformers is not None and estimator != "no_estimator":
             pipe = Pipeline([("transformers", Pipeline(transformers)), estimator])
-        elif transformers is not None and estimator == "no_estimator":
-            pipe = Pipeline([("transformers", Pipeline(transformers))])
-            fit_transform = True
         elif transformers is None and estimator != "no_estimator":
             pipe = Pipeline([estimator])
-        else:
-            raise ValueError("Wrong combination of estimator and transformer")
 
-        if exp_error is not None:
-            with pytest.raises(exp_error):
-                if fit_transform:
-                    pipe.fit_transform(X, y)
-                else:
-                    pipe.fit(X, y)
-                    # print(X[-10:])
-                    pipe.predict(X[-10:])
+        if fit_transform:
+            pipe.fit_transform(X, y)
         else:
-            if fit_transform:
-                pipe.fit_transform(X, y)
-            else:
-                pipe.fit(X, y)
-                # print(X[-10:])
-                pipe.predict(X[-10:])
-            assert_frame_equal(X_orig, X)
+            pipe.fit(X, y)
+            pipe.predict(X[-10:])
+        assert_frame_equal(X_orig, X)
 
-            if isinstance(y, pd.Series):
-                assert_series_equal(y_orig, y)
-            else:
-                assert_array_equal(y_orig, y)
+        if isinstance(y, pd.Series):
+            assert_series_equal(y_orig, y)
+        else:
+            assert_array_equal(y_orig, y)
