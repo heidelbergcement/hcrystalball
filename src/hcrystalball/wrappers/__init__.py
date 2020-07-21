@@ -1,104 +1,15 @@
 from ._sklearn import get_sklearn_wrapper as get_sklearn_wrapper
 from sklearn import set_config
+from hcrystalball.utils import optional_import
 
 set_config(print_changed_only=False)
 
 __all__ = ["get_sklearn_wrapper"]
 
-# Following lines allow for lazy optinal imports with original ModuleNotFoundErrors
-try:
-    from ._prophet import ProphetWrapper
-
-    __all__ += ["ProphetWrapper"]
-except Exception:
-
-    class ProphetWrapper:
-        """This is just helper class to inform user about missing dependencies at init time"""
-
-        def __init__(self, **kwargs):
-            # this always fails
-            from ._prophet import ProphetWrapper
-
-
-try:
-    from ._sarimax import SarimaxWrapper
-
-    __all__ += ["SarimaxWrapper"]
-except Exception:
-
-    class SarimaxWrapper:
-        """This is just helper class to inform user about missing dependencies at init time"""
-
-        def __init__(self, **kwargs):
-            # this always fails
-            from ._sarimax import SarimaxWrapper
-
-
-try:
-    from ._smoothing import ExponentialSmoothingWrapper
-
-    __all__ += ["ExponentialSmoothingWrapper"]
-except Exception:
-
-    class ExponentialSmoothingWrapper:
-        """This is just helper class to inform user about missing dependencies at init time"""
-
-        def __init__(self, **kwargs):
-            # this always fails
-            from ._smoothing import ExponentialSmoothingWrapper
-
-
-try:
-    from ._smoothing import SimpleSmoothingWrapper
-
-    __all__ += ["SimpleSmoothingWrapper"]
-except Exception:
-
-    class SimpleSmoothingWrapper:
-        """This is just helper class to inform user about missing dependencies at init time"""
-
-        def __init__(self, **kwargs):
-            # this always fails
-            from ._smoothing import SimpleSmoothingWrapper
-
-
-try:
-    from ._smoothing import HoltSmoothingWrapper
-
-    __all__ += ["HoltSmoothingWrapper"]
-except Exception:
-
-    class HoltSmoothingWrapper:
-        """This is just helper class to inform user about missing dependencies at init time"""
-
-        def __init__(self, **kwargs):
-            # this always fails
-            from ._smoothing import HoltSmoothingWrapper
-
-
-try:
-    from ._tbats import TBATSWrapper
-
-    __all__ += ["TBATSWrapper"]
-except Exception:
-
-    class TBATSWrapper:
-        """This is just helper class to inform user about missing dependencies at init time"""
-
-        def __init__(self, **kwargs):
-            # this always fails
-            from ._tbats import TBATSWrapper
-
-
-try:
-    from ._tbats import BATSWrapper
-
-    __all__ += ["BATSWrapper"]
-except Exception:
-
-    class BATSWrapper:
-        """This is just helper class to inform user about missing dependencies at init time"""
-
-        def __init__(self, **kwargs):
-            # this always fails
-            from ._tbats import BATSWrapper
+__all__.extend(optional_import("hcrystalball.wrappers._prophet", "ProphetWrapper", globals()))
+__all__.extend(optional_import("hcrystalball.wrappers._smoothing", "ExponentialSmoothingWrapper", globals()))
+__all__.extend(optional_import("hcrystalball.wrappers._smoothing", "SimpleSmoothingWrapper", globals()))
+__all__.extend(optional_import("hcrystalball.wrappers._smoothing", "HoltSmoothingWrapper", globals()))
+__all__.extend(optional_import("hcrystalball.wrappers._sarimax", "SarimaxWrapper", globals()))
+__all__.extend(optional_import("hcrystalball.wrappers._tbats", "TBATSWrapper", globals()))
+__all__.extend(optional_import("hcrystalball.wrappers._tbats", "BATSWrapper", globals()))

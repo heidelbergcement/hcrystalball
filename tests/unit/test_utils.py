@@ -1,12 +1,20 @@
 import pytest
+import sys
+from importlib import import_module
+
 import pandas as pd
 import numpy as np
-import pandas.util.testing as tm
-from pandas.testing import assert_frame_equal, assert_series_equal
+import pandas._testing as tm
+from pandas.testing import assert_frame_equal
+from pandas.testing import assert_series_equal
 from numpy.testing import assert_array_equal
 
-from hcrystalball.utils import check_X_y, check_fit_before_predict, get_estimator_repr
-from hcrystalball.exceptions import InsufficientDataLengthError, PredictWithoutFitError
+from hcrystalball.utils import check_X_y
+from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import get_estimator_repr
+from hcrystalball.utils import optional_import
+from hcrystalball.exceptions import InsufficientDataLengthError
+from hcrystalball.exceptions import PredictWithoutFitError
 
 
 @pytest.fixture(scope="module")
@@ -142,3 +150,71 @@ def test_get_model_repr_pipeline_instance_model_in_pipeline(pipeline_instance_mo
     assert model_repr == pipeline_instance_model_in_pipeline.__repr__(N_CHAR_MAX=10000).replace(
         "\n", ""
     ).replace(" ", "")
+
+
+@pytest.mark.parametrize(
+    "module_name, class_name, dependency",
+    [
+        ("_prophet", "ProphetWrapper", "fbprophet"),
+        ("_smoothing", "ExponentialSmoothingWrapper", "statsmodels.tsa.api"),
+        ("_smoothing", "HoltSmoothingWrapper", "statsmodels.tsa.api"),
+        ("_smoothing", "SimpleSmoothingWrapper", "statsmodels.tsa.api"),
+        ("_sarimax", "SarimaxWrapper", "pmdarima.arima"),
+        ("_tbats", "TBATSWrapper", "tbats"),
+        ("_tbats", "BATSWrapper", "tbats"),
+    ],
+)
+def test_optional_import_missing_dependency(module_name, class_name, dependency):
+    # store modules for later reference
+    hcb_wrappers = sys.modules["hcrystalball.wrappers"]
+    hcb_wrappers_module = sys.modules[f"hcrystalball.wrappers.{module_name}"]
+    dep = sys.modules[dependency]
+
+    # remove modules
+    del sys.modules["hcrystalball.wrappers"]
+    del sys.modules[f"hcrystalball.wrappers.{module_name}"]
+    sys.modules[dependency] = None
+
+    # import never fails
+    res = optional_import(f"hcrystalball.wrappers.{module_name}", class_name, globals())
+
+    assert not res
+
+    # class has an informative docstring
+    assert (
+        globals()[class_name].__doc__
+        == "This is just helper class to inform user about missing dependencies at init time"
+    )
+
+    # init of the helper class fails
+    with pytest.raises(ModuleNotFoundError):
+        globals()[class_name]()
+
+    # restore modules for other tests
+    sys.modules["hcrystalball.wrappers"] = hcb_wrappers
+    sys.modules[f"hcrystalball.wrappers.{module_name}"] = hcb_wrappers_module
+    sys.modules[dependency] = dep
+
+
+@pytest.mark.parametrize(
+    "module_name, class_name",
+    [
+        ("_prophet", "ProphetWrapper"),
+        ("_smoothing", "ExponentialSmoothingWrapper"),
+        ("_smoothing", "HoltSmoothingWrapper"),
+        ("_smoothing", "SimpleSmoothingWrapper"),
+        ("_sarimax", "SarimaxWrapper"),
+        ("_tbats", "TBATSWrapper"),
+        ("_tbats", "BATSWrapper"),
+    ],
+)
+def test_optional_import_with_dependency(module_name, class_name):
+    # importing from private modules (from hcrystalball.wrappers._prophet import ProphetWrapper)
+    # and wrapper module (form hcrystalball.wrappers import ProphetWrapper)
+    # returns the same result when having dependencies in place
+    ProphetWrapperOrig = getattr(import_module(f"hcrystalball.wrappers.{module_name}"), class_name)
+
+    res = optional_import(f"hcrystalball.wrappers.{module_name}", class_name, globals())
+
+    assert res[0] == class_name
+    assert str(globals()[class_name]()) == str(ProphetWrapperOrig())
