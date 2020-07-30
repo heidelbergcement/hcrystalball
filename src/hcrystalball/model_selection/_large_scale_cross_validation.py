@@ -102,7 +102,7 @@ def select_model(
         leave=True,
         desc="Select Models"
         if parallel_over_dict is None
-        else f"{list(parallel_over_dict.keys())[0]}:{list(parallel_over_dict.values())[0]}",
+        else (", ").join([f"{k}: {v}" for k, v in parallel_over_dict.items()]),
     )
 
     # run model selection and create result object for each data partition
