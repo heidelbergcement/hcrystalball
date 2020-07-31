@@ -1,7 +1,9 @@
 import itertools
 from copy import deepcopy
-
 import pandas as pd
+import sys
+import io
+
 from ._data_preparation import partition_data
 from ._data_preparation import filter_data
 from ._data_preparation import prepare_data_for_training
@@ -25,18 +27,18 @@ def make_progress_bar(*args, **kwargs):
     iterable or tqdm_notebook
         tqdm_notebook based progress bar or simple iterable
     """
+    pbar = args[0]
     try:
-        from tqdm.notebook import tqdm_notebook
+        from tqdm.auto import tqdm as tqdm_auto
 
-        pbar = tqdm_notebook(*args, **kwargs)
-    except Exception:
+        pbar = tqdm_auto(*args, **kwargs)
+    except Exception as e:
         logging.warning(
             "No prerequisites (tqdm) installed for interactive progress bar, "
             "continuing without one. See the output in the console "
-            "or check installation instructions"
+            "or check installation instructions."
+            f"{e}"
         )
-        return args[0]
-
     return pbar
 
 
@@ -93,12 +95,19 @@ def select_model(
     else:
         df_cv = partition_data(df, list(set(partition_columns).difference(parallel_partition)))
 
-    # will show progress bar only when running not parallel execution, otherwise loop over labels and data
-    pbar = zip(df_cv["labels"], df_cv["data"])
-    if not parallel_partition:
-        pbar = make_progress_bar(pbar, total=len(df_cv["labels"]), leave=True, desc="select model")
+    # will define progress bar if dependencies installed
+    pbar = make_progress_bar(
+        zip(df_cv["labels"], df_cv["data"]),
+        total=len(df_cv["labels"]),
+        leave=True,
+        desc="Select Models"
+        if parallel_over_dict is None
+        else (", ").join([f"{k}: {v}" for k, v in parallel_over_dict.items()]),
+    )
+
     # run model selection and create result object for each data partition
     for non_parallel_partition, data_part in pbar:
+        # for non_parallel_partition, data_part in zip(df_cv["labels"], df_cv["data"]):
         grid_search_tmp = deepcopy(grid_search)
         X, y = data_part.drop(target_col_name, axis=1), data_part[target_col_name]
         if hasattr(grid_search_tmp, "autosarimax"):
@@ -300,7 +309,6 @@ def run_model_selection(
         - flow itself
         - state of computations
     """
-
     from prefect.utilities.debug import raise_on_exception
 
     flow = _define_model_selection_flow()

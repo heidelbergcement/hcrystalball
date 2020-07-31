@@ -2,6 +2,13 @@
 Changelog
 =========
 
+Version 0.1.6
+=============
+
+- Fix country column handling in ModelSelector
+- Improved experience of trying examples through Binder (pre-cached docker image)
+- Adding templates for GitHub issues
+
 Version 0.1.5
 =============
 
