@@ -10,10 +10,10 @@ def test_sarimax_adjust_holidays(X_with_holidays):
     sarimax = SarimaxWrapper(order=(1, 1, 0))
     result = sarimax._adjust_holidays(X_with_holidays)
     assert isinstance(result, pd.DataFrame)
-    assert "holiday" in result.columns.tolist()
-    assert "holiday" in result.select_dtypes(include=[np.number]).columns
-    assert (result["holiday"] == "").sum() == 0
-    assert X_with_holidays[X_with_holidays["holiday"] != ""].shape[0] == result["holiday"].sum()
+    assert "holiday_DE" in result.columns.tolist()
+    assert "holiday_DE" in result.select_dtypes(include=[np.bool]).columns
+    assert (result["holiday_DE"] == "").sum() == 0
+    assert X_with_holidays[X_with_holidays["holiday_DE"] != ""].shape[0] == result["holiday_DE"].sum()
 
 
 @pytest.mark.parametrize(
