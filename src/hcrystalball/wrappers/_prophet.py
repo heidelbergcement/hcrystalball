@@ -4,6 +4,7 @@ from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
 # redirect prophets and pystans output to the console
 import logging
 import sys
+import itertools
 
 sys_out = logging.StreamHandler(sys.__stdout__)
 sys_out.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
@@ -137,8 +138,18 @@ class ProphetWrapper(TSModelWrapper):
             Input features without 'holiday' column
         """
 
-        unique_holiday = X.loc[X["holiday"] != "", "holiday"].unique()
-        extra_holidays = self.extra_holidays if self.extra_holidays is not None else {}
+        holiday_cols = [col for col in X.columns[X.columns.str.startswith("holiday")]]
+
+        unique_holiday = list(
+            itertools.chain.from_iterable([X.loc[X[col] != "", col].unique() for col in holiday_cols])
+        )
+        extra_holidays = {
+            holiday: {"lower_window": 0, "upper_window": 0, "prior_scale": self.holidays_prior_scale}
+            for holiday in unique_holiday
+        }
+        if self.extra_holidays:
+            extra_holidays = {**extra_holidays, **self.extra_holidays}
+
         if len(unique_holiday) > 0:
             missing_holidays = set(extra_holidays.keys()).difference(unique_holiday)
 
@@ -149,19 +160,20 @@ class ProphetWrapper(TSModelWrapper):
                         {unique_holiday}"""
                 )
 
-            prior_scale = self.holidays_prior_scale
-            self.model.holidays = (
-                X.loc[lambda df: df["holiday"] != "", "holiday"]
-                .map(extra_holidays)
-                .apply(pd.Series)
-                .drop(0, axis=1, errors="ignore")
-                .join(X)
-                .fillna({"lower_window": 0, "upper_window": 0, "prior_scale": prior_scale})
-                .assign(ds=lambda x: x.index)
-                .reset_index(drop=True)
-            )
+            holidays = []
+            for col in holiday_cols:
+                inter = X.loc[X[col] != "", [col]].assign(
+                    **{"holiday": lambda df: df[col] + f"_{col.split('_')[1]}"}
+                )
+                holidays.append(
+                    inter.merge(
+                        inter[col].map(extra_holidays).apply(pd.Series), left_index=True, right_index=True,
+                    ).loc[:, ["holiday", "lower_window", "upper_window", "prior_scale"]]
+                )
 
-        return X.drop(columns="holiday", errors="ignore")
+            self.model.holidays = pd.concat(holidays).assign(ds=lambda x: x.index).reset_index(drop=True)
+
+        return X.drop(columns=holiday_cols, errors="ignore")
 
     @enforce_y_type
     @check_X_y
@@ -182,7 +194,7 @@ class ProphetWrapper(TSModelWrapper):
         """
         # TODO Add regressors which are not in self.extra_regressors but are in X?
         self.model = self._init_tsmodel(Prophet)
-        if "holiday" in X.columns:
+        if any(X.columns.str.startswith("holiday")):
             X = self._adjust_holidays(X)
         df = self._transform_data_to_tsmodel_input_format(X, y)
         self.model.fit(df, **self.fit_params) if self.fit_params else self.model.fit(df)

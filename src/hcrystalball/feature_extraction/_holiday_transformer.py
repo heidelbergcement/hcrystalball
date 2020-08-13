@@ -116,7 +116,14 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
         years = X.index.year.unique().tolist() + [max(X.index.year)]
         cal = registry.region_registry[self.unified_country_code]()
         holidays = (
-            pd.concat([pd.DataFrame(data=cal.holidays(year), columns=["date", "holiday"]) for year in years])
+            pd.concat(
+                [
+                    pd.DataFrame(
+                        data=cal.holidays(year), columns=["date", f"holiday_{self.unified_country_code}"]
+                    )
+                    for year in years
+                ]
+            )
             .assign(date=lambda x: x["date"].astype(str))
             # one day could have multiple public holidays
             .drop_duplicates(subset="date")
@@ -125,7 +132,7 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
 
         result = (
             pd.merge(X, holidays, left_index=True, right_index=True, how="left")
-            .fillna({"holiday": ""})
+            .fillna({f"holiday_{self.unified_country_code}": ""})
             .drop(columns=[self.country_code_column], errors="ignore")
         )
 
