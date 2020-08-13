@@ -119,7 +119,8 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
             pd.concat(
                 [
                     pd.DataFrame(
-                        data=cal.holidays(year), columns=["date", f"holiday_{self.unified_country_code}"]
+                        data=cal.holidays(year),
+                        columns=["date", f"holiday_{self.country_code or self.country_code_column}"],
                     )
                     for year in years
                 ]
@@ -132,7 +133,7 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
 
         result = (
             pd.merge(X, holidays, left_index=True, right_index=True, how="left")
-            .fillna({f"holiday_{self.unified_country_code}": ""})
+            .fillna({f"holiday_{self.country_code or self.country_code_column}": ""})
             .drop(columns=[self.country_code_column], errors="ignore")
         )
 

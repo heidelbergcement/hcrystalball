@@ -138,11 +138,12 @@ class ProphetWrapper(TSModelWrapper):
             Input features without 'holiday' column
         """
 
-        holiday_cols = [col for col in X.columns[X.columns.str.startswith("holiday")]]
+        holiday_cols = [col for col in X.filter(like="holiday").columns]
 
         unique_holiday = list(
             itertools.chain.from_iterable([X.loc[X[col] != "", col].unique() for col in holiday_cols])
         )
+
         extra_holidays = {
             holiday: {"lower_window": 0, "upper_window": 0, "prior_scale": self.holidays_prior_scale}
             for holiday in unique_holiday
@@ -194,7 +195,7 @@ class ProphetWrapper(TSModelWrapper):
         """
         # TODO Add regressors which are not in self.extra_regressors but are in X?
         self.model = self._init_tsmodel(Prophet)
-        if any(X.columns.str.startswith("holiday")):
+        if X.filter(like="holiday").shape[1] > 0:
             X = self._adjust_holidays(X)
         df = self._transform_data_to_tsmodel_input_format(X, y)
         self.model.fit(df, **self.fit_params) if self.fit_params else self.model.fit(df)
@@ -218,9 +219,10 @@ class ProphetWrapper(TSModelWrapper):
             with the second and third (named 'name'_lower and 'name'_upper).
             If `full_prophet_output` is set to True, then full Prophet.model.predict output is returned.
         """
-        if "holiday" in X.columns:
+        if X.filter(like="holiday").shape[1] > 0:
             X = self._adjust_holidays(X)
         df = self._transform_data_to_tsmodel_input_format(X)
+
         preds = (
             self.model.predict(df)
             .rename(

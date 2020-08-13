@@ -71,11 +71,13 @@ def test_holiday_transformer_inputs(
 
 
 @pytest.mark.parametrize(
-    "country_code, country_code_column, country_code_column_value",
-    [("CZ", None, None), (None, "holiday_col", "CZ")],
+    "country_code, country_code_column, country_code_column_value, exp_col_name",
+    [("CZ", None, None, "holiday_CZ"), (None, "holiday_col", "CZ", "holiday_holiday_col")],
 )
-def test_holiday_transformer_transform(country_code, country_code_column, country_code_column_value):
-    expected = {"holiday": ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""]}
+def test_holiday_transformer_transform(
+    country_code, country_code_column, country_code_column_value, exp_col_name
+):
+    expected = {exp_col_name: ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""]}
     X = pd.DataFrame(index=pd.date_range(start="2019-05-01", periods=10))
     df_expected = pd.DataFrame(expected, index=X.index)
     if country_code_column:

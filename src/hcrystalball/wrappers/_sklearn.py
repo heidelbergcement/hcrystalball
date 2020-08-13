@@ -43,7 +43,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         if y is not None:
             y = self._y[self.lags + horizon - 1 :]
         X = self._add_lag_features(X, self._y, horizon)
-        if "holiday" in X.columns:
+        if any(X.columns.str.startswith("holiday")):
             X = self._adjust_holidays(X)
         X = X.astype(float)
 
@@ -63,9 +63,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         pandas.DataFrame
             Holiday feature in numeric form
         """
-        return X.replace(
-            {holiday: (0.0 if holiday == "" else 1.0) for holiday in X["holiday"].unique()}
-        ).assign(holiday=lambda x: pd.to_numeric(x["holiday"]))
+        return X.assign(**{col: X[col] != "" for col in X.filter(like="holiday").columns})
 
     @enforce_y_type
     @check_X_y
