@@ -1,6 +1,7 @@
 import pytest
 import pandas as pd
 from pandas.testing import assert_frame_equal
+from sklearn.pipeline import Pipeline
 
 from hcrystalball.feature_extraction import HolidayTransformer
 
@@ -85,4 +86,76 @@ def test_holiday_transformer_transform(
     df_result = HolidayTransformer(
         country_code=country_code, country_code_column=country_code_column
     ).fit_transform(X)
+    assert_frame_equal(df_result, df_expected)
+
+
+@pytest.mark.parametrize(
+    "country_code_first, country_code_column_first, country_code_column_first_value, "
+    "country_code_second, country_code_column_second, country_code_column_second_value",
+    [
+        ("CZ", None, None, "SK", None, None),
+        (None, "czech", "CZ", None, "slovak", "SK"),
+        ("CZ", None, None, None, "slovak", "SK"),
+        (None, "czech", "CZ", "SK", None, None),
+    ],
+)
+def test_two_transformers(
+    country_code_first,
+    country_code_column_first,
+    country_code_column_first_value,
+    country_code_second,
+    country_code_column_second,
+    country_code_column_second_value,
+):
+    expected = {
+        f"holiday_{country_code_first or country_code_column_first}": [
+            "Labour Day",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Liberation Day",
+            "",
+            "",
+        ],
+        f"holiday_{country_code_second or country_code_column_second}": [
+            "Labour Day",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Liberation Day",
+            "",
+            "",
+        ],
+    }
+    X = pd.DataFrame(index=pd.date_range(start="2019-05-01", periods=10))
+    df_expected = pd.DataFrame(expected, index=X.index)
+    if country_code_column_first:
+        X[country_code_column_first] = country_code_column_first_value
+    if country_code_column_second:
+        X[country_code_column_second] = country_code_column_second_value
+
+    pipeline = Pipeline(
+        [
+            (
+                f"holidays_{country_code_first or country_code_column_first}",
+                HolidayTransformer(
+                    country_code_column=country_code_column_first, country_code=country_code_first
+                ),
+            ),
+            (
+                f"holidays_{country_code_second or country_code_column_second}",
+                HolidayTransformer(
+                    country_code_column=country_code_column_second, country_code=country_code_second
+                ),
+            ),
+        ]
+    )
+
+    df_result = pipeline.fit_transform(X)
     assert_frame_equal(df_result, df_expected)
