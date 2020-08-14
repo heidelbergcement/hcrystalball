@@ -107,31 +107,11 @@ def test_two_transformers(
     country_code_column_second,
     country_code_column_second_value,
 ):
+    first_suffix = country_code_first or country_code_column_first
+    second_suffix = country_code_second or country_code_column_second
     expected = {
-        f"holiday_{country_code_first or country_code_column_first}": [
-            "Labour Day",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "Liberation Day",
-            "",
-            "",
-        ],
-        f"holiday_{country_code_second or country_code_column_second}": [
-            "Labour Day",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "Liberation Day",
-            "",
-            "",
-        ],
+        f"holiday_{first_suffix}": ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""],
+        f"holiday_{second_suffix}": ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""],
     }
     X = pd.DataFrame(index=pd.date_range(start="2019-05-01", periods=10))
     df_expected = pd.DataFrame(expected, index=X.index)
@@ -143,13 +123,13 @@ def test_two_transformers(
     pipeline = Pipeline(
         [
             (
-                f"holidays_{country_code_first or country_code_column_first}",
+                f"holidays_{first_suffix}",
                 HolidayTransformer(
                     country_code_column=country_code_column_first, country_code=country_code_first
                 ),
             ),
             (
-                f"holidays_{country_code_second or country_code_column_second}",
+                f"holidays_{second_suffix}",
                 HolidayTransformer(
                     country_code_column=country_code_column_second, country_code=country_code_second
                 ),
