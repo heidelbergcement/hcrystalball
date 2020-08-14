@@ -46,8 +46,8 @@ class ModelSelector:
         Temporal frequency of the data which is to be used in model selection
         Data with different frequency will be resampled to this frequency.
 
-    country_code_column : str
-        Name of the column with ISO code of country/region, which can be used for supplying holiday.
+    country_code_column : str, list
+        Name of the column(s) with ISO code of country/region, which can be used for supplying holiday.
         If used, later provided data must have daily frequency.
         e.g. 'State' with values like 'DE', 'CZ' or 'Region' with values like 'DE-NW', 'DE-HE', etc.
     """
@@ -226,7 +226,14 @@ class ModelSelector:
         exog_cols: list
             List of columns to be used as exogenous variables
         """
+        if self.country_code_column is not None and country_code is not None:
+            raise ValueError(
+                "You can use either `country_code_column` in ModelSelector constructor "
+                "or `country_code` here, not both."
+            )
+
         params = {k: v for k, v in locals().items() if k not in ["self"]}
+
         self.grid_search = get_gridsearch(
             frequency=self.frequency,
             horizon=self.horizon,
@@ -445,13 +452,17 @@ class ModelSelector:
         list
             List of `matplotlib.axes._subplots.AxesSubplot` for each partition
         """
-        partitions = partitions if partitions is not None else self.partitions
+        partitions = partitions or self.partitions
         plts = []
 
         for partition in partitions:
             partition_result = self.get_result_for_partition(partition)
             plts.append(
-                partition_result.plot_result(plot_from=plot_from, title=str(partition), **plot_params)
+                partition_result.plot_result(
+                    plot_from=plot_from,
+                    title=(" ").join([f"{k}={v}" for k, v in partition.items()]),
+                    **plot_params,
+                )
             )
 
         return plts

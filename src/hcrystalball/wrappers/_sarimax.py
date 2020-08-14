@@ -125,10 +125,10 @@ class SarimaxWrapper(TSModelWrapper):
             X = self._adjust_holidays(X)
         endog, exog = self._transform_data_to_tsmodel_input_format(X, y)
         if self.init_with_autoarima or self.always_search_model:
-            autoarima_params = self.autoarima_dict if self.autoarima_dict is not None else {}
+            autoarima_params = self.autoarima_dict or {}
             found_params = AutoARIMA(**autoarima_params).fit(y=endog, exogenous=exog).model_.get_params()
             self.set_params(**found_params)
-            self.init_with_autoarima = True if self.always_search_model else False
+            self.init_with_autoarima = self.always_search_model
         elif self.order is None:
             raise ValueError("Parameter `order` must be set if `init_with_autoarima` is set to False!")
         self.model = self._init_tsmodel(ARIMA)

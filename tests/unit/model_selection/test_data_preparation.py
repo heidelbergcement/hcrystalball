@@ -138,7 +138,7 @@ def test_prepare_data_for_training(
     unprepared_data, prepared_data, target_col_name, partition_columns, expected_error
 ):
 
-    if expected_error is not None:
+    if expected_error:
         with pytest.raises(expected_error):
             result = prepare_data_for_training(
                 unprepared_data, frequency="D", partition_columns=partition_columns

@@ -166,11 +166,14 @@ class ProphetWrapper(TSModelWrapper):
                 inter = X.loc[X[col] != "", [col]].assign(
                     **{"holiday": lambda df: df[col] + f"_{col.split('_')[1]}"}
                 )
-                holidays.append(
-                    inter.merge(
-                        inter[col].map(extra_holidays).apply(pd.Series), left_index=True, right_index=True,
-                    ).loc[:, ["holiday", "lower_window", "upper_window", "prior_scale"]]
-                )
+                if not inter.empty:
+                    holidays.append(
+                        inter.merge(
+                            inter[col].map(extra_holidays).apply(pd.Series),
+                            left_index=True,
+                            right_index=True,
+                        ).loc[:, ["holiday", "lower_window", "upper_window", "prior_scale"]]
+                    )
 
             self.model.holidays = pd.concat(holidays).assign(ds=lambda x: x.index).reset_index(drop=True)
 
