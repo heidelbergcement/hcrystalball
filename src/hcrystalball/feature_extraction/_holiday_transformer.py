@@ -1,4 +1,5 @@
 import pandas as pd
+import logging
 from workalendar.registry import registry
 from sklearn.base import BaseEstimator, TransformerMixin
 
@@ -19,10 +20,16 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
     instead of `country_code` the ISO code found in the column will be assigned into `country_code` column.
     """
 
-    def __init__(self, country_code=None, country_code_column=None):
+    def __init__(
+        self, country_code=None, country_code_column=None, days_before=0, days_after=0, bridge_days=False
+    ):
         self.country_code = country_code
         self.unified_country_code = country_code
         self.country_code_column = country_code_column
+        self.days_before = days_before
+        self.days_after = days_after
+        self.bridge_days = bridge_days
+
         if self.country_code is None and self.country_code_column is None:
             raise ValueError("You need to provide `country_code` or `country_code_column`")
         if self.country_code and self.country_code_column:
@@ -124,10 +131,33 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
             .drop_duplicates(subset="date").set_index("date")
         )
 
-        result = (
+        df = (
             pd.merge(X, holidays, left_index=True, right_index=True, how="left")
             .fillna({self._col_name: ""})
             .drop(columns=[self.country_code_column], errors="ignore")
         )
 
-        return result
+        df = self._get_day_around_holiday_feature(df, "before_holiday", self.days_before)
+        df = self._get_day_around_holiday_feature(df, "after_holiday", self.days_after)
+        if self.bridge_days:
+            if self.days_before == 0 or self.days_before == 0:
+                logging.warning(
+                    """`bridge_days` feature is created only if `days_before`
+                                and `days_before` are greater than 0 """
+                )
+            else:
+                df = df.assign(
+                    _holiday_bridge_days=lambda df: (df[["_before_holiday", "_after_holiday"]].all(axis=1))
+                )
+
+        return df
+
+    def _get_day_around_holiday_feature(self, df, when, days):
+        for day in range(1, days + 1):
+            day = day if when == "after_holiday" else -day
+            df = df.assign(**{f"_{when}_{day}": lambda df: ((df[self._col_name] != "").shift(day))})
+        cols = df.filter(like=f"_{when}_").columns
+        if days > 0:
+            df = df.assign(**{f"_{when}": lambda df: df[cols].any(axis=1)})
+
+        return df.drop(cols, axis=1)

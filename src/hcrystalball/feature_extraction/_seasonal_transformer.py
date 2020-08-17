@@ -34,7 +34,20 @@ class SeasonalityTransformer(BaseEstimator, TransformerMixin):
     """
 
     def __init__(
-        self, auto=True, freq=None, week_day=None, monthly=None, quarterly=None, yearly=None, weekly=None,
+        self,
+        auto=True,
+        freq=None,
+        week_day=None,
+        monthly=None,
+        quarterly=None,
+        yearly=None,
+        weekly=None,
+        month_start=False,
+        month_end=False,
+        quarter_start=False,
+        quarter_end=False,
+        year_start=False,
+        year_end=False,
     ):
         self.auto = auto
         self.freq = freq
@@ -47,6 +60,12 @@ class SeasonalityTransformer(BaseEstimator, TransformerMixin):
         self.quarterly = quarterly
         self.yearly = yearly
         self.weekly = weekly
+        self.month_start = month_start
+        self.month_end = month_end
+        self.quarter_start = quarter_start
+        self.quarter_end = quarter_end
+        self.year_start = year_start
+        self.year_end = year_end
         self._fit_columns = None
 
     def get_feature_names(self):
@@ -137,6 +156,20 @@ class SeasonalityTransformer(BaseEstimator, TransformerMixin):
             season_feat.append(pd.get_dummies(date.year))
 
         _X = pd.concat(season_feat, axis=1)
+
+        if self.month_start:
+            _X["month_start"] = date.is_month_start
+        if self.month_end:
+            _X["month_end"] = date.is_month_end
+        if self.quarter_start:
+            _X["quarter_start"] = date.is_quarter_start
+        if self.quarter_end:
+            _X["quarter_end"] = date.is_quarter_end
+        if self.year_start:
+            _X["year_start"] = date.is_year_start
+        if self.year_end:
+            _X["year_end"] = date.is_year_end
+
         _X.columns = [f"_{col}" for col in _X.columns]
 
         if self._fit_columns is not None:
