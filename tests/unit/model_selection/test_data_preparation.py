@@ -1,12 +1,10 @@
 import pytest
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
-from hcrystalball.model_selection import (
-    partition_data,
-    partition_data_by_values,
-    filter_data,
-    prepare_data_for_training,
-)
+from hcrystalball.model_selection import partition_data
+from hcrystalball.model_selection import partition_data_by_values
+from hcrystalball.model_selection import filter_data
+from hcrystalball.model_selection import prepare_data_for_training
 
 
 def test_partition_data(test_data_raw):
@@ -138,7 +136,7 @@ def test_prepare_data_for_training(
     unprepared_data, prepared_data, target_col_name, partition_columns, expected_error
 ):
 
-    if expected_error is not None:
+    if expected_error:
         with pytest.raises(expected_error):
             result = prepare_data_for_training(
                 unprepared_data, frequency="D", partition_columns=partition_columns

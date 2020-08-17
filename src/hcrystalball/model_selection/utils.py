@@ -2,6 +2,7 @@ import json
 import pickle
 from pathlib import Path
 import functools
+from collections import OrderedDict
 from hcrystalball.utils import generate_partition_hash
 import logging
 
@@ -58,6 +59,8 @@ def _load_file(expert_type="best_model", partition_label=None, partition_hash=No
     ]:
         with open(file_path) as json_file:
             expert = json.load(json_file)
+            if expert_type == "partition":
+                expert = OrderedDict(sorted(expert.items()))
     else:
         with open(file_path, "rb") as pickle_file:
             expert = pickle.load(pickle_file)

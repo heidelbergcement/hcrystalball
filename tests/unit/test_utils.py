@@ -13,6 +13,7 @@ from hcrystalball.utils import check_X_y
 from hcrystalball.utils import check_fit_before_predict
 from hcrystalball.utils import get_estimator_repr
 from hcrystalball.utils import optional_import
+from hcrystalball.utils import deep_dict_update
 from hcrystalball.exceptions import InsufficientDataLengthError
 from hcrystalball.exceptions import PredictWithoutFitError
 
@@ -218,3 +219,21 @@ def test_optional_import_with_dependency(module_name, class_name):
 
     assert res[0] == class_name
     assert str(globals()[class_name]()) == str(ProphetWrapperOrig())
+
+
+@pytest.mark.parametrize(
+    "source, update, exp_result",
+    [
+        (
+            {"a": {"b": 1, "c": 2}, "x": {"z": 1}},
+            {"x": {"c": 0}},
+            {"a": {"b": 1, "c": 2}, "x": {"z": 1, "c": 0}},
+        ),
+        ({"x": {"c": 1}}, {"x": {"c": 0}}, {"x": {"c": 0}},),
+    ],
+)
+def test_deep_dict_update(source, update, exp_result):
+    result = deep_dict_update(source, update)
+    assert result == exp_result
+    assert source == source
+    assert update == update

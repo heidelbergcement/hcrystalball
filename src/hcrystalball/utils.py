@@ -1,5 +1,6 @@
 import hashlib
 import functools
+import collections
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -7,6 +8,26 @@ from sklearn.pipeline import Pipeline
 from sklearn.utils import check_random_state
 from hcrystalball.exceptions import InsufficientDataLengthError
 from hcrystalball.exceptions import PredictWithoutFitError
+
+
+def deep_dict_update(source, overrides):
+    """
+    Update a nested dictionary.
+    """
+    if overrides is None:
+        overrides = {}
+    if source is None:
+        source = {}
+
+    result = source.copy()
+
+    for key, value in overrides.items():
+        if isinstance(value, collections.Mapping) and value:
+            returned = deep_dict_update(result.get(key, {}), value)
+            result[key] = returned
+        else:
+            result[key] = overrides[key]
+    return result
 
 
 def optional_import(module_path, class_name, caller_namespace):

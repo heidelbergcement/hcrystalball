@@ -9,7 +9,7 @@ class PredictWithoutFitError(Exception):
 
     def __init__(self, msg=None, model_name=None):
         if msg is None:
-            if model_name is not None:
+            if model_name:
                 msg = "Trying to call the method of " + model_name + " without fitting the model first."
             else:
                 msg = "Trying to call predict method without fitting the model first."

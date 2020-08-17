@@ -6,6 +6,7 @@ from hcrystalball.compose import TSColumnTransformer
 from hcrystalball.wrappers import ProphetWrapper
 
 from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import Pipeline
 import numpy as np
 import pytest
 
@@ -15,7 +16,14 @@ import pytest
     [
         (
             {"frequency": "D", "sklearn_models": True, "prophet_models": False},
-            {"exog_passthrough": str, "holiday": str, "model": str},
+            {
+                "exog_passthrough": str,
+                "holiday": str,
+                "holiday_step": None,
+                "holiday_steps_codes": None,
+                "holiday_steps_columns": None,
+                "model": str,
+            },
             None,
         ),
         (
@@ -25,12 +33,55 @@ import pytest
                 "prophet_models": False,
                 "country_code_column": "country",
             },
-            {"exog_passthrough": str, "holiday": HolidayTransformer, "model": str},
+            {
+                "exog_passthrough": str,
+                "holiday": Pipeline,
+                "holiday_step": HolidayTransformer,
+                "holiday_steps_codes": [None],
+                "holiday_steps_columns": ["country"],
+                "model": str,
+            },
             None,
         ),
         (
-            {"frequency": "D", "sklearn_models": True, "prophet_models": False, "country_code": "DE"},
-            {"exog_passthrough": str, "holiday": HolidayTransformer, "model": str},
+            {
+                "frequency": "D",
+                "sklearn_models": True,
+                "prophet_models": False,
+                "country_code_column": ["czech", "slovak"],
+            },
+            {
+                "exog_passthrough": str,
+                "holiday": Pipeline,
+                "holiday_step": HolidayTransformer,
+                "holiday_steps_codes": [None, None],
+                "holiday_steps_columns": ["czech", "slovak"],
+                "model": str,
+            },
+            None,
+        ),
+        (
+            {"frequency": "D", "sklearn_models": True, "prophet_models": False, "country_code": "CZ"},
+            {
+                "exog_passthrough": str,
+                "holiday": Pipeline,
+                "holiday_step": HolidayTransformer,
+                "holiday_steps_codes": ["CZ"],
+                "holiday_steps_columns": [None],
+                "model": str,
+            },
+            None,
+        ),
+        (
+            {"frequency": "D", "sklearn_models": True, "prophet_models": False, "country_code": ["CZ", "SK"]},
+            {
+                "exog_passthrough": str,
+                "holiday": Pipeline,
+                "holiday_step": HolidayTransformer,
+                "holiday_steps_codes": ["CZ", "SK"],
+                "holiday_steps_columns": [None, None],
+                "model": str,
+            },
             None,
         ),
         (
@@ -39,9 +90,16 @@ import pytest
                 "sklearn_models": True,
                 "prophet_models": False,
                 "exog_cols": ["raining"],
-                "country_code_column": "country",
+                "country_code_column": ["czech", "slovak"],
             },
-            {"exog_passthrough": TSColumnTransformer, "holiday": HolidayTransformer, "model": str},
+            {
+                "exog_passthrough": TSColumnTransformer,
+                "holiday": Pipeline,
+                "holiday_step": HolidayTransformer,
+                "holiday_steps_codes": [None, None],
+                "holiday_steps_columns": ["czech", "slovak"],
+                "model": str,
+            },
             None,
         ),
         (
@@ -68,10 +126,17 @@ import pytest
                 "clip_predictions_upper": 1500.0,
                 "exog_cols": ["raining"],
             },
-            {"exog_passthrough": TSColumnTransformer, "holiday": HolidayTransformer, "model": str},
+            {
+                "exog_passthrough": TSColumnTransformer,
+                "holiday": Pipeline,
+                "holiday_step": HolidayTransformer,
+                "holiday_steps_codes": [None],
+                "holiday_steps_columns": ["country"],
+                "model": str,
+            },
             None,
         ),
-        ({}, {}, TypeError,),
+        ({}, {}, TypeError),
     ],
 )
 def test_get_gridsearch(gridsearch_params, expected_estimator, expected_error):
@@ -89,6 +154,24 @@ def test_get_gridsearch(gridsearch_params, expected_estimator, expected_error):
 
         assert isinstance(res.estimator["exog_passthrough"], expected_estimator["exog_passthrough"])
         assert isinstance(res.estimator["holiday"], expected_estimator["holiday"])
+        if expected_estimator["holiday_step"]:
+            assert all(
+                [
+                    isinstance(holiday_step[1], expected_estimator["holiday_step"])
+                    for holiday_step in res.estimator["holiday"].steps
+                ]
+            )
+            assert all(
+                [
+                    (holiday_step[1].country_code is code) & (holiday_step[1].country_code_column is col)
+                    for holiday_step, code, col in zip(
+                        res.estimator["holiday"].steps,
+                        expected_estimator["holiday_steps_codes"],
+                        expected_estimator["holiday_steps_columns"],
+                    )
+                ]
+            )
+
         assert isinstance(res.estimator["model"], expected_estimator["model"])
 
 

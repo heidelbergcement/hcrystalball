@@ -5,6 +5,7 @@ from hcrystalball.wrappers import get_sklearn_wrapper
 from hcrystalball.feature_extraction import HolidayTransformer
 
 from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import Pipeline
 import os
 import pytest
 
@@ -13,8 +14,10 @@ import pytest
     "country_code_column, country_code, holiday_step, error",
     [
         (None, None, str, None),
-        ("region", None, HolidayTransformer, None),
-        (None, "DE", HolidayTransformer, None),
+        ("region", None, Pipeline, None),
+        (["region_a", "region_b"], None, Pipeline, None),
+        (None, "DE", Pipeline, None),
+        (None, ["DE", "BE"], Pipeline, None),
         ("region", "DE", None, ValueError),
     ],
 )
@@ -29,8 +32,33 @@ def test_model_selector_holidays(country_code_column, country_code, holiday_step
         assert isinstance(ms.grid_search.estimator.named_steps["holiday"], holiday_step)
 
         if holiday_step is not str:
-            assert ms.grid_search.estimator.named_steps["holiday"].country_code == country_code
-            assert ms.grid_search.estimator.named_steps["holiday"].country_code_column == country_code_column
+            country_codes = [country_code] if isinstance(country_code, str) else (country_code or [])
+            country_code_columns = (
+                [country_code_column] if isinstance(country_code_column, str) else (country_code_column or [])
+            )
+
+            assert all(
+                [
+                    isinstance(step[1], HolidayTransformer)
+                    for step in ms.grid_search.estimator.named_steps["holiday"].steps
+                ]
+            )
+            assert all(
+                [
+                    step[1].country_code == code
+                    for step, code in zip(
+                        ms.grid_search.estimator.named_steps["holiday"].steps, country_codes
+                    )
+                ]
+            )
+            assert all(
+                [
+                    step[1].country_code_column == col
+                    for step, col in zip(
+                        ms.grid_search.estimator.named_steps["holiday"].steps, country_code_columns
+                    )
+                ]
+            )
 
 
 def test_model_selector(tmp_path):
@@ -67,7 +95,8 @@ def test_model_selector(tmp_path):
         exog_cols=["Raining"],
     )
     assert hasattr(ms, "grid_search")
-    assert isinstance(ms.grid_search.estimator.named_steps["holiday"], HolidayTransformer)
+    assert isinstance(ms.grid_search.estimator.named_steps["holiday"], Pipeline)
+    assert isinstance(ms.grid_search.estimator.named_steps["holiday"].steps[0][1], HolidayTransformer)
 
     ms.add_model_to_gridsearch(get_sklearn_wrapper(LinearRegression))
     ms.select_model(

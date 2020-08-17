@@ -1,10 +1,8 @@
 import pandas as pd
 import pytest
-from hcrystalball.wrappers import (
-    ExponentialSmoothingWrapper,
-    SimpleSmoothingWrapper,
-    HoltSmoothingWrapper,
-)
+from hcrystalball.wrappers import ExponentialSmoothingWrapper
+from hcrystalball.wrappers import SimpleSmoothingWrapper
+from hcrystalball.wrappers import HoltSmoothingWrapper
 
 
 @pytest.mark.parametrize("X_y_optional", [("just_X"), ("")], indirect=["X_y_optional"])

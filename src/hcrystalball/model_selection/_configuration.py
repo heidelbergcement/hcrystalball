@@ -6,6 +6,7 @@ from sklearn.model_selection import GridSearchCV
 from ._split import FinerTimeSplit
 from hcrystalball.compose import TSColumnTransformer
 from hcrystalball.metrics import get_scorer
+from hcrystalball.feature_extraction import HolidayTransformer
 
 logger = logging.getLogger(__name__)
 
@@ -54,12 +55,12 @@ def get_gridsearch(
         String of sklearn regression metric name, or hcrystalball compatible scorer. For creation
         of hcrystalball compatible scorer use `make_ts_scorer` function.
 
-    country_code_column : str
-        Column in data, that contains country code in str (e.g. 'DE'). Used in holiday transformer.
+    country_code_column : str, list
+        Column(s) in data, that contain country code in str (e.g. 'DE'). Used in holiday transformer.
         Only one of `country_code_column` or `country_code` can be set.
 
-    country_code : str
-        Country code in str (e.g. 'DE'). Used in holiday transformer.
+    country_code : str, list
+        Country code(s) in str (e.g. 'DE'). Used in holiday transformer.
         Only one of `country_code_column` or `country_code` can be set.
 
     sklearn_models : bool
@@ -106,19 +107,27 @@ def get_gridsearch(
     sklearn.model_selection.GridSearchCV
         CV / Model selection configuration
     """
-    exog_cols = exog_cols if exog_cols is not None else []
+    exog_cols = exog_cols or []
+    country_code_columns = (
+        [country_code_column] if isinstance(country_code_column, str) else country_code_column
+    )
+    country_codes = [country_code] if isinstance(country_code, str) else country_code
     # ensures only exogenous columns and country code column will be passed to model if provided
     # and columns names will be stored in TSColumnTransformer
     if exog_cols:
-        cols = exog_cols + [country_code_column] if country_code_column else exog_cols
+        cols = exog_cols + country_code_columns if country_code_columns else exog_cols
         exog_passthrough = TSColumnTransformer(transformers=[("raw_cols", "passthrough", cols)])
     else:
         exog_passthrough = "passthrough"
     # ensures holiday transformer is added to the pipeline if requested
-    if country_code or country_code_column:
-        from hcrystalball.feature_extraction import HolidayTransformer
-
-        holiday = HolidayTransformer(country_code=country_code, country_code_column=country_code_column)
+    if country_codes:
+        holiday = Pipeline(
+            [(f"holiday_{code}", HolidayTransformer(country_code=code)) for code in country_codes]
+        )
+    elif country_code_columns:
+        holiday = Pipeline(
+            [(f"holiday_{col}", HolidayTransformer(country_code_column=col)) for col in country_code_columns]
+        )
     else:
         holiday = "passthrough"
 
@@ -126,11 +135,15 @@ def get_gridsearch(
         [("exog_passthrough", exog_passthrough), ("holiday", holiday), ("model", "passthrough")]
     )
 
-    scoring = get_scorer(scoring)
     cv = FinerTimeSplit(n_splits=n_splits, horizon=horizon, between_split_lag=between_split_lag)
 
     grid_search = GridSearchCV(
-        estimator=estimator, param_grid=[], scoring=scoring, cv=cv, refit=False, error_score=np.nan,
+        estimator=estimator,
+        param_grid=[],
+        scoring=get_scorer(scoring),
+        cv=cv,
+        refit=False,
+        error_score=np.nan,
     )
 
     if autosarimax_models:

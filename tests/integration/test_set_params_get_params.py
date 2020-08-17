@@ -10,9 +10,9 @@ from hcrystalball.wrappers import ProphetWrapper
     [
         ("series_with_freq_D", "sklearn", "optimize_for_horizon", True, False),
         ("series_with_freq_D", "sklearn", "fit_intercept", False, True),
-        ("series_with_freq_D", "prophet", "extra_holidays", {"Whit Monday": {"lower_window": 2}}, False,),
+        ("series_with_freq_D", "prophet", "extra_holidays", {"Whit Monday": {"lower_window": 2}}, False),
         ("series_with_freq_D", "prophet", "holidays_prior_scale", 20, True),
-        ("series_with_freq_D", "smoothing", "fit_params", {"smoothing_level": 0.2}, False,),
+        ("series_with_freq_D", "smoothing", "fit_params", {"smoothing_level": 0.2}, False),
         ("series_with_freq_D", "smoothing", "trend", "add", True),
         ("series_with_freq_D", "tbats", "conf_int", True, False),
         ("series_with_freq_D", "tbats", "use_box_cox", True, True),

@@ -1,6 +1,7 @@
 import pytest
 import pandas as pd
 from pandas.testing import assert_frame_equal
+from sklearn.pipeline import Pipeline
 
 from hcrystalball.feature_extraction import HolidayTransformer
 
@@ -71,11 +72,13 @@ def test_holiday_transformer_inputs(
 
 
 @pytest.mark.parametrize(
-    "country_code, country_code_column, country_code_column_value",
-    [("CZ", None, None), (None, "holiday_col", "CZ")],
+    "country_code, country_code_column, country_code_column_value, exp_col_name",
+    [("CZ", None, None, "_holiday_CZ"), (None, "holiday_col", "CZ", "_holiday_holiday_col")],
 )
-def test_holiday_transformer_transform(country_code, country_code_column, country_code_column_value):
-    expected = {"holiday": ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""]}
+def test_holiday_transformer_transform(
+    country_code, country_code_column, country_code_column_value, exp_col_name
+):
+    expected = {exp_col_name: ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""]}
     X = pd.DataFrame(index=pd.date_range(start="2019-05-01", periods=10))
     df_expected = pd.DataFrame(expected, index=X.index)
     if country_code_column:
@@ -83,4 +86,56 @@ def test_holiday_transformer_transform(country_code, country_code_column, countr
     df_result = HolidayTransformer(
         country_code=country_code, country_code_column=country_code_column
     ).fit_transform(X)
+    assert_frame_equal(df_result, df_expected)
+
+
+@pytest.mark.parametrize(
+    "country_code_first, country_code_column_first, country_code_column_first_value, "
+    "country_code_second, country_code_column_second, country_code_column_second_value",
+    [
+        ("CZ", None, None, "SK", None, None),
+        (None, "czech", "CZ", None, "slovak", "SK"),
+        ("CZ", None, None, None, "slovak", "SK"),
+        (None, "czech", "CZ", "SK", None, None),
+    ],
+)
+def test_two_transformers(
+    country_code_first,
+    country_code_column_first,
+    country_code_column_first_value,
+    country_code_second,
+    country_code_column_second,
+    country_code_column_second_value,
+):
+    first_suffix = country_code_first or country_code_column_first
+    second_suffix = country_code_second or country_code_column_second
+    expected = {
+        f"_holiday_{first_suffix}": ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""],
+        f"_holiday_{second_suffix}": ["Labour Day", "", "", "", "", "", "", "Liberation Day", "", ""],
+    }
+    X = pd.DataFrame(index=pd.date_range(start="2019-05-01", periods=10))
+    df_expected = pd.DataFrame(expected, index=X.index)
+    if country_code_column_first:
+        X[country_code_column_first] = country_code_column_first_value
+    if country_code_column_second:
+        X[country_code_column_second] = country_code_column_second_value
+
+    pipeline = Pipeline(
+        [
+            (
+                f"holidays_{first_suffix}",
+                HolidayTransformer(
+                    country_code_column=country_code_column_first, country_code=country_code_first
+                ),
+            ),
+            (
+                f"holidays_{second_suffix}",
+                HolidayTransformer(
+                    country_code_column=country_code_column_second, country_code=country_code_second
+                ),
+            ),
+        ]
+    )
+
+    df_result = pipeline.fit_transform(X)
     assert_frame_equal(df_result, df_expected)

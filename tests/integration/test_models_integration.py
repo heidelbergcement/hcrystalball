@@ -117,7 +117,7 @@ def pipeline(request):
                     "second",
                     TSColumnTransformer(
                         transformers=[
-                            ("one_hot", OneHotEncoder(sparse=False), ["holiday"]),
+                            ("one_hot", OneHotEncoder(sparse=False), ["_holiday_country"]),
                             ("raw_cols_2", "passthrough", ["trend"]),
                         ]
                     ),
@@ -142,7 +142,7 @@ def pipeline(request):
                     "second",
                     TSColumnTransformer(
                         transformers=[
-                            ("one_hot", OneHotEncoder(sparse=False), ["holiday"]),
+                            ("one_hot", OneHotEncoder(sparse=False), ["_holiday_DE"]),
                             ("raw_cols_2", "passthrough", ["trend"]),
                         ]
                     ),
@@ -158,7 +158,7 @@ def pipeline(request):
                     TSColumnTransformer(
                         transformers=[
                             ("raw_cols_1", "passthrough", ["trend", "country"]),
-                            ("holiday", HolidayTransformer(country_code_column="country"), ["country"],),
+                            ("holiday", HolidayTransformer(country_code_column="country"), ["country"]),
                             ("scaler", StandardScaler(), ["trend", "one_hot"]),
                         ]
                     ),
@@ -167,7 +167,7 @@ def pipeline(request):
                     "second",
                     TSColumnTransformer(
                         transformers=[
-                            ("one_hot", OneHotEncoder(sparse=False), ["holiday"]),
+                            ("one_hot", OneHotEncoder(sparse=False), ["_holiday_country"]),
                             ("raw_cols_2", "passthrough", ["trend", "country"]),
                         ]
                     ),

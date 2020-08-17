@@ -102,9 +102,7 @@ class SarimaxWrapper(TSModelWrapper):
         -------
         pandas.DataFrame
         """
-        return X.replace(
-            {holiday: (0.0 if holiday == "" else 1.0) for holiday in X["holiday"].unique()}
-        ).assign(holiday=lambda x: pd.to_numeric(x["holiday"]))
+        return X.assign(**{col: X[col] != "" for col in X.filter(like="_holiday_").columns})
 
     @enforce_y_type
     @check_X_y
@@ -123,14 +121,14 @@ class SarimaxWrapper(TSModelWrapper):
         -------
         self
         """
-        if "holiday" in X.columns:
+        if X.filter(like="_holiday_").shape[1] > 0:
             X = self._adjust_holidays(X)
         endog, exog = self._transform_data_to_tsmodel_input_format(X, y)
         if self.init_with_autoarima or self.always_search_model:
-            autoarima_params = self.autoarima_dict if self.autoarima_dict is not None else {}
+            autoarima_params = self.autoarima_dict or {}
             found_params = AutoARIMA(**autoarima_params).fit(y=endog, exogenous=exog).model_.get_params()
             self.set_params(**found_params)
-            self.init_with_autoarima = True if self.always_search_model else False
+            self.init_with_autoarima = self.always_search_model
         elif self.order is None:
             raise ValueError("Parameter `order` must be set if `init_with_autoarima` is set to False!")
         self.model = self._init_tsmodel(ARIMA)
@@ -154,7 +152,7 @@ class SarimaxWrapper(TSModelWrapper):
             If `conf_int` attribute is set to True, the returned DataFrame will have three columns,
             with the second and third (named 'name'_lower and 'name'_upper).
         """
-        if "holiday" in X.columns:
+        if X.filter(like="_holiday_").shape[1] > 0:
             X = self._adjust_holidays(X)
         _, exog = self._transform_data_to_tsmodel_input_format(X)
         preds, conf_ints = self.model.predict(n_periods=X.shape[0], exogenous=exog, return_conf_int=True)

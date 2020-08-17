@@ -164,12 +164,17 @@ def prepare_data_for_training(
     pandas.DataFrame
         Resampled, aggregated data
     """
-    parallel_over_columns = parallel_over_columns if parallel_over_columns is not None else {}
+    parallel_over_columns = parallel_over_columns or {}
     partition_columns = list(set(partition_columns).difference(parallel_over_columns))
 
     # TODO this check should go into separate function for check of exogeneous variables
-    if country_code_column and country_code_column not in df.columns:
-        raise KeyError(f"Column {country_code_column} provided as `holiday_col_name` is not in dataframe!")
+    country_code_columns = (
+        [country_code_column] if isinstance(country_code_column, str) else country_code_column
+    )
+    if country_code_column and not set(country_code_columns).issubset(set(df.columns)):
+        raise KeyError(
+            f"Column(s) {country_code_column} provided as `country_code_column` is not in dataframe!"
+        )
 
     df = df.astype({col: "category" for col in partition_columns})
 
@@ -185,13 +190,13 @@ def prepare_data_for_training(
         .fillna(
             {
                 **{col: 0 for col in num_cols},
-                **{col: "" for col in cat_cols.difference([country_code_column])},
+                **{col: "" for col in cat_cols.difference(country_code_columns or set())},
             }
         )
         .reset_index(partition_columns)
     )
 
-    if country_code_column:
-        df[country_code_column] = df[country_code_column].fillna(method="ffill")
+    if country_code_columns:
+        df[country_code_columns] = df[country_code_columns].fillna(method="ffill")
 
     return df

@@ -10,10 +10,10 @@ def test_sarimax_adjust_holidays(X_with_holidays):
     sarimax = SarimaxWrapper(order=(1, 1, 0))
     result = sarimax._adjust_holidays(X_with_holidays)
     assert isinstance(result, pd.DataFrame)
-    assert "holiday" in result.columns.tolist()
-    assert "holiday" in result.select_dtypes(include=[np.number]).columns
-    assert (result["holiday"] == "").sum() == 0
-    assert X_with_holidays[X_with_holidays["holiday"] != ""].shape[0] == result["holiday"].sum()
+    assert "_holiday_DE" in result.columns.tolist()
+    assert "_holiday_DE" in result.select_dtypes(include=[np.bool]).columns
+    assert (result["_holiday_DE"] == "").sum() == 0
+    assert X_with_holidays[X_with_holidays["_holiday_DE"] != ""].shape[0] == result["_holiday_DE"].sum()
 
 
 @pytest.mark.parametrize(
@@ -25,7 +25,7 @@ def test_sarimax_transform_data_to_tsmodel_input_format(X_y_optional, additional
 
     X, y = X_y_optional
     if additional_col:
-        X["additiona_col"] = 1
+        X["additional_col"] = 1
     sarimax = SarimaxWrapper(order=(1, 1, 0))
     endog, exog = sarimax._transform_data_to_tsmodel_input_format(X, y)
     if y is not None:

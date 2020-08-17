@@ -3,6 +3,7 @@ from copy import deepcopy
 import pandas as pd
 import sys
 import io
+from collections import OrderedDict
 
 from ._data_preparation import partition_data
 from ._data_preparation import filter_data
@@ -84,7 +85,7 @@ def select_model(
     list:
         List of ModelSelectorResults containing all important information for each partition
     """
-    parallel_partition = parallel_over_dict if parallel_over_dict is not None else {}
+    parallel_partition = parallel_over_dict or {}
     results = []
 
     if len(partition_columns) == 0:
@@ -129,7 +130,7 @@ def select_model(
                 cv_results=pd.DataFrame(grid_search_tmp.cv_results_),
                 cv_data=grid_search_tmp.scorer_.cv_data,
                 model_reprs=grid_search_tmp.scorer_.estimator_ids,
-                partition={**parallel_partition, **non_parallel_partition},
+                partition=OrderedDict(sorted({**parallel_partition, **non_parallel_partition}.items())),
                 X_train=X,
                 y_train=y,
                 frequency=frequency,
@@ -440,7 +441,7 @@ def select_model_general(
         return flat_list
 
     else:
-        partition_columns = partition_columns if partition_columns is not None else []
+        partition_columns = partition_columns or []
         # run without prefect
         df_prep = df.pipe(filter_data, include_rules=include_rules, exclude_rules=exclude_rules).pipe(
             prepare_data_for_training,

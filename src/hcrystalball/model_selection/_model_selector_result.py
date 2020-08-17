@@ -190,7 +190,7 @@ class ModelSelectorResult:
 
         df = self.df_plot
 
-        plot_from = plot_from if plot_from is not None else df.index.min()
+        plot_from = plot_from or df.index.min()
 
         if self.cv_splits_overlap:
             # plot each split separately
@@ -207,7 +207,7 @@ class ModelSelectorResult:
 
                 plt_cv = df[plot_from:].loc[lambda x: x["cv_split"] == split, [cv_fcst_col, "cv_split_str"]]
                 plt = plt_cv[[cv_fcst_col]].plot(
-                    ax=plt, title=f"{plt.get_title()} ({plt_cv['cv_split_str'].unique()[0]})",
+                    ax=plt, title=f"{plt.get_title()} | ({plt_cv['cv_split_str'].unique()[0]})",
                 )
                 if not plt_cv.empty:
                     plt.fill_between(
@@ -272,7 +272,7 @@ class ModelSelectorResult:
             f"  frequency: {self.frequency}\n"
             f"  horizon: {self.horizon}\n\n"
             f"  country_code_column: {self.country_code_column}\n\n"
-            f"  partition: {self.partition}\n"
+            f"  partition: {dict(self.partition)}\n"
             f"  partition_hash: {self.partition_hash}\n\n"
             f"  df_plot: DataFrame {self.df_plot.shape} suited for plotting cv results with .plot()\n"
             f"  X_train: DataFrame {self.X_train.shape} with training feature values\n"

@@ -5,8 +5,8 @@ from hcrystalball.feature_extraction import SeasonalityTransformer
 import calendar
 
 
-weekdays = list(calendar.day_name)
-months = list(calendar.month_name)[1:]
+weekdays = [f"_{day}" for day in calendar.day_name]
+months = [f"_{month}" for month in list(calendar.month_name)[1:]]
 
 
 @pytest.mark.parametrize(
@@ -16,28 +16,28 @@ months = list(calendar.month_name)[1:]
             "2019-01-01",
             366,
             weekdays,
-            [f"{i}_week" for i in range(1, 53)],
+            [f"_{i}_week" for i in range(1, 53)],
             months,
-            [f"{i}_quarter" for i in range(1, 5)],
-            [2019, 2020],
+            [f"_{i}_quarter" for i in range(1, 5)],
+            ["_2019", "_2020"],
         ),
         (
             "2019-01-01",
             365,
             weekdays,
-            [f"{i}_week" for i in range(1, 53)],
+            [f"_{i}_week" for i in range(1, 53)],
             months,
-            [f"{i}_quarter" for i in range(1, 5)],
-            [2019],
+            [f"_{i}_quarter" for i in range(1, 5)],
+            ["_2019"],
         ),
         (
             "2019-01-03",
             5,
-            set(weekdays).difference(["Tuesday", "Wednesday"]),
-            ["1_week", "2_week"],
-            ["January"],
-            ["1_quarter"],
-            [2019],
+            set(weekdays).difference(["_Tuesday", "_Wednesday"]),
+            ["_1_week", "_2_week"],
+            ["_January"],
+            ["_1_quarter"],
+            ["_2019"],
         ),
     ],
 )
@@ -84,6 +84,6 @@ def test_seasonality_transformer_ensure_cols():
     tail_1 = tail_t.transform(X.tail(6))
 
     # missing column was brought back from first transform
-    assert ("Friday" not in tail_1.columns) & ("Friday" in head_2.columns)
+    assert ("_Friday" not in tail_1.columns) & ("_Friday" in head_2.columns)
     # extra columns from 2nd and other transforms are clipped away
-    assert ("2_week" in tail_1.columns) & ("2_week" not in head_2.columns)
+    assert ("_2_week" in tail_1.columns) & ("_2_week" not in head_2.columns)
