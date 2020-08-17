@@ -15,17 +15,15 @@ from hcrystalball.wrappers import ProphetWrapper
     indirect=["X_with_holidays"],
 )
 def test_prophet_adjust_holidays(X_with_holidays, extra_holidays):
-
     prophet = ProphetWrapper(extra_holidays=extra_holidays)
     prophet.model = prophet._init_tsmodel(Prophet)
     X = prophet._adjust_holidays(X_with_holidays)
     holidays = prophet.model.holidays
 
-    assert_frame_equal(X, X_with_holidays.drop(columns="holiday_DE"))
+    assert_frame_equal(X, X_with_holidays.drop(columns="_holiday_DE"))
     assert isinstance(holidays, pd.DataFrame)
     assert "ds" in holidays.columns.tolist()
     assert "holiday" in holidays.columns.tolist()
-    import pdb
 
     assert set(holidays.columns) == set(["ds", "holiday", "lower_window", "upper_window", "prior_scale"])
     if extra_holidays:
@@ -46,7 +44,7 @@ def test_prophet_transform_data_to_tsmodel_input_format(X_y_optional, additional
 
     X, y = X_y_optional
     if additional_col:
-        X["additiona_col"] = 1
+        X["additional_col"] = 1
     prophet = ProphetWrapper()
     result = prophet._transform_data_to_tsmodel_input_format(X, y)
     assert "ds" in result.columns.tolist()
@@ -57,6 +55,6 @@ def test_prophet_transform_data_to_tsmodel_input_format(X_y_optional, additional
         assert "y" in result.columns.tolist()
         col_count += 1
     if additional_col:
-        assert "additiona_col" in result.columns.tolist()
+        assert "additional_col" in result.columns.tolist()
         col_count += 1
     assert result.shape[1] == col_count

@@ -135,7 +135,9 @@ class SeasonalityTransformer(BaseEstimator, TransformerMixin):
             season_feat.append(pd.get_dummies(date.quarter).rename(columns=lambda x: f"{x}_quarter"))
         if self.yearly or (self.auto and self.freq in ["D", "W", "M", "Q", "Y"]) and self.yearly is not False:
             season_feat.append(pd.get_dummies(date.year))
+
         _X = pd.concat(season_feat, axis=1)
+        _X.columns = [f"_{col}" for col in _X.columns]
 
         if self._fit_columns is not None:
             _X = self._ensure_pred_and_train_cols_equals(_X)

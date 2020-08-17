@@ -27,6 +27,7 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
             raise ValueError("You need to provide `country_code` or `country_code_column`")
         if self.country_code and self.country_code_column:
             raise ValueError("Provide `country_code` or `country_code_column`, not both")
+        self._col_name = f"_holiday_{self.country_code or self.country_code_column}"
 
     @property
     def unified_country_code(self):
@@ -34,8 +35,8 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
         return self._unified_country_code
 
     def get_feature_names(self):
-        """Return list with features which the transformer generates - `holiday`"""
-        return ["holiday"]
+        """Return list with features which the transformer generates"""
+        return [self._col_name]
 
     @unified_country_code.setter
     def unified_country_code(self, value):
@@ -117,23 +118,15 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
         cal = registry.region_registry[self.unified_country_code]()
         holidays = (
             pd.concat(
-                [
-                    pd.DataFrame(
-                        data=cal.holidays(year),
-                        columns=["date", f"holiday_{self.country_code or self.country_code_column}"],
-                    )
-                    for year in years
-                ]
+                [pd.DataFrame(data=cal.holidays(year), columns=["date", self._col_name]) for year in years]
             )
-            .assign(date=lambda x: x["date"].astype(str))
             # one day could have multiple public holidays
-            .drop_duplicates(subset="date")
-            .set_index("date")
+            .drop_duplicates(subset="date").set_index("date")
         )
 
         result = (
             pd.merge(X, holidays, left_index=True, right_index=True, how="left")
-            .fillna({f"holiday_{self.country_code or self.country_code_column}": ""})
+            .fillna({self._col_name: ""})
             .drop(columns=[self.country_code_column], errors="ignore")
         )
 

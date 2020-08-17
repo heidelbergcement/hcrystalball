@@ -102,7 +102,7 @@ class SarimaxWrapper(TSModelWrapper):
         -------
         pandas.DataFrame
         """
-        return X.assign(**{col: X[col] != "" for col in X.filter(like="holiday").columns})
+        return X.assign(**{col: X[col] != "" for col in X.filter(like="_holiday_").columns})
 
     @enforce_y_type
     @check_X_y
@@ -121,7 +121,7 @@ class SarimaxWrapper(TSModelWrapper):
         -------
         self
         """
-        if any(X.columns.str.startswith("holiday")):
+        if X.filter(like="_holiday_").shape[1] > 0:
             X = self._adjust_holidays(X)
         endog, exog = self._transform_data_to_tsmodel_input_format(X, y)
         if self.init_with_autoarima or self.always_search_model:
@@ -152,7 +152,7 @@ class SarimaxWrapper(TSModelWrapper):
             If `conf_int` attribute is set to True, the returned DataFrame will have three columns,
             with the second and third (named 'name'_lower and 'name'_upper).
         """
-        if any(X.columns.str.startswith("holiday")):
+        if X.filter(like="_holiday_").shape[1] > 0:
             X = self._adjust_holidays(X)
         _, exog = self._transform_data_to_tsmodel_input_format(X)
         preds, conf_ints = self.model.predict(n_periods=X.shape[0], exogenous=exog, return_conf_int=True)
