@@ -477,6 +477,6 @@ class ModelSelector:
             r += f"  results: List of {len(self.results)} ModelSelectorResults\n"
             r += f"  paritions: List of {len(self.partitions)} partitions\n"
             for partition in self.partitions:
-                r += f"     {partition}\n"
+                r += f"     {dict(partition)}\n"
         r += "-------------\n"
         return r

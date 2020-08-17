@@ -272,7 +272,7 @@ class ModelSelectorResult:
             f"  frequency: {self.frequency}\n"
             f"  horizon: {self.horizon}\n\n"
             f"  country_code_column: {self.country_code_column}\n\n"
-            f"  partition: {self.partition}\n"
+            f"  partition: {dict(self.partition)}\n"
             f"  partition_hash: {self.partition_hash}\n\n"
             f"  df_plot: DataFrame {self.df_plot.shape} suited for plotting cv results with .plot()\n"
             f"  X_train: DataFrame {self.X_train.shape} with training feature values\n"
