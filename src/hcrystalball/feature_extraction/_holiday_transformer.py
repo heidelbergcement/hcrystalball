@@ -98,7 +98,7 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
         Returns
         -------
         pandas.DataFrame
-            DataFrame with 'holiday' column including names of holidays for each of the date
+            DataFrame with `self._col_name` column including names of holidays for each of the date
 
         Raises
         ------
@@ -137,27 +137,58 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
             .drop(columns=[self.country_code_column], errors="ignore")
         )
 
-        df = self._get_day_around_holiday_feature(df, "before_holiday", self.days_before)
-        df = self._get_day_around_holiday_feature(df, "after_holiday", self.days_after)
+        df = self._get_day_around_holiday_feature(
+            df, f"_{self.days_before}_before{self._col_name}", -self.days_before
+        )
+        df = self._get_day_around_holiday_feature(
+            df, f"_{self.days_after}_after{self._col_name}", self.days_after
+        )
         if self.bridge_days:
             if self.days_before == 0 or self.days_before == 0:
-                logging.warning(
+                raise ValueError(
                     """`bridge_days` feature is created only if `days_before`
-                                and `days_before` are greater than 0 """
+                                and `days_before` are both greater than 0 """
                 )
             else:
                 df = df.assign(
-                    _holiday_bridge_days=lambda df: (df[["_before_holiday", "_after_holiday"]].all(axis=1))
+                    **{
+                        f"_bridge{self._col_name}": lambda df: (
+                            df[
+                                [
+                                    f"_{self.days_before}_before{self._col_name}",
+                                    f"_{self.days_after}_after{self._col_name}",
+                                ]
+                            ].all(axis=1)
+                        )
+                    }
                 )
 
         return df
 
-    def _get_day_around_holiday_feature(self, df, when, days):
-        for day in range(1, days + 1):
-            day = day if when == "after_holiday" else -day
-            df = df.assign(**{f"_{when}_{day}": lambda df: ((df[self._col_name] != "").shift(day))})
-        cols = df.filter(like=f"_{when}_").columns
-        if days > 0:
-            df = df.assign(**{f"_{when}": lambda df: df[cols].any(axis=1)})
+    def _get_day_around_holiday_feature(self, df, col_name, days):
+        """
+        Add new boolean column into pandas.DataFrame with number of `days` being True
+        before or after the public holiday depending on `when` parameter.
+
+        Parameters
+        ----------
+        df : pandas.DataFrame
+            column with `self._col_name` and datetime index
+        col_name : str
+            column name of new feature
+        days : int
+            number of days taken into account (with 0 doesn't create any column)
+
+        Returns
+        -------
+        pandas.DataFrame
+            DataFrame with `self._col_name` column and additional column `col_name` if `days` > 0
+        """
+        for day in range(1, abs(days) + 1):
+            day = day if days > 0 else -day
+            df = df.assign(**{f"_{col_name}_{day}": lambda df: ((df[self._col_name] != "").shift(day))})
+        cols = df.filter(like=f"_{col_name}_").columns
+        if days != 0:
+            df = df.assign(**{f"{col_name}": lambda df: df[cols].any(axis=1)})
 
         return df.drop(cols, axis=1)

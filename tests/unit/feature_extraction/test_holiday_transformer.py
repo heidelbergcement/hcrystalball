@@ -149,49 +149,69 @@ def expected_result_holidays_related_features(request):
     elif "all_related_features" in request.param:
         result = {
             "_holiday_DE": ["Good Friday", "", "", "Easter Monday", "", "", "", "", "", ""],
-            "_before_holiday": [False, True, True, False, False, False, False, False, False, False],
-            "_after_holiday": [False, True, True, False, True, True, False, False, False, False],
-            "_holiday_bridge_days": [False, True, True, False, False, False, False, False, False, False],
+            "_2_before_holiday_DE": [False, True, True, False, False, False, False, False, False, False],
+            "_2_after_holiday_DE": [False, True, True, False, True, True, False, False, False, False],
+            "_bridge_holiday_DE": [False, True, True, False, False, False, False, False, False, False],
         }
 
     elif "features_without_bridge_days" in request.param:
         result = {
             "_holiday_DE": ["Good Friday", "", "", "Easter Monday", "", "", "", "", "", ""],
-            "_before_holiday": [False, False, True, False, False, False, False, False, False, False],
-            "_after_holiday": [False, True, False, False, True, False, False, False, False, False],
+            "_1_before_holiday_DE": [False, False, True, False, False, False, False, False, False, False],
+            "_1_after_holiday_DE": [False, True, False, False, True, False, False, False, False, False],
         }
 
     elif "just_before_holidays_1" in request.param:
         result = {
             "_holiday_DE": ["Good Friday", "", "", "Easter Monday", "", "", "", "", "", ""],
-            "_before_holiday": [False, False, True, False, False, False, False, False, False, False],
+            "_1_before_holiday_DE": [False, False, True, False, False, False, False, False, False, False],
         }
 
     elif "bridge_days_work_just_with_after_and_before_days" in request.param:
         result = {
             "_holiday_DE": ["Good Friday", "", "", "Easter Monday", "", "", "", "", "", ""],
-            "_after_holiday": [False, True, False, False, True, False, False, False, False, False],
+            "_1_after_holiday_DE": [False, True, False, False, True, False, False, False, False, False],
         }
 
     return pd.DataFrame(result, index=pd.date_range(start="2020-04-10", periods=10))
 
 
 @pytest.mark.parametrize(
-    "country_code, days_before, days_after, bridge_days, expected_result_holidays_related_features",
+    """country_code,
+    days_before,
+    days_after,
+    bridge_days,
+    expected_result_holidays_related_features,
+    extected_error""",
     [
-        ("DE", 0, 0, False, "without_related_features"),
-        ("DE", 2, 2, True, "all_related_features"),
-        ("DE", 1, 1, False, "features_without_bridge_days"),
-        ("DE", 1, 0, False, "just_before_holidays_1"),
-        ("DE", 0, 1, True, "bridge_days_work_just_with_after_and_before_days"),
+        ("DE", 0, 0, False, "without_related_features", None),
+        ("DE", 2, 2, True, "all_related_features", None),
+        ("DE", 1, 1, False, "features_without_bridge_days", None),
+        ("DE", 1, 0, False, "just_before_holidays_1", None),
+        ("DE", 0, 1, True, "bridge_days_work_just_with_after_and_before_days", ValueError),
     ],
     indirect=["expected_result_holidays_related_features"],
 )
 def test_holidays_related_features(
-    country_code, days_before, days_after, bridge_days, expected_result_holidays_related_features
+    country_code,
+    days_before,
+    days_after,
+    bridge_days,
+    expected_result_holidays_related_features,
+    extected_error,
 ):
     X = pd.DataFrame(index=pd.date_range(start="2020-04-10", periods=10))
-    df_result = HolidayTransformer(
-        country_code=country_code, days_before=days_before, days_after=days_after, bridge_days=bridge_days
-    ).fit_transform(X)
-    assert_frame_equal(df_result, expected_result_holidays_related_features)
+    if extected_error is None:
+        df_result = HolidayTransformer(
+            country_code=country_code, days_before=days_before, days_after=days_after, bridge_days=bridge_days
+        ).fit_transform(X)
+        assert_frame_equal(df_result, expected_result_holidays_related_features)
+
+    else:
+        with pytest.raises(extected_error):
+            df_result = HolidayTransformer(
+                country_code=country_code,
+                days_before=days_before,
+                days_after=days_after,
+                bridge_days=bridge_days,
+            ).fit_transform(X)

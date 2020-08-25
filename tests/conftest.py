@@ -178,7 +178,7 @@ def X_with_holidays():
     from hcrystalball.feature_extraction import HolidayTransformer
 
     X = pd.DataFrame(index=pd.date_range(start="2019-01-01", periods=300))
-    holidays = HolidayTransformer(country_code="DE").fit_transform(X)
+    holidays = HolidayTransformer(country_code="DE", days_before=2, days_after=1).fit_transform(X)
     return X.join(holidays)
 
 
