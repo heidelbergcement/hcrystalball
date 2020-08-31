@@ -19,3 +19,4 @@ repos:
     hooks:
     -   id: nbstripout
         files: ".ipynb"
+        args: [--line-length="metadata.celltoolbar cell.metadata.heading_collapsed"]
