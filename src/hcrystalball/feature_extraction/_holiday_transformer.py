@@ -21,7 +21,12 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
     """
 
     def __init__(
-        self, country_code=None, country_code_column=None, days_before=0, days_after=0, bridge_days=False
+        self,
+        country_code=None,
+        country_code_column=None,
+        days_before=0,
+        days_after=0,
+        bridge_days=False,
     ):
         self.country_code = country_code
         self.unified_country_code = country_code

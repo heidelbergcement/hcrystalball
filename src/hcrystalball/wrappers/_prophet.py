@@ -146,8 +146,8 @@ class ProphetWrapper(TSModelWrapper):
         extra_holidays = {
             col: {
                 holiday: {
-                    "lower_window": self.get_holiday_windows(X, f"_before{col}"),
-                    "upper_window": self.get_holiday_windows(X, f"_after{col}"),
+                    "lower_window": self._get_holiday_windows(X, f"_before{col}"),
+                    "upper_window": self._get_holiday_windows(X, f"_after{col}"),
                     "prior_scale": self.holidays_prior_scale,
                 }
                 for holiday in holidays
@@ -186,14 +186,29 @@ class ProphetWrapper(TSModelWrapper):
                             inter[col].map(extra_holidays[col]).apply(pd.Series),
                             left_index=True,
                             right_index=True,
-                        ).loc[:, ["holiday", "lower_window", "upper_window", "prior_scale"]]
+                        ).loc[
+                            :,
+                            ["holiday", "lower_window", "upper_window", "prior_scale"],
+                        ]
                     )
 
             self.model.holidays = pd.concat(holidays).assign(ds=lambda x: x.index).reset_index(drop=True)
 
         return X.drop(columns=holiday_cols, errors="ignore")
 
-    def get_holiday_windows(self, X, col_like):
+    def _get_holiday_windows(self, X, col_like):
+        """Get information about window for holidays for particular country.
+
+        Parameters
+        ----------
+        X : pandas.DataFrame
+            Input features with 'col_like' column.
+
+        Returns
+        -------
+        int
+            number of days around holidays (whether before or after depends on `col_like`)
+        """
         window = X.filter(like=f"{col_like}")
         window = 0 if window.empty else window.columns[0].split("_")[1]
         return int(window)
