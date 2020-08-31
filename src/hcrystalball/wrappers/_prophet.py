@@ -204,6 +204,9 @@ class ProphetWrapper(TSModelWrapper):
         X : pandas.DataFrame
             Input features with 'col_like' column.
 
+        col_like: str
+            col name pattern
+            (i.e. `_before_holiday_DE`)
         Returns
         -------
         int

@@ -15,6 +15,20 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
     country_code_column: str
         name of the column which have the ISO code of the country/region
 
+    days_before: int
+        number of days before the holiday which will be taken into account
+        (i.e. 2 means that new bool column will be created and will be True for 2 days before holidays,
+        otherwise False)
+
+    days_after: int
+        number of days after the holiday which will be taken into account
+        (i.e. 2 means that new bool column will be created and will be True for 2 days after holidays,
+        otherwise False)
+
+    bridge_days: bool
+        overlaping `days_before` and `days_after` feature which serves for modeling between
+        holidays working days
+
     Please be aware that you cannot provide both country_code and country_code_column
     during initialization since this would be ambuguious. If you provide `country_code_column`
     instead of `country_code` the ISO code found in the column will be assigned into `country_code` column.
@@ -194,6 +208,7 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
             df = df.assign(**{f"_{col_name}_{day}": lambda df: ((df[self._col_name] != "").shift(day))})
         cols = df.filter(like=f"_{col_name}_").columns
         if days != 0:
+            # all intermediate columns called (i.e. _{`col_name`}_) are combined into one as `col_name`
             df = df.assign(**{f"{col_name}": lambda df: df[cols].any(axis=1)})
 
         return df.drop(cols, axis=1)
