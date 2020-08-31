@@ -132,7 +132,7 @@ def expected_result_prophet_adjust_holidays_related_features():
 
 
 @pytest.mark.parametrize(
-    "X_with_holidays, extra_holidays, expected_result_prophet_adjust_holidays_for_two_countries",
+    "X_with_holidays, extra_holidays, expected_result_prophet_adjust_holidays_related_features",
     [
         (
             "double_holidays",
@@ -142,20 +142,20 @@ def expected_result_prophet_adjust_holidays_related_features():
     ],
     indirect=[
         "X_with_holidays",
-        "expected_result_prophet_adjust_holidays_for_two_countries",
+        "expected_result_prophet_adjust_holidays_related_features",
     ],
 )
 def test_prophet_adjust_holidays_related_features(
     X_with_holidays,
     extra_holidays,
-    expected_result_prophet_adjust_holidays_for_two_countries,
+    expected_result_prophet_adjust_holidays_related_features,
 ):
 
     prophet = ProphetWrapper(extra_holidays=extra_holidays)
     prophet.model = prophet._init_tsmodel(Prophet)
     prophet._adjust_holidays(X_with_holidays)
     holidays = prophet.model.holidays
-    assert_frame_equal(holidays, expected_result_prophet_adjust_holidays_for_two_countries)
+    assert_frame_equal(holidays, expected_result_prophet_adjust_holidays_related_features)
 
 
 @pytest.mark.parametrize(
