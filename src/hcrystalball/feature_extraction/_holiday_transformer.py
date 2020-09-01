@@ -1,5 +1,4 @@
 import pandas as pd
-import logging
 from workalendar.registry import registry
 from sklearn.base import BaseEstimator, TransformerMixin
 
