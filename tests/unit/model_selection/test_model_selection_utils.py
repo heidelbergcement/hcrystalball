@@ -12,7 +12,10 @@ def test_persist_experts_in_physical_partition(train_data, grid_search, tmp_path
 
     partition_columns = ["Product"]
     results = select_model(
-        train_data, target_col_name="Quantity", partition_columns=partition_columns, grid_search=grid_search,
+        train_data,
+        target_col_name="Quantity",
+        partition_columns=partition_columns,
+        grid_search=grid_search,
     )
 
     persist_experts_in_physical_partition(
@@ -54,7 +57,10 @@ def test_persist_experts_in_physical_partition(train_data, grid_search, tmp_path
             partition = json.load(file)
             assert partition == result.partition
 
-        with open(os.path.join(tmp_path, result.partition_hash + ".model_selector_result"), "rb",) as file:
+        with open(
+            os.path.join(tmp_path, result.partition_hash + ".model_selector_result"),
+            "rb",
+        ) as file:
             model_selector_result = pickle.load(file)
             assert isinstance(model_selector_result, type(result))
             assert str(model_selector_result.__dict__) == str(result.__dict__)
@@ -65,7 +71,10 @@ def test_load_expert(train_data, grid_search, tmp_path):
 
     partition_columns = ["Product"]
     results = select_model(
-        train_data, target_col_name="Quantity", partition_columns=partition_columns, grid_search=grid_search,
+        train_data,
+        target_col_name="Quantity",
+        partition_columns=partition_columns,
+        grid_search=grid_search,
     )
 
     persist_experts_in_physical_partition(
@@ -104,13 +113,19 @@ def test_load_expert(train_data, grid_search, tmp_path):
         assert partition == result.partition
 
         model_selector_result = _load_file(
-            partition_label=result.partition, path=tmp_path, expert_type="model_selector_result",
+            partition_label=result.partition,
+            path=tmp_path,
+            expert_type="model_selector_result",
         )
         assert isinstance(model_selector_result, type(result))
         assert str(model_selector_result.__dict__) == str(result.__dict__)
 
         # with partition_hash
-        pkl_model = _load_file(partition_hash=result.partition_hash, path=tmp_path, expert_type="best_model",)
+        pkl_model = _load_file(
+            partition_hash=result.partition_hash,
+            path=tmp_path,
+            expert_type="best_model",
+        )
         assert isinstance(pkl_model, type(result.best_model))
         assert str(pkl_model.get_params()) == str(result.best_model.get_params())
 

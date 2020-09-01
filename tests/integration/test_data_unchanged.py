@@ -31,7 +31,11 @@ def estimators():
         "prophet": [
             (
                 "prophet",
-                ProphetWrapper(daily_seasonality=False, weekly_seasonality=False, yearly_seasonality=False,),
+                ProphetWrapper(
+                    daily_seasonality=False,
+                    weekly_seasonality=False,
+                    yearly_seasonality=False,
+                ),
             )
         ],
         "sarimax": [("sarimax", SarimaxWrapper(order=(1, 1, 1), seasonal_order=(1, 1, 1, 2)))],

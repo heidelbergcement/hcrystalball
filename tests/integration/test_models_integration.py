@@ -186,7 +186,11 @@ def pipeline(request):
             "more_dimensions_with_get_feature_names",
             ["trend", "x0_1", "x0_2", "x0_3", "x0_4"],
         ),
-        ("more_cols_freq_D", "less_dimensions_without_get_feature_names", ["trend", "pca_0"],),
+        (
+            "more_cols_freq_D",
+            "less_dimensions_without_get_feature_names",
+            ["trend", "pca_0"],
+        ),
         ("more_cols_freq_D", "with_model", ["ExponentialSmoothing"]),
         ("more_cols_freq_D", "more_layers_builtin_transformers", ["trend", "x0_1"]),
         (

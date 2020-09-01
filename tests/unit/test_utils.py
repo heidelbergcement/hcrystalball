@@ -144,7 +144,9 @@ def test_get_model_repr_single_model(wrapper_instance):
     ["sklearn", "stacking_ensemble", "simple_ensemble", "smoothing", "sarimax", "prophet", "tbats"],
     indirect=["pipeline_instance_model_in_pipeline"],
 )
-def test_get_model_repr_pipeline_instance_model_in_pipeline(pipeline_instance_model_in_pipeline,):
+def test_get_model_repr_pipeline_instance_model_in_pipeline(
+    pipeline_instance_model_in_pipeline,
+):
 
     model_repr = get_estimator_repr(pipeline_instance_model_in_pipeline)
     assert model_repr.find("...") == -1
@@ -229,7 +231,11 @@ def test_optional_import_with_dependency(module_name, class_name):
             {"x": {"c": 0}},
             {"a": {"b": 1, "c": 2}, "x": {"z": 1, "c": 0}},
         ),
-        ({"x": {"c": 1}}, {"x": {"c": 0}}, {"x": {"c": 0}},),
+        (
+            {"x": {"c": 1}},
+            {"x": {"c": 0}},
+            {"x": {"c": 0}},
+        ),
     ],
 )
 def test_deep_dict_update(source, update, exp_result):

@@ -175,7 +175,11 @@ def get_scorer(function="neg_mean_absolute_error"):
 
 
 def make_ts_scorer(
-    score_func, greater_is_better=True, needs_proba=False, needs_threshold=False, **kwargs,
+    score_func,
+    greater_is_better=True,
+    needs_proba=False,
+    needs_threshold=False,
+    **kwargs,
 ):
     """Make a scorer from a performance metric or loss function.
 

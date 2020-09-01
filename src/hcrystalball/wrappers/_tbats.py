@@ -62,7 +62,11 @@ class BaseTBATSWrapper(TSModelWrapper, metaclass=ABCMeta):
             preds[f"{self.name}_lower"] = conf_ints["lower_bound"]
             preds[f"{self.name}_upper"] = conf_ints["upper_bound"]
         else:
-            preds = pd.DataFrame(self.model.forecast(steps=X.shape[0]), index=X.index, columns=[self.name],)
+            preds = pd.DataFrame(
+                self.model.forecast(steps=X.shape[0]),
+                index=X.index,
+                columns=[self.name],
+            )
         return self._clip_predictions(preds)
 
 

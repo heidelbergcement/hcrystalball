@@ -100,7 +100,9 @@ def test_model_selector(tmp_path):
 
     ms.add_model_to_gridsearch(get_sklearn_wrapper(LinearRegression))
     ms.select_model(
-        df=df, target_col_name=target_col_name, partition_columns=["Region", "Plant", "Product"],
+        df=df,
+        target_col_name=target_col_name,
+        partition_columns=["Region", "Plant", "Product"],
     )
 
     assert len(ms.results) == n_regions * n_plants * n_products

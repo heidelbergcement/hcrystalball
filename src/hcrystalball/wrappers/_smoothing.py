@@ -188,7 +188,11 @@ class HoltSmoothingWrapper(BaseSmoothingWrapper):
 
     @tsmodel_wrapper_constructor_factory(Holt)
     def __init__(
-        self, name="HoltSmoothing", fit_params=None, clip_predictions_lower=None, clip_predictions_upper=None,
+        self,
+        name="HoltSmoothing",
+        fit_params=None,
+        clip_predictions_lower=None,
+        clip_predictions_upper=None,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the Holt class on top of the ones defined here!"""
