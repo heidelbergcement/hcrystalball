@@ -19,3 +19,4 @@ repos:
     hooks:
     -   id: nbstripout
         files: ".ipynb"
+        args: [--extra-keys="metadata.kernel_spec.display_name metadata.kernel_spec.name"]
