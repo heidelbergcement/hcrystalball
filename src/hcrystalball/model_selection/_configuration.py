@@ -386,6 +386,7 @@ def get_gridsearch(
     if stacking_ensembles:
         from hcrystalball.ensemble import StackingEnsemble
         from hcrystalball.wrappers import ProphetWrapper
+        from hcrystalball.wrappers import ThetaWrapper
         from sklearn.ensemble import RandomForestRegressor
 
         grid_search.param_grid.append(
@@ -421,6 +422,7 @@ def get_gridsearch(
     if average_ensembles:
         from hcrystalball.ensemble import SimpleEnsemble
         from hcrystalball.wrappers import ProphetWrapper
+        from hcrystalball.wrappers import ThetaWrapper
 
         grid_search.param_grid.append(
             {
