@@ -195,7 +195,11 @@ class HoltSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
 
     @tsmodel_wrapper_constructor_factory(Holt)
     def __init__(
-        self, name="HoltSmoothing", fit_params=None, clip_predictions_lower=None, clip_predictions_upper=None,
+        self,
+        name="HoltSmoothing",
+        fit_params=None,
+        clip_predictions_lower=None,
+        clip_predictions_upper=None,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the Holt class on top of the ones defined here!"""
@@ -203,7 +207,7 @@ class HoltSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
 
 
 class ThetaWrapper(BaseStatsmodelsForecastingWrapper):
-    """Wrapper for `~statsmodels.tsa.holtwinters.Holt` (see other parameters there)
+    """Wrapper for `~statsmodels.tsa.forecasting.theta.ThetaModel` (see other parameters there)
 
     Parameters
     ----------
@@ -214,8 +218,8 @@ class ThetaWrapper(BaseStatsmodelsForecastingWrapper):
         Whether confidence intervals should be also outputed.
 
     fit_params: dict
-        Parameters passed to `~hcrystalball.wrappers.HoltSmoothingWrapper.fit` method of model.
-        For more details see `statsmodels.tsa.holtwinters.Holt.fit`
+        Parameters passed to `~hcrystalball.wrappers.ThetaWrapper.fit` method of model.
+        For more details see `statsmodels.tsa.forecasting.theta.ThetaModel.fit`
 
     clip_predictions_lower: float
         Minimal value allowed for predictions - predictions will be clipped to this value.
