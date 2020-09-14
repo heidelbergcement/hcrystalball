@@ -11,6 +11,7 @@ import pandas as pd
 from statsmodels.tsa.api import ExponentialSmoothing
 from statsmodels.tsa.api import Holt
 from statsmodels.tsa.api import SimpleExpSmoothing
+from statsmodels.tsa.forecasting.theta import ThetaModel
 from hcrystalball.wrappers._base import TSModelWrapper
 from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
 from hcrystalball.utils import check_X_y
@@ -18,7 +19,7 @@ from hcrystalball.utils import enforce_y_type
 from hcrystalball.utils import check_fit_before_predict
 
 
-class BaseSmoothingWrapper(TSModelWrapper, metaclass=ABCMeta):
+class BaseStatsmodelsForecastingWrapper(TSModelWrapper, metaclass=ABCMeta):
     """BaseWrapper for smoothing models from `~statsmodels.tsa.holtwinters`
 
     Currently supported ones are `~statsmodels.tsa.holtwinters.ExponentialSmoothing`,
@@ -93,11 +94,17 @@ class BaseSmoothingWrapper(TSModelWrapper, metaclass=ABCMeta):
         """
         horizon = self._transform_data_to_tsmodel_input_format(X)
         preds = self.model.forecast(horizon).to_frame(self.name)
+        if hasattr(self.model, "prediction_intervals"):
+            preds = (
+                self.model.prediction_intervals(horizon)
+                .rename(columns=lambda x: f"{self.name}_" + x)
+                .join(preds)
+            )
 
         return self._clip_predictions(preds)
 
 
-class ExponentialSmoothingWrapper(BaseSmoothingWrapper):
+class ExponentialSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
     """Wrapper for `~statsmodels.tsa.holtwinters.ExponentialSmoothing` (see other parameters there)
 
     Parameters
@@ -131,7 +138,7 @@ class ExponentialSmoothingWrapper(BaseSmoothingWrapper):
         pass
 
 
-class SimpleSmoothingWrapper(BaseSmoothingWrapper):
+class SimpleSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
     """Wrapper for `~statsmodels.tsa.holtwinters.SimpleExpSmoothing` (see other parameters there)
 
     Parameters
@@ -165,7 +172,7 @@ class SimpleSmoothingWrapper(BaseSmoothingWrapper):
         pass
 
 
-class HoltSmoothingWrapper(BaseSmoothingWrapper):
+class HoltSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
     """Wrapper for `~statsmodels.tsa.holtwinters.Holt` (see other parameters there)
 
     Parameters
@@ -195,8 +202,42 @@ class HoltSmoothingWrapper(BaseSmoothingWrapper):
         pass
 
 
-__all__ = [
-    "ExponentialSmoothingWrapper",
-    "SimpleSmoothingWrapper",
-    "HoltSmoothingWrapper",
-]
+class ThetaWrapper(BaseStatsmodelsForecastingWrapper):
+    """Wrapper for `~statsmodels.tsa.holtwinters.Holt` (see other parameters there)
+
+    Parameters
+    ----------
+    name: str
+        Name of the model instance, used also as column name for returned prediction
+
+    conf_int : bool
+        Whether confidence intervals should be also outputed.
+
+    fit_params: dict
+        Parameters passed to `~hcrystalball.wrappers.HoltSmoothingWrapper.fit` method of model.
+        For more details see `statsmodels.tsa.holtwinters.Holt.fit`
+
+    clip_predictions_lower: float
+        Minimal value allowed for predictions - predictions will be clipped to this value.
+
+    clip_predictions_upper: float
+        Maximum value allowed for predictions - predictions will be clipped to this value.
+    """
+
+    model_cls = ThetaModel
+
+    @tsmodel_wrapper_constructor_factory(ThetaModel)
+    def __init__(
+        self,
+        name="ThetaModel",
+        conf_int=False,
+        fit_params=None,
+        clip_predictions_lower=None,
+        clip_predictions_upper=None,
+    ):
+        """This constructor will be modified at runtime to accept
+        all parameters of the Holt class on top of the ones defined here!"""
+        pass
+
+
+__all__ = ["ExponentialSmoothingWrapper", "SimpleSmoothingWrapper", "HoltSmoothingWrapper", "ThetaWrapper"]
