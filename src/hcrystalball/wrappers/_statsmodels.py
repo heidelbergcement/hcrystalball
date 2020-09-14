@@ -94,13 +94,13 @@ class BaseStatsmodelsForecastingWrapper(TSModelWrapper, metaclass=ABCMeta):
         """
         horizon = self._transform_data_to_tsmodel_input_format(X)
         preds = self.model.forecast(horizon).to_frame(self.name)
-        if hasattr(self.model, "prediction_intervals"):
+        if hasattr(self.model, "prediction_intervals") and self.conf_int:
             preds = (
                 self.model.prediction_intervals(horizon)
                 .rename(columns=lambda x: f"{self.name}_" + x)
                 .join(preds)
             )
-
+        preds.index = X.index
         return self._clip_predictions(preds)
 
 

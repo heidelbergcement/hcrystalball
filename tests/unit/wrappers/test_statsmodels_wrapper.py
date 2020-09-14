@@ -8,7 +8,8 @@ from hcrystalball.wrappers import ThetaWrapper
 
 @pytest.mark.parametrize("X_y_optional", [("just_X"), ("")], indirect=["X_y_optional"])
 @pytest.mark.parametrize(
-    "model", [ExponentialSmoothingWrapper, HoltSmoothingWrapper, SimpleSmoothingWrapper, ThetaWrapper],
+    "model",
+    [ExponentialSmoothingWrapper, HoltSmoothingWrapper, SimpleSmoothingWrapper, ThetaWrapper],
 )
 def test_statsmodels_transform_data_to_tsmodel_input_format(X_y_optional, model):
 
@@ -22,9 +23,10 @@ def test_statsmodels_transform_data_to_tsmodel_input_format(X_y_optional, model)
 
 
 @pytest.mark.parametrize("X_y_optional", [("")], indirect=["X_y_optional"])
-@pytest.mark.parametrize("conf_int", [True])
+@pytest.mark.parametrize("conf_int", [True, False])
 @pytest.mark.parametrize(
-    "model", [ExponentialSmoothingWrapper, HoltSmoothingWrapper, SimpleSmoothingWrapper, ThetaWrapper],
+    "model",
+    [ExponentialSmoothingWrapper, HoltSmoothingWrapper, SimpleSmoothingWrapper, ThetaWrapper],
 )
 def test_statsmodels_predict_with_conf_int(X_y_optional, model, conf_int):
 
@@ -33,6 +35,11 @@ def test_statsmodels_predict_with_conf_int(X_y_optional, model, conf_int):
         result = model(name="test", conf_int=conf_int).fit(X[:-10], y[:-10]).predict(X[-10:])
         assert isinstance(result, pd.DataFrame)
         assert all(result.columns == ["test_lower", "test_upper", "test"])
+
+    elif not conf_int:
+        result = model(name="test").fit(X[:-10], y[:-10]).predict(X[-10:])
+        assert isinstance(result, pd.DataFrame)
+        assert all(result.columns == ["test"])
 
     else:
         with pytest.raises(TypeError):
