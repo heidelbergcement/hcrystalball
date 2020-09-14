@@ -102,7 +102,12 @@ class SarimaxWrapper(TSModelWrapper):
         -------
         pandas.DataFrame
         """
-        return X.assign(**{col: X[col] != "" for col in X.filter(like="_holiday_").columns})
+        return X.assign(
+            **{
+                col: X[col] != ""
+                for col in X.filter(like="_holiday_").select_dtypes(include="object").columns
+            }
+        )
 
     @enforce_y_type
     @check_X_y
@@ -159,7 +164,9 @@ class SarimaxWrapper(TSModelWrapper):
         preds = pd.DataFrame(preds, index=X.index, columns=[self.name])
         if self.conf_int:
             conf_ints = pd.DataFrame(
-                conf_ints, columns=[f"{self.name}_lower", f"{self.name}_upper"], index=X.index,
+                conf_ints,
+                columns=[f"{self.name}_lower", f"{self.name}_upper"],
+                index=X.index,
             )
             preds = pd.concat([preds, conf_ints], axis=1)
 

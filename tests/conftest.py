@@ -174,11 +174,16 @@ def X_y_optional(request):
 
 
 @pytest.fixture(scope="module")
-def X_with_holidays():
+def X_with_holidays(request):
     from hcrystalball.feature_extraction import HolidayTransformer
 
     X = pd.DataFrame(index=pd.date_range(start="2019-01-01", periods=300))
-    holidays = HolidayTransformer(country_code="DE").fit_transform(X)
+    holidays = HolidayTransformer(
+        country_code="DE", days_before=2, days_after=1, bridge_days=1
+    ).fit_transform(X)
+    if "double_holidays" in request.param:
+        X = X.join(HolidayTransformer(country_code="BE", days_before=0, days_after=2).fit_transform(X))
+
     return X.join(holidays)
 
 
@@ -271,7 +276,9 @@ def pipeline_instance_model_only(request):
                 (
                     "regressor",
                     ProphetWrapper(
-                        daily_seasonality=False, weekly_seasonality=False, yearly_seasonality=False,
+                        daily_seasonality=False,
+                        weekly_seasonality=False,
+                        yearly_seasonality=False,
                     ),
                 )
             ]
@@ -286,7 +293,14 @@ def pipeline_instance_model_only(request):
         return Pipeline([("regressor", get_sklearn_wrapper(LinearRegression, lags=4))])
 
     elif request.param == "sarimax":
-        return Pipeline([("regressor", SarimaxWrapper(order=(1, 1, 0), seasonal_order=(1, 1, 1, 1)),)])
+        return Pipeline(
+            [
+                (
+                    "regressor",
+                    SarimaxWrapper(order=(1, 1, 0), seasonal_order=(1, 1, 1, 1)),
+                )
+            ]
+        )
 
     elif request.param == "stacking_ensemble":
         return Pipeline(
@@ -347,16 +361,40 @@ def pipeline_instance_model_in_pipeline(request):
         )
 
     elif request.param == "smoothing":
-        return Pipeline([("model", Pipeline([("regressor", ExponentialSmoothingWrapper(trend="add"))]),)])
+        return Pipeline(
+            [
+                (
+                    "model",
+                    Pipeline([("regressor", ExponentialSmoothingWrapper(trend="add"))]),
+                )
+            ]
+        )
 
     elif request.param == "tbats":
         return Pipeline(
-            [("model", Pipeline([("regressor", TBATSWrapper(use_arma_errors=False, use_box_cox=False),)]),)]
+            [
+                (
+                    "model",
+                    Pipeline(
+                        [
+                            (
+                                "regressor",
+                                TBATSWrapper(use_arma_errors=False, use_box_cox=False),
+                            )
+                        ]
+                    ),
+                )
+            ]
         )
 
     elif request.param == "sklearn":
         return Pipeline(
-            [("model", Pipeline([("regressor", get_sklearn_wrapper(LinearRegression, lags=4))]),)]
+            [
+                (
+                    "model",
+                    Pipeline([("regressor", get_sklearn_wrapper(LinearRegression, lags=4))]),
+                )
+            ]
         )
 
     elif request.param == "sarimax":
@@ -364,7 +402,14 @@ def pipeline_instance_model_in_pipeline(request):
             [
                 (
                     "model",
-                    Pipeline([("regressor", SarimaxWrapper(order=(1, 1, 0), seasonal_order=(1, 1, 1, 1)),)]),
+                    Pipeline(
+                        [
+                            (
+                                "regressor",
+                                SarimaxWrapper(order=(1, 1, 0), seasonal_order=(1, 1, 1, 1)),
+                            )
+                        ]
+                    ),
                 )
             ]
         )
@@ -432,7 +477,8 @@ def test_data_raw():
     dfs = []
     for region in regions:
         df_tmp = pd.DataFrame(
-            columns=["date", "Region", "Plant", "Product", "Quantity"], index=range(len(dates)),
+            columns=["date", "Region", "Plant", "Product", "Quantity"],
+            index=range(len(dates)),
         )
         df_tmp.loc[:, "Region"] = region
         for plant in plants:
@@ -461,7 +507,8 @@ def train_data(request):
 
     dfs = []
     df_tmp = pd.DataFrame(
-        columns=["date", "Region", "Product", "Holidays_code", "Quantity"], index=range(len(df0.index)),
+        columns=["date", "Region", "Product", "Holidays_code", "Quantity"],
+        index=range(len(df0.index)),
     )
     for region in regions:
         df_tmp.loc[:, "Region"] = region
@@ -502,7 +549,11 @@ def grid_search(request):
 
     parameters = [
         {"model": [good_dummy]},
-        {"model": [bad_dummy], "model__strategy": ["constant"], "model__constant": [42]},
+        {
+            "model": [bad_dummy],
+            "model__strategy": ["constant"],
+            "model__constant": [42],
+        },
     ]
 
     holiday_model = Pipeline(

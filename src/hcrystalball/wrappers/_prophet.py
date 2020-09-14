@@ -139,22 +139,29 @@ class ProphetWrapper(TSModelWrapper):
             Input features without 'holiday' column
         """
 
-        holiday_cols = [col for col in X.filter(like="_holiday_").columns]
+        holiday_cols = [col for col in X.filter(like="_holiday_").select_dtypes(include="object").columns]
 
-        unique_holiday = list(
-            itertools.chain.from_iterable([X.loc[X[col] != "", col].unique() for col in holiday_cols])
-        )
+        unique_holiday_dict = {col: X.loc[X[col] != "", col].unique() for col in holiday_cols}
 
-        # ensure correct handling of extra_holidays parameters
         extra_holidays = {
-            holiday: {"lower_window": 0, "upper_window": 0, "prior_scale": self.holidays_prior_scale}
-            for holiday in unique_holiday
+            col: {
+                holiday: {
+                    "lower_window": self._get_holiday_windows(X, f"_before{col}"),
+                    "upper_window": self._get_holiday_windows(X, f"_after{col}"),
+                    "prior_scale": self.holidays_prior_scale,
+                }
+                for holiday in holidays
+            }
+            for col, holidays in unique_holiday_dict.items()
         }
-        if self.extra_holidays:
-            extra_holidays = deep_dict_update(extra_holidays, self.extra_holidays)
 
+        if self.extra_holidays:
+            extra_holidays = {k: deep_dict_update(v, self.extra_holidays) for k, v in extra_holidays.items()}
+
+        unique_holiday = set(itertools.chain.from_iterable(unique_holiday_dict.values()))
+        all_extra_holidays = set(itertools.chain.from_iterable(extra_holidays.values()))
         if len(unique_holiday) > 0:
-            missing_holidays = set(extra_holidays.keys()).difference(unique_holiday)
+            missing_holidays = all_extra_holidays.difference(unique_holiday)
 
             if missing_holidays:
                 logging.warning(
@@ -176,15 +183,38 @@ class ProphetWrapper(TSModelWrapper):
                     # given the extra_holidays parameter
                     holidays.append(
                         inter.merge(
-                            inter[col].map(extra_holidays).apply(pd.Series),
+                            inter[col].map(extra_holidays[col]).apply(pd.Series),
                             left_index=True,
                             right_index=True,
-                        ).loc[:, ["holiday", "lower_window", "upper_window", "prior_scale"]]
+                        ).loc[
+                            :,
+                            ["holiday", "lower_window", "upper_window", "prior_scale"],
+                        ]
                     )
 
             self.model.holidays = pd.concat(holidays).assign(ds=lambda x: x.index).reset_index(drop=True)
 
         return X.drop(columns=holiday_cols, errors="ignore")
+
+    def _get_holiday_windows(self, X, col_like):
+        """Get information about window for holidays for particular country.
+
+        Parameters
+        ----------
+        X : pandas.DataFrame
+            Input features with 'col_like' column.
+
+        col_like: str
+            col name pattern
+            (i.e. `_before_holiday_DE`)
+        Returns
+        -------
+        int
+            number of days around holidays (whether before or after depends on `col_like`)
+        """
+        window = X.filter(like=f"{col_like}")
+        window = 0 if window.empty else window.columns[0].split("_")[1]
+        return int(window)
 
     @enforce_y_type
     @check_X_y
