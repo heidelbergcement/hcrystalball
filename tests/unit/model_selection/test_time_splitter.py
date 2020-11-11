@@ -60,7 +60,10 @@ def test_cv_finertimesplit_split_input_data_types(test_data, expected_error):
             assert len(isplit[0]) == len(test_data) - (n_splits - i) * horizon
             assert len(isplit[1]) == horizon
             assert np.array_equal(isplit[0], np.arange(len(test_data) - (n_splits - i) * horizon))
-            assert np.array_equal(isplit[1], np.arange(horizon) + len(test_data) - (n_splits - i) * horizon,)
+            assert np.array_equal(
+                isplit[1],
+                np.arange(horizon) + len(test_data) - (n_splits - i) * horizon,
+            )
     else:
         with pytest.raises(expected_error):
             _ = list(fts.split(test_data))

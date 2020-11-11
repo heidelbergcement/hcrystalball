@@ -86,7 +86,12 @@ def test_seasonality_transformer(X_start, X_len, weekdays, weeks, months, quarte
     cols_with_ones = first_row[first_row[first_row.columns[0]] == 1].index
 
     single_date_cols = (
-        SeasonalityTransformer(freq=freq, month_start=True, quarter_start=True, year_start=True,)
+        SeasonalityTransformer(
+            freq=freq,
+            month_start=True,
+            quarter_start=True,
+            year_start=True,
+        )
         .fit(X.head(1), y.head(1))
         .transform(X.head(1))
         .columns
