@@ -160,6 +160,7 @@ class ModelSelector:
         prophet_models=False,
         tbats_models=False,
         exp_smooth_models=False,
+        theta_models=False,
         average_ensembles=False,
         stacking_ensembles=False,
         stacking_ensembles_train_horizon=10,

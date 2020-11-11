@@ -26,6 +26,7 @@ def get_gridsearch(
     prophet_models=False,
     tbats_models=False,
     exp_smooth_models=False,
+    theta_models=False,
     average_ensembles=False,
     stacking_ensembles=False,
     stacking_ensembles_train_horizon=10,
@@ -353,6 +354,20 @@ def get_gridsearch(
             }
         )
 
+    if theta_models:
+        from hcrystalball.wrappers import ThetaWrapper
+
+        grid_search.param_grid.append(
+            {
+                "model": [
+                    ThetaWrapper(
+                        clip_predictions_lower=clip_predictions_lower,
+                        clip_predictions_upper=clip_predictions_upper,
+                    )
+                ]
+            }
+        )
+
     if tbats_models:
         from hcrystalball.wrappers import TBATSWrapper
 
@@ -371,6 +386,7 @@ def get_gridsearch(
     if stacking_ensembles:
         from hcrystalball.ensemble import StackingEnsemble
         from hcrystalball.wrappers import ProphetWrapper
+        from hcrystalball.wrappers import ThetaWrapper
         from sklearn.ensemble import RandomForestRegressor
 
         grid_search.param_grid.append(
@@ -395,6 +411,10 @@ def get_gridsearch(
                             clip_predictions_upper=clip_predictions_upper,
                         ),
                         sklearn_model_pipeline,
+                        ThetaWrapper(
+                            clip_predictions_lower=clip_predictions_lower,
+                            clip_predictions_upper=clip_predictions_upper,
+                        ),
                     ],
                 ],
             }
@@ -402,6 +422,7 @@ def get_gridsearch(
     if average_ensembles:
         from hcrystalball.ensemble import SimpleEnsemble
         from hcrystalball.wrappers import ProphetWrapper
+        from hcrystalball.wrappers import ThetaWrapper
 
         grid_search.param_grid.append(
             {
@@ -419,6 +440,10 @@ def get_gridsearch(
                             clip_predictions_upper=clip_predictions_upper,
                         ),
                         sklearn_model_pipeline,
+                        ThetaWrapper(
+                            clip_predictions_lower=clip_predictions_lower,
+                            clip_predictions_upper=clip_predictions_upper,
+                        ),
                     ],
                 ],
             }

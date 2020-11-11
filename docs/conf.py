@@ -73,3 +73,4 @@ automodsumm_inherited_members = True
 
 # Handling notebook execution
 nbsphinx_execute = os.getenv("NBSPHINX_EXECUTE", "auto")
+nbsphinx_kernel_name = "python3"

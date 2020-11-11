@@ -2,6 +2,14 @@
 Changelog
 =========
 
+Version 0.1.7
+=============
+
+- Add support for simultaneous usage of multiple holidays
+- Add progress bars for model selection
+- Improve plotting
+- Column names created by Seasonality and Holiday transformers start with _ to prevent name clashes
+
 Version 0.1.6
 =============
 

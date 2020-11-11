@@ -9,7 +9,7 @@ dependencies:
 - numpy=1.18
 - scikit-learn=0.23
 - workalendar=10.1 # for HolidayTransformer
-- statsmodels=0.11 # SmoothingWrappers
+- statsmodels=0.12 # SmoothingWrappers
 - fbprophet=0.6 # ProphetWrapper
 - matplotlib-base=3.2.2 # for plotting in model selection
 - tqdm # interactive progress bar
@@ -21,7 +21,6 @@ dependencies:
 - nbsphinx # to build docs
 - sphinx_rtd_theme # to build docs
 - sphinx-gallery # to build docs
-- black # to format the code
 - flake8 # to format the code
 - pre-commit # to run pre-commit hooks
 - prefect # to execute model selection in parallel
@@ -32,4 +31,5 @@ dependencies:
   - tbats==1.0.10 #(T)BATSWrapper, pinning patch version needed to to change in 1.0.3
   - pytest # to run tests
   - pytest-cov # to run tests
+  - black # to format the code, moved to pip since conda doesn't have new release yet
   - . # for the docs build, remove when not having cloned git repository and run `pip install hcrystalball` or `conda install -c conda-forge hcrystalball` instead

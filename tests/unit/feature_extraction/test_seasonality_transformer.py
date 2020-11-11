@@ -31,10 +31,10 @@ months = [f"_{month}" for month in list(calendar.month_name)[1:]]
             ["_2019"],
         ),
         (
-            "2019-01-03",
+            "2019-01-01",
             5,
-            set(weekdays).difference(["_Tuesday", "_Wednesday"]),
-            ["_1_week", "_2_week"],
+            set(weekdays).difference(["_Sunday", "_Monday"]),
+            ["_1_week"],
             ["_January"],
             ["_1_quarter"],
             ["_2019"],
@@ -48,19 +48,48 @@ def test_seasonality_transformer(X_start, X_len, weekdays, weeks, months, quarte
 
     freq = pd.infer_freq(X.index)
 
-    df = pd.concat([X, y, SeasonalityTransformer(freq=freq).fit(X, y).transform(X)], axis=1)
+    df = pd.concat(
+        [
+            X,
+            y,
+            SeasonalityTransformer(
+                freq=freq,
+                month_end=True,
+                month_start=True,
+                quarter_start=True,
+                quarter_end=True,
+                year_start=True,
+                year_end=True,
+            )
+            .fit(X, y)
+            .transform(X),
+        ],
+        axis=1,
+    )
 
+    periods_starts_ends = [
+        "_month_start",
+        "_month_end",
+        "_quarter_start",
+        "_quarter_end",
+        "_year_start",
+        "_year_end",
+    ]
     assert set(weekdays).issubset(df.columns)
     assert set(weeks).issubset(df.columns)
     assert set(months).issubset(df.columns)
     assert set(quarter).issubset(df.columns)
     assert set(year).issubset(df.columns)
+    assert set(periods_starts_ends).issubset(df.columns)
 
     first_row = df.head(1).T
     cols_with_ones = first_row[first_row[first_row.columns[0]] == 1].index
 
     single_date_cols = (
-        SeasonalityTransformer(freq=freq).fit(X.head(1), y.head(1)).transform(X.head(1)).columns
+        SeasonalityTransformer(freq=freq, month_start=True, quarter_start=True, year_start=True,)
+        .fit(X.head(1), y.head(1))
+        .transform(X.head(1))
+        .columns
     )
 
     assert set(cols_with_ones) == set(single_date_cols)
