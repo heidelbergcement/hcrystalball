@@ -19,7 +19,11 @@ def column_transformer_and_cols(request):
         tran = TSColumnTransformer(
             transformers=[
                 ("raw_cols", "passthrough", ["trend", "one_hot"]),
-                ("one_hot", OneHotEncoder(), ["one_hot"],),
+                (
+                    "one_hot",
+                    OneHotEncoder(),
+                    ["one_hot"],
+                ),
             ]
         )
         cols = ["trend", "one_hot", "x0_1", "x0_2", "x0_3", "x0_4"]

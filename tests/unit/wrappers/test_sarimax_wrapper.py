@@ -55,7 +55,10 @@ def test_autoarima_init(X_y_linear_trend):
     "X_y_linear_trend, init_params",
     [
         ("more_cols_freq_D", {"order": (1, 1, 1), "seasonal_order": (0, 0, 0, 2)}),
-        ("more_cols_freq_D", {"init_with_autoarima": True, "autoarima_dict": {"D": 1, "m": 2}},),
+        (
+            "more_cols_freq_D",
+            {"init_with_autoarima": True, "autoarima_dict": {"D": 1, "m": 2}},
+        ),
         (
             "more_cols_freq_D",
             {"always_search_model": True, "autoarima_dict": {"D": 1, "m": 2}, "init_with_autoarima": True},

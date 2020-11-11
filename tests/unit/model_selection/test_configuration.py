@@ -22,6 +22,9 @@ import pytest
                 "holiday_step": None,
                 "holiday_steps_codes": None,
                 "holiday_steps_columns": None,
+                "holiday_steps_days_after": None,
+                "holiday_steps_days_before": None,
+                "holiday_steps_bridge_days": None,
                 "model": str,
             },
             None,
@@ -39,6 +42,9 @@ import pytest
                 "holiday_step": HolidayTransformer,
                 "holiday_steps_codes": [None],
                 "holiday_steps_columns": ["country"],
+                "holiday_steps_days_after": [0],
+                "holiday_steps_days_before": [0],
+                "holiday_steps_bridge_days": [False],
                 "model": str,
             },
             None,
@@ -56,6 +62,9 @@ import pytest
                 "holiday_step": HolidayTransformer,
                 "holiday_steps_codes": [None, None],
                 "holiday_steps_columns": ["czech", "slovak"],
+                "holiday_steps_days_after": [0, 0],
+                "holiday_steps_days_before": [0, 0],
+                "holiday_steps_bridge_days": [False, False],
                 "model": str,
             },
             None,
@@ -68,6 +77,9 @@ import pytest
                 "holiday_step": HolidayTransformer,
                 "holiday_steps_codes": ["CZ"],
                 "holiday_steps_columns": [None],
+                "holiday_steps_days_after": [0],
+                "holiday_steps_days_before": [0],
+                "holiday_steps_bridge_days": [False],
                 "model": str,
             },
             None,
@@ -80,6 +92,9 @@ import pytest
                 "holiday_step": HolidayTransformer,
                 "holiday_steps_codes": ["CZ", "SK"],
                 "holiday_steps_columns": [None, None],
+                "holiday_steps_days_after": [0, 0],
+                "holiday_steps_days_before": [0, 0],
+                "holiday_steps_bridge_days": [False, False],
                 "model": str,
             },
             None,
@@ -91,6 +106,9 @@ import pytest
                 "prophet_models": False,
                 "exog_cols": ["raining"],
                 "country_code_column": ["czech", "slovak"],
+                "holidays_days_before": 1,
+                "holidays_days_after": 1,
+                "holidays_bridge_days": True,
             },
             {
                 "exog_passthrough": TSColumnTransformer,
@@ -98,6 +116,9 @@ import pytest
                 "holiday_step": HolidayTransformer,
                 "holiday_steps_codes": [None, None],
                 "holiday_steps_columns": ["czech", "slovak"],
+                "holiday_steps_days_after": [1, 1],
+                "holiday_steps_days_before": [1, 1],
+                "holiday_steps_bridge_days": [True, True],
                 "model": str,
             },
             None,
@@ -111,6 +132,9 @@ import pytest
                 "scoring": "neg_mean_squared_error",
                 "country_code_column": "country",
                 "country_code": None,
+                "holidays_days_before": 1,
+                "holidays_days_after": 1,
+                "holidays_bridge_days": True,
                 "sklearn_models": True,
                 "sklearn_models_optimize_for_horizon": True,
                 "autosarimax_models": True,
@@ -132,6 +156,9 @@ import pytest
                 "holiday_step": HolidayTransformer,
                 "holiday_steps_codes": [None],
                 "holiday_steps_columns": ["country"],
+                "holiday_steps_days_after": [1],
+                "holiday_steps_days_before": [1],
+                "holiday_steps_bridge_days": [True],
                 "model": str,
             },
             None,
@@ -163,11 +190,18 @@ def test_get_gridsearch(gridsearch_params, expected_estimator, expected_error):
             )
             assert all(
                 [
-                    (holiday_step[1].country_code is code) & (holiday_step[1].country_code_column is col)
-                    for holiday_step, code, col in zip(
+                    (holiday_step[1].country_code is code)
+                    & (holiday_step[1].country_code_column is col)
+                    & (holiday_step[1].days_before is before)
+                    & (holiday_step[1].days_after is after)
+                    & (holiday_step[1].bridge_days is bridge)
+                    for holiday_step, code, col, before, after, bridge in zip(
                         res.estimator["holiday"].steps,
                         expected_estimator["holiday_steps_codes"],
                         expected_estimator["holiday_steps_columns"],
+                        expected_estimator["holiday_steps_days_before"],
+                        expected_estimator["holiday_steps_days_after"],
+                        expected_estimator["holiday_steps_bridge_days"],
                     )
                 ]
             )

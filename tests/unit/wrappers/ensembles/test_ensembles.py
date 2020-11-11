@@ -10,7 +10,8 @@ from hcrystalball.exceptions import DuplicatedModelNameError
 
 
 @pytest.fixture(
-    scope="module", params=["with_duplicates", "no_duplicates", "no_duplicates_with_pipeline"],
+    scope="module",
+    params=["with_duplicates", "no_duplicates", "no_duplicates_with_pipeline"],
 )
 def base_learners(request):
     class DummyModel:
@@ -54,9 +55,19 @@ def base_learners(request):
     [
         ("no_duplicates", StackingEnsemble, {"meta_model": LinearRegression()}, None),
         ("no_duplicates", SimpleEnsemble, {}, None),
-        ("with_duplicates", StackingEnsemble, {"meta_model": LinearRegression()}, DuplicatedModelNameError,),
+        (
+            "with_duplicates",
+            StackingEnsemble,
+            {"meta_model": LinearRegression()},
+            DuplicatedModelNameError,
+        ),
         ("with_duplicates", SimpleEnsemble, {}, DuplicatedModelNameError),
-        ("no_duplicates_with_pipeline", StackingEnsemble, {"meta_model": LinearRegression()}, None,),
+        (
+            "no_duplicates_with_pipeline",
+            StackingEnsemble,
+            {"meta_model": LinearRegression()},
+            None,
+        ),
         ("no_duplicates_with_pipeline", SimpleEnsemble, {}, None),
         (
             "with_duplicates_with_pipeline",

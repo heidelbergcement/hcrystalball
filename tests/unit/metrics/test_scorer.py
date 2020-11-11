@@ -125,7 +125,10 @@ def test_save_model_repr_and_hash(X_y_linear_trend, model4persistence):
     X, y = X_y_linear_trend
 
     test_scorer = make_ts_scorer(
-        mean_absolute_error, greater_is_better=False, needs_proba=False, needs_threshold=False,
+        mean_absolute_error,
+        greater_is_better=False,
+        needs_proba=False,
+        needs_threshold=False,
     )
 
     estimators, expected_model_ids, _ = model4persistence

@@ -55,13 +55,19 @@ class TSColumnTransformer(ColumnTransformer):
         for index, (name, trans, apply_cols, _) in enumerate(self._iter(fitted=True)):
             if trans == "passthrough":
                 col_tuple = Columns(
-                    col_name=apply_cols, trans_name=name, trans_index=index, passthrough=True,
+                    col_name=apply_cols,
+                    trans_name=name,
+                    trans_index=index,
+                    passthrough=True,
                 )
             elif trans == "drop":
                 continue
             elif hasattr(trans, "get_feature_names"):
                 col_tuple = Columns(
-                    col_name=trans.get_feature_names(), trans_name=name, trans_index=index, passthrough=False,
+                    col_name=trans.get_feature_names(),
+                    trans_name=name,
+                    trans_index=index,
+                    passthrough=False,
                 )
             else:
                 # TODO: for transformers that reduce/inflate dimensions,
@@ -71,7 +77,10 @@ class TSColumnTransformer(ColumnTransformer):
                     if trans.n_components != len(apply_cols):
                         apply_cols = [name + "_" + str(i) for i in range(trans.n_components)]
                 col_tuple = Columns(
-                    col_name=apply_cols, trans_name=name, trans_index=index, passthrough=False,
+                    col_name=apply_cols,
+                    trans_name=name,
+                    trans_index=index,
+                    passthrough=False,
                 )
 
             feature_tuples.append(col_tuple)

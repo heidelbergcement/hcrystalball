@@ -78,10 +78,15 @@ def tsmodel_wrapper_constructor_factory(modeltype):
         assignments = "; ".join([f"self.{p}={p}" for p in full_parameter_names])
 
         constructor_code = compile(
-            f'def __init__(self, {", ".join(full_parameter_names)}): ' f"{assignments}", "<string>", "exec",
+            f'def __init__(self, {", ".join(full_parameter_names)}): ' f"{assignments}",
+            "<string>",
+            "exec",
         )
         modified_init_func = FunctionType(
-            constructor_code.co_consts[0], globals(), "__init__", tuple(full_parameter_defaults),
+            constructor_code.co_consts[0],
+            globals(),
+            "__init__",
+            tuple(full_parameter_defaults),
         )
         return modified_init_func
 

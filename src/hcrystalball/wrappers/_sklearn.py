@@ -216,7 +216,7 @@ def _get_sklearn_wrapper(model_cls):
     """
 
     class SklearnWrapper(BaseSklearnWrapper):
-        """"Wrapper for regressors compatible with Sklearn-API.
+        """ "Wrapper for regressors compatible with Sklearn-API.
 
         This wrapper allows you use Sklearn-API regressors as autoregressive models
         for time series predictions. All model specific parameters will be passed to provided

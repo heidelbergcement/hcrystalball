@@ -116,7 +116,9 @@ class SeasonalityTransformer(BaseEstimator, TransformerMixin):
         miss_cols = list(self._fit_columns.difference(X.columns))
         if len(miss_cols) > 0:
             miss_data = pd.DataFrame(
-                data=np.zeros((len(X.index), len(miss_cols)), dtype=int), columns=miss_cols, index=X.index,
+                data=np.zeros((len(X.index), len(miss_cols)), dtype=int),
+                columns=miss_cols,
+                index=X.index,
             )
             data = X.join(miss_data)
 

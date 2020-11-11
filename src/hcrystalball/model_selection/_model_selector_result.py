@@ -108,7 +108,10 @@ class ModelSelectorResult:
         """
         if attribute_name is None:
             _persist_to_file(
-                data=self, expert_type="model_selector_result", partition_hash=self.partition_hash, path=path,
+                data=self,
+                expert_type="model_selector_result",
+                partition_hash=self.partition_hash,
+                path=path,
             )
         else:
             if attribute_name not in self._persist_attrs:
@@ -141,7 +144,8 @@ class ModelSelectorResult:
                 pd.merge(
                     self.y_train.rename("actuals"),
                     self.best_model_cv_data[["best_model", "split"]].rename(
-                        {"best_model": f"cv_forecast({self.best_model_name})", "split": "cv_split"}, axis=1,
+                        {"best_model": f"cv_forecast({self.best_model_name})", "split": "cv_split"},
+                        axis=1,
                     ),
                     left_index=True,
                     right_index=True,
@@ -199,7 +203,10 @@ class ModelSelectorResult:
             for split in df["cv_split"].dropna().unique():
                 plt = (
                     df[plot_from:]
-                    .drop(["error", cv_fcst_col, "cv_split", "cv_split_str", "mae"], axis=1,)
+                    .drop(
+                        ["error", cv_fcst_col, "cv_split", "cv_split_str", "mae"],
+                        axis=1,
+                    )
                     .plot(**plot_params)
                 )
                 # get limits for shaded areas
@@ -207,7 +214,8 @@ class ModelSelectorResult:
 
                 plt_cv = df[plot_from:].loc[lambda x: x["cv_split"] == split, [cv_fcst_col, "cv_split_str"]]
                 plt = plt_cv[[cv_fcst_col]].plot(
-                    ax=plt, title=f"{plt.get_title()} | ({plt_cv['cv_split_str'].unique()[0]})",
+                    ax=plt,
+                    title=f"{plt.get_title()} | ({plt_cv['cv_split_str'].unique()[0]})",
                 )
                 if not plt_cv.empty:
                     plt.fill_between(
