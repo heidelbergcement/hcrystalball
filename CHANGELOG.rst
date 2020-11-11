@@ -2,6 +2,8 @@
 Changelog
 =========
 
+- Add before_days, after_days, bridge_days features to the holiday transformer for better modeling of after, before and between holiday effects
+
 Version 0.1.7
 =============
 
