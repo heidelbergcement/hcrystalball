@@ -19,6 +19,9 @@ def get_gridsearch(
     scoring="neg_mean_absolute_error",
     country_code_column=None,
     country_code=None,
+    holidays_days_before=0,
+    holidays_days_after=0,
+    holidays_bridge_days=False,
     sklearn_models=True,
     sklearn_models_optimize_for_horizon=False,
     autosarimax_models=False,
@@ -63,6 +66,20 @@ def get_gridsearch(
     country_code : str, list
         Country code(s) in str (e.g. 'DE'). Used in holiday transformer.
         Only one of `country_code_column` or `country_code` can be set.
+
+    holidays_days_before : int
+        Number of days before the holiday which will be taken into account
+        (i.e. 2 means that new bool column will be created and will be True for 2 days before holidays,
+        otherwise False)
+
+    holidays_days_after : int
+        Number of days after the holiday which will be taken into account
+        (i.e. 2 means that new bool column will be created and will be True for 2 days after holidays,
+        otherwise False)
+
+    holidays_bridge_days : bool
+        Overlaping `holidays_days_before` and `holidays_days_after` feature which serves for modeling between
+        holidays working days
 
     sklearn_models : bool
         Whether to consider sklearn models
@@ -113,6 +130,7 @@ def get_gridsearch(
         [country_code_column] if isinstance(country_code_column, str) else country_code_column
     )
     country_codes = [country_code] if isinstance(country_code, str) else country_code
+
     # ensures only exogenous columns and country code column will be passed to model if provided
     # and columns names will be stored in TSColumnTransformer
     if exog_cols:
@@ -123,11 +141,33 @@ def get_gridsearch(
     # ensures holiday transformer is added to the pipeline if requested
     if country_codes:
         holiday = Pipeline(
-            [(f"holiday_{code}", HolidayTransformer(country_code=code)) for code in country_codes]
+            [
+                (
+                    f"holiday_{code}",
+                    HolidayTransformer(
+                        country_code=code,
+                        days_before=holidays_days_before,
+                        days_after=holidays_days_after,
+                        bridge_days=holidays_bridge_days,
+                    ),
+                )
+                for code in country_codes
+            ]
         )
     elif country_code_columns:
         holiday = Pipeline(
-            [(f"holiday_{col}", HolidayTransformer(country_code_column=col)) for col in country_code_columns]
+            [
+                (
+                    f"holiday_{col}",
+                    HolidayTransformer(
+                        country_code_column=col,
+                        days_before=holidays_days_before,
+                        days_after=holidays_days_after,
+                        bridge_days=holidays_bridge_days,
+                    ),
+                )
+                for col in country_code_columns
+            ]
         )
     else:
         holiday = "passthrough"

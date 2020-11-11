@@ -153,6 +153,9 @@ class ModelSelector:
         between_split_lag=None,
         scoring="neg_mean_absolute_error",
         country_code=None,
+        holidays_days_before=0,
+        holidays_days_after=0,
+        holidays_bridge_days=False,
         sklearn_models=True,
         sklearn_models_optimize_for_horizon=False,
         autosarimax_models=False,
@@ -187,6 +190,20 @@ class ModelSelector:
         country_code : str
             Country code in str (e.g. 'DE'). Used in holiday transformer.
             Only one of `country_code_column` or `country_code` can be set.
+
+        holidays_days_before : int
+            Number of days before the holiday which will be taken into account
+            (i.e. 2 means that new bool column will be created and will be True for 2 days before holidays,
+            otherwise False)
+
+        holidays_days_after : int
+            Number of days after the holiday which will be taken into account
+            (i.e. 2 means that new bool column will be created and will be True for 2 days after holidays,
+            otherwise False)
+
+        holidays_bridge_days : bool
+            Overlaping `holidays_days_before` and `holidays_days_after` feature which serves for modeling
+            between holidays working days
 
         sklearn_models : bool
             Whether to consider sklearn models
