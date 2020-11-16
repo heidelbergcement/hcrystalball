@@ -41,6 +41,11 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
             y - numpy.ndarray
         """
         if y is not None:
+            if self.lags + horizon > len(self._y):
+                raise InsufficientDataLengthError(
+                    f"Sum of model lags ({self.lags}) and forecasting horizon ({horizon} "
+                    f"cannot be bigger than length of y ({len(y)})."
+                )
             y = self._y[self.lags + horizon - 1 :]
         X = self._add_lag_features(X, self._y, horizon)
         if X.filter(like="_holiday_").shape[1] > 0:
