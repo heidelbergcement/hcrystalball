@@ -4,7 +4,7 @@ import numpy as np
 from hcrystalball.wrappers import SarimaxWrapper
 
 
-@pytest.mark.parametrize("X_with_holidays", [(""), (""), ("")], indirect=["X_with_holidays"])
+@pytest.mark.parametrize("X_with_holidays", [("")], indirect=["X_with_holidays"])
 def test_sarimax_adjust_holidays(X_with_holidays):
 
     sarimax = SarimaxWrapper(order=(1, 1, 0))
