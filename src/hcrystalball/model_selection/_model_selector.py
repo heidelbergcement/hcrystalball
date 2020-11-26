@@ -26,7 +26,11 @@ def load_model_selector(folder_path):
         load_model_selector_result(path=r.parent, partition_hash=r.stem)
         for r in Path(folder_path).glob("*.model_selector_result")
     ]
-    model_selector = ModelSelector(horizon=results[0].horizon, frequency=results[0].frequency)
+    model_selector = ModelSelector(
+        horizon=results[0].horizon,
+        frequency=results[0].frequency,
+        country_code_column=results[0].country_code_column,
+    )
     model_selector.results = results
     return model_selector
 
