@@ -2,10 +2,18 @@
 Changelog
 =========
 
+Version 0.1.9
+=============
+
+- Add support for python 3.6
+- Fix loading of country code column for model selector
+- Improve compatibility with sktime
+
 Version 0.1.8
 =============
 
 - Add before_days, after_days, bridge_days features to the holiday transformer for better modeling of after, before and between holiday effects
+- Add Theta model
 
 Version 0.1.7
 =============
