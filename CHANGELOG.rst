@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 0.1.10
+=============
+
+- Fix bug with statsmodels>=0.12 for the damp parameter -> damped_trend
+
 Version 0.1.9
 =============
 
