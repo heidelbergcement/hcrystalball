@@ -3,7 +3,7 @@ import pandas as pd
 from hcrystalball.exceptions import InsufficientDataLengthError
 from hcrystalball.wrappers._base import TSModelWrapper
 from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
-from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict
+from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict, set_verbosity
 
 
 class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
@@ -95,6 +95,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         self.fitted = True
         return self
 
+    @set_verbosity
     def _predict(self, X):
         """Transform stored training data to autoregressive form with `lags` features,
         fit the model and output prediction based on transformed X features.
@@ -117,6 +118,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         )
         X_pred, _ = self._transform_data_to_tsmodel_input_format(X)
         pred = self.model.predict(X_pred)
+
         return pd.DataFrame(data=pred.reshape(-1, 1), columns=[self.name], index=X.index)
 
     @check_fit_before_predict
@@ -265,6 +267,7 @@ def _get_sklearn_wrapper(model_cls):
             optimize_for_horizon=False,
             clip_predictions_lower=None,
             clip_predictions_upper=None,
+            hcb_verbose=False,
         ):
             pass
 
