@@ -1,6 +1,7 @@
 from ._large_scale_cross_validation import select_model
 from ._large_scale_cross_validation import run_model_selection
 from ._large_scale_cross_validation import select_model_general
+from ._large_scale_cross_validation import get_best_not_failing_model
 from ._configuration import get_gridsearch
 from ._configuration import add_model_to_gridsearch
 from ._split import FinerTimeSplit
@@ -30,4 +31,5 @@ __all__ = [
     "run_model_selection",
     "select_model",
     "select_model_general",
+    "get_best_not_failing_model",
 ]

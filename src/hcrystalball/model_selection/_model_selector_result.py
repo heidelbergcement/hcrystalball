@@ -65,6 +65,7 @@ class ModelSelectorResult:
         frequency,
         horizon,
         country_code_column,
+        best_model_rank,
     ):
         self.best_model = best_model
         self.cv_results = cv_results
@@ -76,13 +77,16 @@ class ModelSelectorResult:
         self.frequency = frequency
         self.horizon = horizon
         self.country_code_column = country_code_column
+        self.best_model_rank = best_model_rank
 
         self.best_model_hash = generate_estimator_hash(best_model)
         self.best_model_cv_data = self.cv_data.rename({self.best_model_hash: "best_model"}, axis=1)[
             ["split", "y_true", "best_model"]
         ]
         self.best_model_name = get_estimator_name(best_model).replace("model__", "")
-        self.best_model_cv_results = self.cv_results[self.cv_results["rank_test_score"] == 1].iloc[0]
+        self.best_model_cv_results = self.cv_results[
+            self.cv_results["rank_test_score"] == self.best_model_rank
+        ].iloc[0]
         self.best_model_repr = self.model_reprs[self.best_model_hash]
         self.partition_hash = generate_partition_hash(self.partition)
 
