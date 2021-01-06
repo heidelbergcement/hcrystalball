@@ -45,9 +45,9 @@ def make_progress_bar(*args, **kwargs):
 
 def get_best_not_failing_model(grid_search, X, y):
     """
-    Prevent situation when model incompatible data are not seen during CV (there the last split actuals) and
-    model which cannot be fitted on the full dataset is choseen. In such a situation the next model with lower
-    test score should be selected.
+    Prevent situation when model incompatible data are not seen during CV (in the last split of actuals) and
+    model which cannot be fitted on the full dataset is choseen. In such a situation the next model with the
+    lowest test score should be selected.
 
     Parameters
     ----------
