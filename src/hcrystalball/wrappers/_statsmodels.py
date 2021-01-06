@@ -17,6 +17,7 @@ from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
 from hcrystalball.utils import check_X_y
 from hcrystalball.utils import enforce_y_type
 from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import set_verbosity
 
 
 class BaseStatsmodelsForecastingWrapper(TSModelWrapper, metaclass=ABCMeta):
@@ -55,6 +56,7 @@ class BaseStatsmodelsForecastingWrapper(TSModelWrapper, metaclass=ABCMeta):
 
     @enforce_y_type
     @check_X_y
+    @set_verbosity
     def fit(self, X, y):
         """Transform data to `statsmodels.tsa.api` required format
         and fit the model.
@@ -79,6 +81,7 @@ class BaseStatsmodelsForecastingWrapper(TSModelWrapper, metaclass=ABCMeta):
         return self
 
     @check_fit_before_predict
+    @set_verbosity
     def predict(self, X):
         """Transform data to `statsmodels.tsa.api` required format and provide predictions.
 
@@ -132,6 +135,7 @@ class ExponentialSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
         fit_params=None,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=False,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the ExponentialSmoothing class on top of the ones defined here!"""
@@ -166,6 +170,7 @@ class SimpleSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
         fit_params=None,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=False,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the SimpleExpSmoothing class on top of the ones defined here!"""
@@ -200,6 +205,7 @@ class HoltSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
         fit_params=None,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=False,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the Holt class on top of the ones defined here!"""
@@ -238,6 +244,7 @@ class ThetaWrapper(BaseStatsmodelsForecastingWrapper):
         fit_params=None,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=False,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the Holt class on top of the ones defined here!"""

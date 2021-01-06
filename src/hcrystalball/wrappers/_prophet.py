@@ -10,13 +10,18 @@ sys_out = logging.StreamHandler(sys.__stdout__)
 sys_out.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
 logging.getLogger("fbprophet").addHandler(sys_out)
 logging.getLogger("pystan").addHandler(sys_out)
+logger = logging.getLogger("fbprophet.plot")
+logger.setLevel(logging.CRITICAL)
 
 from fbprophet import Prophet
+
 import pandas as pd
 from hcrystalball.utils import check_fit_before_predict
 from hcrystalball.utils import check_X_y
 from hcrystalball.utils import enforce_y_type
 from hcrystalball.utils import deep_dict_update
+from hcrystalball.utils import set_verbosity
+
 
 pd.plotting.register_matplotlib_converters()
 
@@ -73,6 +78,7 @@ class ProphetWrapper(TSModelWrapper):
         fit_params=None,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=False,
     ):
         """This constructor will be modified at runtime to accept all
         parameters of the Prophet class on top of the ones defined here!"""
@@ -218,6 +224,7 @@ class ProphetWrapper(TSModelWrapper):
 
     @enforce_y_type
     @check_X_y
+    @set_verbosity
     def fit(self, X, y):
         """Transform input data to `Prophet.model` required format and fit the model.
 
@@ -243,6 +250,7 @@ class ProphetWrapper(TSModelWrapper):
         return self
 
     @check_fit_before_predict
+    @set_verbosity
     def predict(self, X):
         """Adjust holidays, transform data to required format and provide predictions.
 
@@ -274,6 +282,7 @@ class ProphetWrapper(TSModelWrapper):
             )
             .drop(columns="ds", errors="ignore")
         )
+
         if not self.full_prophet_output:
             if self.conf_int:
                 preds = preds[[self.name, f"{self.name}_lower", f"{self.name}_upper"]]
