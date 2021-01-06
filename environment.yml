@@ -7,7 +7,7 @@ dependencies:
 - pandas=1.0
 - numpy=1.18
 - scikit-learn=0.23
-- workalendar=10.1 # for HolidayTransformer
+- workalendar=14.1 # for HolidayTransformer
 - statsmodels=0.12 # SmoothingWrappers
 - fbprophet=0.6 # ProphetWrapper
 - matplotlib-base=3.2.2 # for plotting in model selection

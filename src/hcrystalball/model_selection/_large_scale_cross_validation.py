@@ -43,6 +43,49 @@ def make_progress_bar(*args, **kwargs):
     return pbar
 
 
+def get_best_not_failing_model(grid_search, X, y):
+    """
+    Prevent situation when model incompatible data are not seen during CV (in the last split of actuals) and
+    model which cannot be fitted on the full dataset is choseen. In such a situation the next model with the
+    lowest test score should be selected.
+
+    Parameters
+    ----------
+    grid_search : sklearn.model_selection.GridSearchCV
+        Fitted instance compatible with Sklearn GridSearchCV
+
+    X : pandas.DataFrame
+            Input features.
+
+    y : array_like, (1d)
+            Target vector.
+
+    Returns
+    -------
+    dict
+        with keys `rank` and `params`
+
+    Raises
+    ------
+    ValueError
+        No available model could be fit on given data
+    """
+    params_ranks = (
+        pd.DataFrame(grid_search.cv_results_)[["rank_test_score", "params"]]
+        .sort_values("rank_test_score")
+        .to_dict("records")
+    )
+
+    for param_rank in params_ranks:
+        try:
+            grid_search.estimator.set_params(**param_rank["params"]).fit(X, y)
+            return {"rank": param_rank["rank_test_score"], "params": param_rank["params"]}
+        except Exception:
+            continue
+
+    raise ValueError("No available model could be fit on given data")
+
+
 def select_model(
     df,
     target_col_name,
@@ -121,12 +164,14 @@ def select_model(
 
         # searches among all models with found best Sarimax on last split (as opose to using AutoSarimax)
         grid_search_tmp.fit(X, y)
+        best_param_rank = get_best_not_failing_model(grid_search_tmp, X, y)
         # add convenient result object
         results.append(
             ModelSelectorResult(
                 # more robust refit=True that makes sure, that models failing during fit
                 # are ommited even if exception happens in wrapper's model's __init__
-                best_model=grid_search_tmp.estimator.set_params(**grid_search_tmp.best_params_).fit(X, y),
+                best_model=grid_search_tmp.estimator.set_params(**best_param_rank["params"]).fit(X, y),
+                best_model_rank=best_param_rank["rank"],
                 cv_results=pd.DataFrame(grid_search_tmp.cv_results_),
                 cv_data=grid_search_tmp.scorer_.cv_data,
                 model_reprs=grid_search_tmp.scorer_.estimator_ids,
