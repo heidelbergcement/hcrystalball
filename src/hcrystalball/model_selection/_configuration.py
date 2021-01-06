@@ -10,6 +10,8 @@ from hcrystalball.feature_extraction import HolidayTransformer
 
 logger = logging.getLogger(__name__)
 
+RANDOM_STATE = 42
+
 
 def get_gridsearch(
     frequency,
@@ -228,6 +230,7 @@ def get_gridsearch(
 
         sklearn_model = get_sklearn_wrapper(
             RandomForestRegressor,
+            random_state=RANDOM_STATE,
             clip_predictions_lower=clip_predictions_lower,
             clip_predictions_upper=clip_predictions_upper,
         )
@@ -239,14 +242,13 @@ def get_gridsearch(
         sklearn_model_pipeline.name = f"seasonality_{sklearn_model.name}"
 
     if sklearn_models:
-        classes = [ElasticNet, RandomForestRegressor]
         models = {
-            model_class.__name__: get_sklearn_wrapper(
-                model_class,
+            "ElasticNet": get_sklearn_wrapper(
+                ElasticNet,
                 clip_predictions_lower=clip_predictions_lower,
                 clip_predictions_upper=clip_predictions_upper,
-            )
-            for model_class in classes
+            ),
+            "RandomForestRegressor": sklearn_model,
         }
 
         optimize_for_horizon = [False, True] if sklearn_models_optimize_for_horizon else [False]
@@ -331,7 +333,7 @@ def get_gridsearch(
                 ],
                 "model__trend": ["add"],
                 "model__seasonal": [None, "add"],
-                "model__damped": [True, False],
+                "model__damped_trend": [True, False],
                 "model__fit_params": [
                     {"use_boxcox": True, "use_basinhopping": False},
                     # {'use_boxcox':True, 'use_basinhopping':True},
@@ -352,7 +354,7 @@ def get_gridsearch(
                 ],
                 "model__trend": ["add"],
                 "model__seasonal": ["mul"],
-                "model__damped": [True, False],
+                "model__damped_trend": [True, False],
                 "model__fit_params": [
                     {"use_boxcox": False, "use_basinhopping": False},
                     # {'use_boxcox':False, 'use_basinhopping':True}
@@ -371,7 +373,7 @@ def get_gridsearch(
                 ],
                 "model__trend": [None],
                 "model__seasonal": [None, "add", "mul"],
-                "model__damped": [False],
+                "model__damped_trend": [False],
                 "model__fit_params": [
                     {"use_boxcox": False, "use_basinhopping": False},
                     # {'use_boxcox':False, 'use_basinhopping':True}
@@ -443,7 +445,7 @@ def get_gridsearch(
                         clip_predictions_upper=clip_predictions_upper,
                     )
                 ],
-                "model__meta_model": [ElasticNet(), RandomForestRegressor()],
+                "model__meta_model": [ElasticNet(), RandomForestRegressor(random_state=RANDOM_STATE)],
                 "model__base_learners": [
                     [
                         ProphetWrapper(
