@@ -31,4 +31,5 @@ dependencies:
   - pytest # to run tests
   - pytest-cov # to run tests
   - black # to format the code, moved to pip since conda doesn't have new release yet
+  - neuralprophet
   - . # for the docs build, remove when not having cloned git repository and run `pip install hcrystalball` or `conda install -c conda-forge hcrystalball` instead

@@ -7,6 +7,7 @@ set_config(print_changed_only=False)
 __all__ = ["get_sklearn_wrapper"]
 
 __all__.extend(optional_import("hcrystalball.wrappers._prophet", "ProphetWrapper", globals()))
+__all__.extend(optional_import("hcrystalball.wrappers._neural_prophet", "NeuralProphetWrapper", globals()))
 __all__.extend(
     optional_import("hcrystalball.wrappers._statsmodels", "ExponentialSmoothingWrapper", globals())
 )
