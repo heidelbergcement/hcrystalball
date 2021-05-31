@@ -210,8 +210,8 @@ def _get_sklearn_wrapper(model_cls):
     >>> est
     SklearnWrapper(bootstrap=True, ccp_alpha=0.0, clip_predictions_lower=0.0,
                clip_predictions_upper=None, criterion='mse', fit_params=None,
-               lags=3, max_depth=6, max_features='auto', max_leaf_nodes=None,
-               max_samples=None, min_impurity_decrease=0.0,
+               hcb_verbose=False, lags=3, max_depth=6, max_features='auto',
+               max_leaf_nodes=None, max_samples=None, min_impurity_decrease=0.0,
                min_impurity_split=None, min_samples_leaf=1, min_samples_split=2,
                min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None,
                name='sklearn', oob_score=False, optimize_for_horizon=False,
