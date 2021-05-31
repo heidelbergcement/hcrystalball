@@ -345,7 +345,7 @@ def run_model_selection(
     visualize_success : bool
         If True, generate graph of task completion
 
-    executor : prefect.engine.executors
+    executor : prefect.executors
         Provide prefect's executor.
         For more information see https://docs.prefect.io/api/latest/engine/executors.html
 
@@ -430,7 +430,7 @@ def select_model_general(
     parallel_over_columns : list, tuple
         Subset of partition_columns, that are used to parallel split.
 
-    executor : prefect.engine.executors
+    executor : prefect.executors
         Provide prefect's executor. Only valid when `parallel_over_columns` is set.
         For more information see https://docs.prefect.io/api/latest/engine/executors.html
 

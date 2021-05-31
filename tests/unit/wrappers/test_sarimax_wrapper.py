@@ -11,7 +11,7 @@ def test_sarimax_adjust_holidays(X_with_holidays):
     result = sarimax._adjust_holidays(X_with_holidays)
     assert isinstance(result, pd.DataFrame)
     assert "_holiday_DE" in result.columns.tolist()
-    assert "_holiday_DE" in result.select_dtypes(include=[np.bool]).columns
+    assert "_holiday_DE" in result.select_dtypes(include=[bool]).columns
     assert (result["_holiday_DE"] == "").sum() == 0
     assert X_with_holidays[X_with_holidays["_holiday_DE"] != ""].shape[0] == result["_holiday_DE"].sum()
 

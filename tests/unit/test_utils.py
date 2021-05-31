@@ -158,7 +158,7 @@ def test_get_model_repr_pipeline_instance_model_in_pipeline(
 @pytest.mark.parametrize(
     "module_name, class_name, dependency",
     [
-        ("_prophet", "ProphetWrapper", "fbprophet"),
+        ("_prophet", "ProphetWrapper", "prophet"),
         ("_statsmodels", "ExponentialSmoothingWrapper", "statsmodels.tsa.api"),
         ("_statsmodels", "HoltSmoothingWrapper", "statsmodels.tsa.api"),
         ("_statsmodels", "SimpleSmoothingWrapper", "statsmodels.tsa.api"),

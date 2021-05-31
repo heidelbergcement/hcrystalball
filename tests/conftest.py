@@ -515,7 +515,7 @@ def train_data(request):
         for product in products:
             df_tmp.loc[:, "date"] = df0.index.astype(str).to_list()
             df_tmp.loc[:, "Product"] = product
-            df_tmp.loc[:, "Quantity"] = random_state.random_sample(n_dates)
+            df_tmp.loc[:, "Quantity"] = random_state.random_sample(len(df0.index))
             df_tmp.loc[:, "Holidays_code"] = "NL"
 
             dfs.append(df_tmp.copy())
