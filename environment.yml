@@ -3,14 +3,14 @@ channels:
 - conda-forge
 - defaults
 dependencies:
-- scipy>=1.4
-- pandas>=1.0
-- numpy>=1.18
-- scikit-learn>=0.23
-- workalendar>=14.1 # for HolidayTransformer
-- statsmodels>=0.12 # SmoothingWrappers
-- prophet>=1.0.1 # ProphetWrapper
-- matplotlib-base>=3.2.2 # for plotting in model selection
+- scipy=1.4 # for statsmodels multiplicative seasonality. In some cases in future versions returns np.nans otherwise
+- pandas=1.2
+- numpy=1.20
+- scikit-learn=0.24
+- workalendar=15.3 # for HolidayTransformer
+- statsmodels==0.12.1 # SmoothingWrappers
+- prophet=1.0.1 # ProphetWrapper
+- matplotlib-base=3.4.2 # for plotting in model selection
 - tqdm # interactive progress bar
 - ipywidgets # interactive progress bar
 - jupyterlab # run examples, interactive progress bar
