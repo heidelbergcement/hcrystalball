@@ -467,6 +467,24 @@ def generate_multiple_tsdata(
     return pd.concat(dfs).set_index("Date")
 
 
+def filter_statsmodels_warnings(warnings_to_filter=None):
+    """Filter warnings, that statsmodels library typically emits
+
+    Parameters
+    ----------
+    warnings_to_filter : list, optional
+        List of warnings to add to `warnings.simplefilter`.
+        By default None translates to ConvergenceWarning, ValueWarning, FutureWarning, UserWarning
+    """
+    from statsmodels.tools import sm_exceptions as sme
+    import warnings
+
+    default_warnings = [sme.ConvergenceWarning, FutureWarning, UserWarning, sme.ValueWarning]
+    warnings_to_filter = warnings_to_filter if warnings_to_filter is not None else default_warnings
+
+    [warnings.simplefilter("ignore", warning) for warning in warnings_to_filter]
+
+
 class _suppress_stdout_stderr(object):
     """
     A context manager for doing a "deep suppression" of stdout and stderr in
@@ -503,9 +521,6 @@ class _suppress_stdout_stderr(object):
 def set_verbosity(func):
     @functools.wraps(func)
     def _set_verbosity(self, *args, **kwargs):
-        # import pdb
-
-        # pdb.set_trace()
         if self.hcb_verbose:
             return func(self, *args, **kwargs)
         else:
