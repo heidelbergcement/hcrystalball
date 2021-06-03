@@ -3,8 +3,17 @@ repos:
     rev: v3.2.0
     hooks:
     -   id: check-yaml
+    -   id: check-json
+    -   id: pretty-format-json
+        args:
+          - --autofix
+          - --no-sort-keys
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
+-   repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.8.0
+    hooks:
+    -   id: isort
 -   repo: https://github.com/psf/black
     rev: 20.8b1
     hooks:

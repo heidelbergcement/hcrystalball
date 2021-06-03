@@ -30,5 +30,8 @@ dependencies:
   - tbats==1.1.0 #(T)BATSWrapper
   - pytest # to run tests
   - pytest-cov # to run tests
-  - black # to format the code, moved to pip since conda doesn't have new release yet
+  - black==20.8b1 # to format the code, moved to pip to match the pre-commit hooks
+  - flake8==3.8.3 # to lint the code, moved to pip to match the pre-commit hooks
+  - isort==5.5.4 # to sort imports in the code, moved to pip to match the pre-commit hooks
+  - nbstripout==0.3.9 # to strip notebooks output, moved to pip to match the pre-commit hooks
   - . # for the docs build, remove when not having cloned git repository and run `pip install hcrystalball` or `conda install -c conda-forge hcrystalball` instead
