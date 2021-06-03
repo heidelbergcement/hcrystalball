@@ -6,17 +6,21 @@ sys_out = logging.StreamHandler(sys.__stdout__)
 sys_out.setFormatter(logging.Formatter("%(asctime)s - statsmodels - %(levelname)s - %(message)s"))
 logging.getLogger("py.warnings").addHandler(sys_out)
 
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+from abc import abstractmethod
+
 import pandas as pd
 from statsmodels.tsa.api import ExponentialSmoothing
 from statsmodels.tsa.api import Holt
 from statsmodels.tsa.api import SimpleExpSmoothing
 from statsmodels.tsa.forecasting.theta import ThetaModel
-from hcrystalball.wrappers._base import TSModelWrapper
-from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
+
+from hcrystalball.utils import check_fit_before_predict
 from hcrystalball.utils import check_X_y
 from hcrystalball.utils import enforce_y_type
-from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import set_verbosity
+from hcrystalball.wrappers._base import TSModelWrapper
+from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
 
 
 class BaseStatsmodelsForecastingWrapper(TSModelWrapper, metaclass=ABCMeta):
@@ -55,6 +59,7 @@ class BaseStatsmodelsForecastingWrapper(TSModelWrapper, metaclass=ABCMeta):
 
     @enforce_y_type
     @check_X_y
+    @set_verbosity
     def fit(self, X, y):
         """Transform data to `statsmodels.tsa.api` required format
         and fit the model.
@@ -79,6 +84,7 @@ class BaseStatsmodelsForecastingWrapper(TSModelWrapper, metaclass=ABCMeta):
         return self
 
     @check_fit_before_predict
+    @set_verbosity
     def predict(self, X):
         """Transform data to `statsmodels.tsa.api` required format and provide predictions.
 
@@ -121,6 +127,10 @@ class ExponentialSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
 
     clip_predictions_upper: float
         Maximum value allowed for predictions - predictions will be clipped to this value.
+
+    hcb_verbose : bool
+        Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+        and 3rd party libraries during fit and predict
     """
 
     model_cls = ExponentialSmoothing
@@ -132,6 +142,7 @@ class ExponentialSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
         fit_params=None,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=True,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the ExponentialSmoothing class on top of the ones defined here!"""
@@ -155,6 +166,10 @@ class SimpleSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
 
     clip_predictions_upper: float
         Maximum value allowed for predictions - predictions will be clipped to this value.
+
+    hcb_verbose : bool
+        Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+        and 3rd party libraries during fit and predict
     """
 
     model_cls = SimpleExpSmoothing
@@ -166,6 +181,7 @@ class SimpleSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
         fit_params=None,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=True,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the SimpleExpSmoothing class on top of the ones defined here!"""
@@ -189,6 +205,10 @@ class HoltSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
 
     clip_predictions_upper: float
         Maximum value allowed for predictions - predictions will be clipped to this value.
+
+    hcb_verbose : bool
+        Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+        and 3rd party libraries during fit and predict
     """
 
     model_cls = Holt
@@ -200,6 +220,7 @@ class HoltSmoothingWrapper(BaseStatsmodelsForecastingWrapper):
         fit_params=None,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=True,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the Holt class on top of the ones defined here!"""
@@ -226,6 +247,10 @@ class ThetaWrapper(BaseStatsmodelsForecastingWrapper):
 
     clip_predictions_upper: float
         Maximum value allowed for predictions - predictions will be clipped to this value.
+
+    hcb_verbose : bool
+        Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+        and 3rd party libraries during fit and predict
     """
 
     model_cls = ThetaModel
@@ -238,6 +263,7 @@ class ThetaWrapper(BaseStatsmodelsForecastingWrapper):
         fit_params=None,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=True,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the Holt class on top of the ones defined here!"""

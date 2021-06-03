@@ -1,9 +1,15 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+from abc import abstractmethod
+
 import pandas as pd
+
 from hcrystalball.exceptions import InsufficientDataLengthError
+from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import check_X_y
+from hcrystalball.utils import enforce_y_type
+from hcrystalball.utils import set_verbosity
 from hcrystalball.wrappers._base import TSModelWrapper
 from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
-from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict
 
 
 class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
@@ -95,6 +101,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         self.fitted = True
         return self
 
+    @set_verbosity
     def _predict(self, X):
         """Transform stored training data to autoregressive form with `lags` features,
         fit the model and output prediction based on transformed X features.
@@ -117,6 +124,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         )
         X_pred, _ = self._transform_data_to_tsmodel_input_format(X)
         pred = self.model.predict(X_pred)
+
         return pd.DataFrame(data=pred.reshape(-1, 1), columns=[self.name], index=X.index)
 
     @check_fit_before_predict
@@ -208,8 +216,8 @@ def _get_sklearn_wrapper(model_cls):
     >>> est
     SklearnWrapper(bootstrap=True, ccp_alpha=0.0, clip_predictions_lower=0.0,
                clip_predictions_upper=None, criterion='mse', fit_params=None,
-               lags=3, max_depth=6, max_features='auto', max_leaf_nodes=None,
-               max_samples=None, min_impurity_decrease=0.0,
+               hcb_verbose=False, lags=3, max_depth=6, max_features='auto',
+               max_leaf_nodes=None, max_samples=None, min_impurity_decrease=0.0,
                min_impurity_split=None, min_samples_leaf=1, min_samples_split=2,
                min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None,
                name='sklearn', oob_score=False, optimize_for_horizon=False,
@@ -252,6 +260,11 @@ def _get_sklearn_wrapper(model_cls):
 
         clip_predictions_upper: float
             Maximum value allowed for predictions - predictions will be clipped to this value.
+
+        hcb_verbose : bool
+            Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+            and 3rd party libraries during fit and predict
+
         """
 
         model_class = model_cls
@@ -265,6 +278,7 @@ def _get_sklearn_wrapper(model_cls):
             optimize_for_horizon=False,
             clip_predictions_lower=None,
             clip_predictions_upper=None,
+            hcb_verbose=True,
         ):
             pass
 

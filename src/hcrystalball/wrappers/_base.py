@@ -1,6 +1,8 @@
 import inspect
+from abc import ABCMeta
+from abc import abstractmethod
 from types import FunctionType
-from abc import ABCMeta, abstractmethod
+
 from sklearn.base import BaseEstimator
 
 

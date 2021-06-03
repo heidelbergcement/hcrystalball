@@ -1,8 +1,9 @@
 import pandas as pd
 import pytest
-from hcrystalball.wrappers import TBATSWrapper
-from tbats import TBATS
 from pandas.testing import assert_frame_equal
+from tbats import TBATS
+
+from hcrystalball.wrappers import TBATSWrapper
 
 
 @pytest.mark.parametrize("X_y_linear_trend", [("freq_D")], indirect=["X_y_linear_trend"])

@@ -1,8 +1,9 @@
-import pytest
 import pandas as pd
+import pytest
 from sklearn.dummy import DummyRegressor
-from hcrystalball.wrappers import get_sklearn_wrapper
+
 from hcrystalball.exceptions import InsufficientDataLengthError
+from hcrystalball.wrappers import get_sklearn_wrapper
 
 
 @pytest.mark.parametrize(

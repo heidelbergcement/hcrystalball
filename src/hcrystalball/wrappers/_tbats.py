@@ -1,10 +1,16 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+from abc import abstractmethod
+
 import pandas as pd
 from tbats import BATS
 from tbats import TBATS
+
+from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import check_X_y
+from hcrystalball.utils import enforce_y_type
+from hcrystalball.utils import set_verbosity
 from hcrystalball.wrappers._base import TSModelWrapper
 from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
-from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict
 
 
 class BaseTBATSWrapper(TSModelWrapper, metaclass=ABCMeta):
@@ -21,6 +27,7 @@ class BaseTBATSWrapper(TSModelWrapper, metaclass=ABCMeta):
 
     @enforce_y_type
     @check_X_y
+    @set_verbosity
     def fit(self, X, y):
         """Fit the model.
 
@@ -42,6 +49,7 @@ class BaseTBATSWrapper(TSModelWrapper, metaclass=ABCMeta):
         return self
 
     @check_fit_before_predict
+    @set_verbosity
     def predict(self, X):
         """Transform data to tbats required format and run the predictions.
 
@@ -98,6 +106,10 @@ class BATSWrapper(BaseTBATSWrapper):
     clip_predictions_upper : float
         Maximum value allowed for predictions - predictions will be clipped to this value.
 
+    hcb_verbose : bool
+        Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+        and 3rd party libraries during fit and predict
+
     Notes
     -----
     Fitting the model might take significant time. You might consider advices from the author
@@ -116,6 +128,7 @@ class BATSWrapper(BaseTBATSWrapper):
         conf_int_level=0.95,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=True,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the BATS class on top of the ones defined here!"""
@@ -150,6 +163,10 @@ class TBATSWrapper(BaseTBATSWrapper):
     clip_predictions_upper : float
         Maximum value allowed for predictions - predictions will be clipped to this value.
 
+    hcb_verbose : bool
+        Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+        and 3rd party libraries during fit and predict
+
     Notes
     -----
     Fitting the model might take significant time. You might consider advices from the author
@@ -168,6 +185,7 @@ class TBATSWrapper(BaseTBATSWrapper):
         conf_int_level=0.95,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=True,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the TBATS class on top of the ones defined here!"""

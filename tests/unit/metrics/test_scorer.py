@@ -1,10 +1,12 @@
+import hashlib
+import inspect
+
+import pandas as pd
 import pytest
 from sklearn.metrics import mean_absolute_error
-import inspect
-import hashlib
-import pandas as pd
 
-from hcrystalball.metrics import make_ts_scorer, get_scorer
+from hcrystalball.metrics import get_scorer
+from hcrystalball.metrics import make_ts_scorer
 from hcrystalball.metrics._scorer import _TSPredictScorer
 
 

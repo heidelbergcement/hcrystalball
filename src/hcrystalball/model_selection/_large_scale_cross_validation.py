@@ -1,18 +1,19 @@
-import itertools
-from copy import deepcopy
-import pandas as pd
-import sys
 import io
-from collections import OrderedDict
-
-from ._data_preparation import partition_data
-from ._data_preparation import filter_data
-from ._data_preparation import prepare_data_for_training
-from ._model_selector_result import ModelSelectorResult
-from .utils import persist_experts_in_physical_partition
+import itertools
 
 # redirect prefect to the console
 import logging
+import sys
+from collections import OrderedDict
+from copy import deepcopy
+
+import pandas as pd
+
+from ._data_preparation import filter_data
+from ._data_preparation import partition_data
+from ._data_preparation import prepare_data_for_training
+from ._model_selector_result import ModelSelectorResult
+from .utils import persist_experts_in_physical_partition
 
 logger = logging.getLogger(__name__)
 
@@ -198,7 +199,10 @@ def _define_model_selection_flow():
     prefect.Flow
     """
 
-    from prefect import task, Flow, Parameter, unmapped
+    from prefect import Flow
+    from prefect import Parameter
+    from prefect import task
+    from prefect import unmapped
 
     with Flow("model selection") as flow:
         df = Parameter("data")

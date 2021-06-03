@@ -1,8 +1,9 @@
 import pytest
 from sklearn.linear_model import ElasticNet
-from hcrystalball.wrappers import TBATSWrapper
+
 from hcrystalball.wrappers import ExponentialSmoothingWrapper
 from hcrystalball.wrappers import ProphetWrapper
+from hcrystalball.wrappers import TBATSWrapper
 
 
 @pytest.mark.parametrize(

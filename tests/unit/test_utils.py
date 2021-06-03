@@ -1,21 +1,21 @@
-import pytest
 import sys
 from importlib import import_module
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pandas._testing as tm
+import pytest
+from numpy.testing import assert_array_equal
 from pandas.testing import assert_frame_equal
 from pandas.testing import assert_series_equal
-from numpy.testing import assert_array_equal
 
-from hcrystalball.utils import check_X_y
-from hcrystalball.utils import check_fit_before_predict
-from hcrystalball.utils import get_estimator_repr
-from hcrystalball.utils import optional_import
-from hcrystalball.utils import deep_dict_update
 from hcrystalball.exceptions import InsufficientDataLengthError
 from hcrystalball.exceptions import PredictWithoutFitError
+from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import check_X_y
+from hcrystalball.utils import deep_dict_update
+from hcrystalball.utils import get_estimator_repr
+from hcrystalball.utils import optional_import
 
 
 @pytest.fixture(scope="module")

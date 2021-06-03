@@ -1,11 +1,12 @@
-import pytest
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pytest
+from pandas.testing import assert_frame_equal
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
-from pandas.testing import assert_frame_equal
 
-from hcrystalball.ensemble import StackingEnsemble, SimpleEnsemble
+from hcrystalball.ensemble import SimpleEnsemble
+from hcrystalball.ensemble import StackingEnsemble
 from hcrystalball.exceptions import DuplicatedModelNameError
 
 

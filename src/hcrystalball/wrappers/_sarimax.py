@@ -7,11 +7,14 @@ sys_out.setFormatter(logging.Formatter("%(asctime)s - statsmodels - %(levelname)
 logging.getLogger("py.warnings").addHandler(sys_out)
 
 import pandas as pd
-from pmdarima.arima import AutoARIMA, ARIMA
+from pmdarima.arima import ARIMA
+from pmdarima.arima import AutoARIMA
 
+from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import check_X_y
+from hcrystalball.utils import enforce_y_type
 from hcrystalball.wrappers._base import TSModelWrapper
 from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
-from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict
 
 
 class SarimaxWrapper(TSModelWrapper):
@@ -46,6 +49,10 @@ class SarimaxWrapper(TSModelWrapper):
 
     clip_predictions_upper: float
         Maximum value allowed for predictions - predictions will be clipped to this value.
+
+    hcb_verbose : bool
+        Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+        and 3rd party libraries during fit and predict
     """
 
     @tsmodel_wrapper_constructor_factory(ARIMA)
@@ -58,6 +65,7 @@ class SarimaxWrapper(TSModelWrapper):
         always_search_model=False,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=True,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the ARIMA class on top of the ones defined here!"""
@@ -131,13 +139,13 @@ class SarimaxWrapper(TSModelWrapper):
         endog, exog = self._transform_data_to_tsmodel_input_format(X, y)
         if self.init_with_autoarima or self.always_search_model:
             autoarima_params = self.autoarima_dict or {}
-            found_params = AutoARIMA(**autoarima_params).fit(y=endog, X=exog).model_.get_params()
+            found_params = AutoARIMA(**autoarima_params).fit(y=endog, exog=exog).model_.get_params()
             self.set_params(**found_params)
             self.init_with_autoarima = self.always_search_model
         elif self.order is None:
             raise ValueError("Parameter `order` must be set if `init_with_autoarima` is set to False!")
         self.model = self._init_tsmodel(ARIMA)
-        self.model.fit(y=endog, X=exog)
+        self.model.fit(y=endog, exog=exog)
         self.fitted = True
         return self
 
@@ -160,7 +168,7 @@ class SarimaxWrapper(TSModelWrapper):
         if X.filter(like="_holiday_").shape[1] > 0:
             X = self._adjust_holidays(X)
         _, exog = self._transform_data_to_tsmodel_input_format(X)
-        preds, conf_ints = self.model.predict(n_periods=X.shape[0], X=exog, return_conf_int=True)
+        preds, conf_ints = self.model.predict(n_periods=X.shape[0], exog=exog, return_conf_int=True)
         preds = pd.DataFrame(preds, index=X.index, columns=[self.name])
         if self.conf_int:
             conf_ints = pd.DataFrame(

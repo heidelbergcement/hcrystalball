@@ -1,9 +1,10 @@
-import pytest
 import pandas as pd
 from pandas.testing import assert_frame_equal
+import pytest
+
+from hcrystalball.model_selection import filter_data
 from hcrystalball.model_selection import partition_data
 from hcrystalball.model_selection import partition_data_by_values
-from hcrystalball.model_selection import filter_data
 from hcrystalball.model_selection import prepare_data_for_training
 
 

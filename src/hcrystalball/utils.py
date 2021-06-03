@@ -1,11 +1,14 @@
-import hashlib
-import functools
 import collections
-import pandas as pd
-import numpy as np
+import functools
+import hashlib
+import os
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.utils import check_random_state
+
 from hcrystalball.exceptions import InsufficientDataLengthError
 from hcrystalball.exceptions import PredictWithoutFitError
 
@@ -466,6 +469,70 @@ def generate_multiple_tsdata(
     return pd.concat(dfs).set_index("Date")
 
 
+def filter_statsmodels_warnings(warnings_to_filter=None):
+    """Filter warnings, that statsmodels library typically emits
+
+    Parameters
+    ----------
+    warnings_to_filter : list, optional
+        List of warnings to add to `warnings.simplefilter`.
+        By default None translates to ConvergenceWarning, ValueWarning, FutureWarning, UserWarning
+    """
+    import warnings
+
+    from statsmodels.tools import sm_exceptions as sme
+
+    default_warnings = [sme.ConvergenceWarning, FutureWarning, UserWarning, sme.ValueWarning]
+    warnings_to_filter = warnings_to_filter if warnings_to_filter is not None else default_warnings
+
+    [warnings.simplefilter("ignore", warning) for warning in warnings_to_filter]
+
+
+class _suppress_stdout_stderr(object):
+    """
+    A context manager for doing a "deep suppression" of stdout and stderr in
+    Python, i.e. will suppress all print, even if the print originates in a
+    compiled C/Fortran sub-function.
+       This will not suppress raised exceptions, since exceptions are printed
+    to stderr just before a script exits, and after the context manager has
+    exited (at least, I think that is why it lets exceptions through).
+    References
+    ----------
+    https://github.com/facebook/prophet/issues/223
+    """
+
+    def __init__(self):
+        # Open a pair of null files
+        self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
+        # Save the actual stdout (1) and stderr (2) file descriptors.
+        self.save_fds = [os.dup(1), os.dup(2)]
+
+    def __enter__(self):
+        # Assign the null pointers to stdout and stderr.
+        os.dup2(self.null_fds[0], 1)
+        os.dup2(self.null_fds[1], 2)
+
+    def __exit__(self, *_):
+        # Re-assign the real stdout/stderr back to (1) and (2)
+        os.dup2(self.save_fds[0], 1)
+        os.dup2(self.save_fds[1], 2)
+        # Close the null files
+        for fd in self.null_fds + self.save_fds:
+            os.close(fd)
+
+
+def set_verbosity(func):
+    @functools.wraps(func)
+    def _set_verbosity(self, *args, **kwargs):
+        if self.hcb_verbose:
+            return func(self, *args, **kwargs)
+        else:
+            with _suppress_stdout_stderr():
+                return func(self, *args, **kwargs)
+
+    return _set_verbosity
+
+
 __all__ = [
     "get_estimator_repr",
     "get_sales_data",
@@ -474,4 +541,5 @@ __all__ = [
     "generate_partition_hash",
     "generate_tsdata",
     "optional_import",
+    "set_verbosity",
 ]

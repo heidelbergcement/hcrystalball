@@ -1,7 +1,8 @@
 import pytest
+
+from hcrystalball.model_selection import ModelSelectorResult
 from hcrystalball.model_selection import run_model_selection
 from hcrystalball.model_selection import select_model_general
-from hcrystalball.model_selection import ModelSelectorResult
 
 
 @pytest.mark.parametrize(

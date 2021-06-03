@@ -1,15 +1,15 @@
-import pytest
-
 import pandas as pd
-from pandas.testing import assert_frame_equal, assert_series_equal
-
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+import pytest
+from pandas.testing import assert_frame_equal
+from pandas.testing import assert_series_equal
 from sklearn.decomposition import PCA
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import StandardScaler
 
-from hcrystalball.wrappers import ExponentialSmoothingWrapper
 from hcrystalball.compose import TSColumnTransformer
 from hcrystalball.feature_extraction import HolidayTransformer
+from hcrystalball.wrappers import ExponentialSmoothingWrapper
 
 
 @pytest.mark.parametrize(
