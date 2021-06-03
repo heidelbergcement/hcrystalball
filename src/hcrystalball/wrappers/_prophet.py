@@ -14,8 +14,9 @@ logging.getLogger("pystan").addHandler(sys_out)
 logger = logging.getLogger("fbprophet.plot")
 logger.setLevel(logging.CRITICAL)
 
-from prophet import Prophet
 import pandas as pd
+from prophet import Prophet
+
 from hcrystalball.utils import check_fit_before_predict
 from hcrystalball.utils import check_X_y
 from hcrystalball.utils import deep_dict_update
