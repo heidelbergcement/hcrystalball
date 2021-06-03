@@ -1,4 +1,4 @@
-# This workflows will setup conda environment, lint the code, run test suite, ensure docs can be built and upload code coverage
+# This workflow will setup conda environment, lint the code, run test suite, ensure docs can be built and upload code coverage
 # Extracted from https://gist.github.com/mwouts/9842452d020c08faf9e84a3bba38a66f
 name: CI
 on:
@@ -12,9 +12,10 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ["3.6", "3.7"]
+        python-version: ["3.7", "3.8"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout

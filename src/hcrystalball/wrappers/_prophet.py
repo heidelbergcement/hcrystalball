@@ -8,10 +8,10 @@ import itertools
 
 sys_out = logging.StreamHandler(sys.__stdout__)
 sys_out.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
-logging.getLogger("fbprophet").addHandler(sys_out)
+logging.getLogger("prophet").addHandler(sys_out)
 logging.getLogger("pystan").addHandler(sys_out)
 
-from fbprophet import Prophet
+from prophet import Prophet
 import pandas as pd
 from hcrystalball.utils import check_fit_before_predict
 from hcrystalball.utils import check_X_y
@@ -22,11 +22,11 @@ pd.plotting.register_matplotlib_converters()
 
 
 class ProphetWrapper(TSModelWrapper):
-    """Wrapper for fbprophet.Prophet model
+    """Wrapper for prophet.Prophet model
 
     https://facebook.github.io/prophet/docs/quick_start.html#python-api
 
-    Bring fbprophet to sklearn time-series compatible interface and puts fit parameters
+    Bring prophet to sklearn time-series compatible interface and puts fit parameters
     to initialization stage.
 
     Parameters
@@ -38,13 +38,13 @@ class ProphetWrapper(TSModelWrapper):
         Whether confidence intervals should be also outputed.
 
     full_prophet_output: bool
-        Whether the `predict` method should output the full fbprophet.Prophet dataframe.
+        Whether the `predict` method should output the full prophet.Prophet dataframe.
 
     extra_seasonalities : list of dicts
-        Dictionary will be passed to fbprophet.Prophet add_regressor method.
+        Dictionary will be passed to prophet.Prophet add_regressor method.
 
     extra_regressors : list or list of dicts
-        Dictionary will be passed to fbprophet.Prophet add_seasonality method.
+        Dictionary will be passed to prophet.Prophet add_seasonality method.
 
     extra_holidays : dict of dict
         Dict with name of the holiday and values as another dict with required
@@ -52,7 +52,7 @@ class ProphetWrapper(TSModelWrapper):
         i.e.{'holiday_name': {'lower_window':1, 'upper_window:1, 'prior_scale: 10}}.
 
     fit_params : dict
-        Parameters passed to `fit` fbprophet.Prophet model.
+        Parameters passed to `fit` prophet.Prophet model.
 
     clip_predictions_lower : float
         Minimal value allowed for predictions - predictions will be clipped to this value.

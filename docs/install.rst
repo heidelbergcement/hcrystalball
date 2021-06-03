@@ -26,7 +26,7 @@ Install other libraries you want to wrap
 .. code-block:: bash
 
     conda install -c conda-forge statsmodels
-    conda install -c conda-forge fbprophet
+    conda install -c conda-forge prophet
     conda install -c conda-forge scikit-learn
 
     pip install pmdarima

@@ -16,7 +16,7 @@ Later for each of the use-case, or data partition, you would need to adapt your 
 Also, searching for optimal model parameters and data preprocessing steps might become tedious task in such setup.
 
 Main building block of hcrystalball, that further enables such large scale cross validation, is a layer of wrappers,
-that bring models from fbprophet, exponential smoothing (from statsmodels), sarimax (from pmdarima), tbats
+that bring models from prophet, exponential smoothing (from statsmodels), sarimax (from pmdarima), tbats
 and any sklearn compatible regressor to time-series compatible sklearn API compliant nature.
 
 Usage of such wrappers is for people who are familiar with sklearn straight forward
@@ -26,7 +26,7 @@ Most wrappers
 
 .. code-block:: python
 
-    # fbprophet, pmdarima, statsmodels, tbats
+    # prophet, pmdarima, statsmodels, tbats
     from hcrystalball.wrappers import SarimaxWrapper
     # from hcrystalball.wrappers import ProphetWrapper
     # from hcrystalball.wrappers import ExponentialSmoothingWrapper

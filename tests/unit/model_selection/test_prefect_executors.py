@@ -10,9 +10,9 @@ from hcrystalball.model_selection import ModelSelectorResult
     indirect=["train_data", "grid_search"],
 )
 def test_prefect_executors(train_data, grid_search, parallel_columns):
-    from prefect.engine.executors import DaskExecutor
-    from prefect.engine.executors import LocalDaskExecutor
-    from prefect.engine.executors import LocalExecutor
+    from prefect.executors import DaskExecutor
+    from prefect.executors import LocalDaskExecutor
+    from prefect.executors import LocalExecutor
     from dask.distributed import Client
 
     client = Client()

@@ -223,7 +223,7 @@ class ModelSelectorResult:
                 )
                 if not plt_cv.empty:
                     plt.fill_between(
-                        x=plt_cv.index,
+                        x=plt_cv.index.values,
                         y1=max_y,
                         y2=min_y,
                         alpha=[0.2, 0.4][split % 2],
@@ -244,7 +244,7 @@ class ModelSelectorResult:
                 tmp_df = df[plot_from:].loc[lambda x: x["cv_split"] == split, ["cv_split_str"]]
                 if not tmp_df.empty:
                     plt.fill_between(
-                        x=tmp_df.index,
+                        x=tmp_df.index.values,
                         y1=max_y,
                         y2=min_y,
                         alpha=[0.2, 0.4][split % 2],

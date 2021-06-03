@@ -145,7 +145,10 @@ class SeasonalityTransformer(BaseEstimator, TransformerMixin):
         if (self.week_day or (self.auto and self.freq in ["D"])) and self.week_day is not False:
             season_feat.append(pd.get_dummies(date.day_name()))
         if self.weekly or (self.auto and self.freq in ["D", "W"]) and self.weekly is not False:
-            season_feat.append(pd.get_dummies(date.week).rename(columns=lambda x: f"{x}_week"))
+            season_feat.append(
+                pd.get_dummies(date.isocalendar().week.values).rename(columns=lambda x: f"{x}_week")
+            )
+            # season_feat.append(pd.get_dummies(date.week).rename(columns=lambda x: f"{x}_week"))
         if self.monthly or (self.auto and self.freq in ["D", "W", "M"]) and self.monthly is not False:
             season_feat.append(pd.get_dummies(date.month_name()))
         if (
