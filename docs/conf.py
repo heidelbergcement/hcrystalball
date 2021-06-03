@@ -1,6 +1,7 @@
 """Sphinx docs build configuration file."""
-import os
 import inspect
+import os
+
 import hcrystalball
 
 __location__ = os.path.join(os.getcwd(), os.path.dirname(inspect.getfile(inspect.currentframe())))

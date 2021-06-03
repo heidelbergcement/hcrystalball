@@ -1,18 +1,18 @@
 """Pytest fixtures."""
-import pytest
 import numpy as np
 import pandas as pd
+import pandas._testing as tm
+import pytest
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
 
-from hcrystalball.wrappers import ProphetWrapper
+from hcrystalball.ensemble import SimpleEnsemble
+from hcrystalball.ensemble import StackingEnsemble
 from hcrystalball.wrappers import ExponentialSmoothingWrapper
-from hcrystalball.wrappers import TBATSWrapper
+from hcrystalball.wrappers import ProphetWrapper
 from hcrystalball.wrappers import SarimaxWrapper
+from hcrystalball.wrappers import TBATSWrapper
 from hcrystalball.wrappers import get_sklearn_wrapper
-from hcrystalball.ensemble import StackingEnsemble, SimpleEnsemble
-
-import pandas._testing as tm
 
 random_state = np.random.RandomState(123)
 tm.N = 100  # 100 rows
@@ -530,15 +530,16 @@ def train_data(request):
 
 @pytest.fixture()
 def grid_search(request):
-    from hcrystalball.wrappers import get_sklearn_wrapper
+    from sklearn.dummy import DummyRegressor
+    from sklearn.metrics import mean_absolute_error
+    from sklearn.model_selection import GridSearchCV
+    from sklearn.pipeline import Pipeline
+
     from hcrystalball.feature_extraction import HolidayTransformer
     from hcrystalball.feature_extraction import SeasonalityTransformer
-    from hcrystalball.model_selection import FinerTimeSplit
-    from sklearn.pipeline import Pipeline
-    from sklearn.model_selection import GridSearchCV
-    from sklearn.dummy import DummyRegressor
     from hcrystalball.metrics import make_ts_scorer
-    from sklearn.metrics import mean_absolute_error
+    from hcrystalball.model_selection import FinerTimeSplit
+    from hcrystalball.wrappers import get_sklearn_wrapper
 
     scoring = make_ts_scorer(mean_absolute_error, greater_is_better=False)
 

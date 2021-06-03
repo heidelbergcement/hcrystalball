@@ -1,10 +1,12 @@
-from hcrystalball.model_selection.utils import persist_experts_in_physical_partition
-from hcrystalball.model_selection.utils import _load_file
-from hcrystalball.model_selection import select_model
-import pickle
 import json
 import os
+import pickle
+
 import pytest
+
+from hcrystalball.model_selection import select_model
+from hcrystalball.model_selection.utils import _load_file
+from hcrystalball.model_selection.utils import persist_experts_in_physical_partition
 
 
 @pytest.mark.parametrize("train_data, grid_search", [("", "")], indirect=["train_data", "grid_search"])

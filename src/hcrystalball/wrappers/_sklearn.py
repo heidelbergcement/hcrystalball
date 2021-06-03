@@ -1,9 +1,15 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+from abc import abstractmethod
+
 import pandas as pd
+
 from hcrystalball.exceptions import InsufficientDataLengthError
+from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import check_X_y
+from hcrystalball.utils import enforce_y_type
+from hcrystalball.utils import set_verbosity
 from hcrystalball.wrappers._base import TSModelWrapper
 from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
-from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict, set_verbosity
 
 
 class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
@@ -254,6 +260,11 @@ def _get_sklearn_wrapper(model_cls):
 
         clip_predictions_upper: float
             Maximum value allowed for predictions - predictions will be clipped to this value.
+
+        hcb_verbose : bool
+            Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+            and 3rd party libraries during fit and predict
+
         """
 
         model_class = model_cls
@@ -267,7 +278,7 @@ def _get_sklearn_wrapper(model_cls):
             optimize_for_horizon=False,
             clip_predictions_lower=None,
             clip_predictions_upper=None,
-            hcb_verbose=False,
+            hcb_verbose=True,
         ):
             pass
 

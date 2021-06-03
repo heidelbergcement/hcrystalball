@@ -1,13 +1,13 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
 from hcrystalball.compose import TSColumnTransformer
-from hcrystalball.wrappers import get_sklearn_wrapper
 from hcrystalball.preprocessing import TargetTransformer
 from hcrystalball.utils import generate_tsdata
+from hcrystalball.wrappers import get_sklearn_wrapper
 
 
 def test_target_transformer():

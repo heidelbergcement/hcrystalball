@@ -1,11 +1,13 @@
 import functools
+
 import pandas as pd
 
 from hcrystalball.utils import generate_estimator_hash
 from hcrystalball.utils import generate_partition_hash
 from hcrystalball.utils import get_estimator_name
-from .utils import _persist_to_file
+
 from .utils import _load_file
+from .utils import _persist_to_file
 
 load_model_selector_result = functools.partial(_load_file, expert_type="model_selector_result")
 

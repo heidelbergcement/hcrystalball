@@ -1,12 +1,13 @@
-import pandas as pd
-from pathlib import Path
 from collections import Counter
+from pathlib import Path
 
-from ._configuration import get_gridsearch
+import pandas as pd
+
 from ._configuration import add_model_to_gridsearch
+from ._configuration import get_gridsearch
 from ._large_scale_cross_validation import select_model_general
-from .utils import persist_experts_in_physical_partition
 from ._model_selector_result import load_model_selector_result
+from .utils import persist_experts_in_physical_partition
 
 
 def load_model_selector(folder_path):
@@ -175,6 +176,7 @@ class ModelSelector:
         clip_predictions_lower=None,
         clip_predictions_upper=None,
         exog_cols=None,
+        hcb_verbose=False,
     ):
         """Create grid_search attribute (`sklearn.model_selection.GridSearchCV`) based on selection criteria
 
@@ -247,6 +249,10 @@ class ModelSelector:
 
         exog_cols: list
             List of columns to be used as exogenous variables
+
+        hcb_verbose : bool
+            Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+            and 3rd party libraries during fit and predict
         """
         if self.country_code_column is not None and country_code is not None:
             raise ValueError(

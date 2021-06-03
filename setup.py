@@ -9,7 +9,8 @@
 """
 import sys
 
-from pkg_resources import require, VersionConflict
+from pkg_resources import VersionConflict
+from pkg_resources import require
 from setuptools import setup
 
 try:

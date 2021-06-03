@@ -1,9 +1,12 @@
-from sklearn.metrics._scorer import _BaseScorer
-from sklearn.metrics import SCORERS
-import pandas as pd
-import numpy as np
 from collections import defaultdict
-from hcrystalball.utils import get_estimator_repr, generate_estimator_hash
+
+import numpy as np
+import pandas as pd
+from sklearn.metrics import SCORERS
+from sklearn.metrics._scorer import _BaseScorer
+
+from hcrystalball.utils import generate_estimator_hash
+from hcrystalball.utils import get_estimator_repr
 
 
 class PersistCVDataMixin:

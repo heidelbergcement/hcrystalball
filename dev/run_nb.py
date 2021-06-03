@@ -1,8 +1,9 @@
 """Check notebook execution speed"""
-import time
-import pandas as pd
-from pathlib import Path
 import subprocess
+import time
+from pathlib import Path
+
+import pandas as pd
 
 
 def bench_notebook(filename):

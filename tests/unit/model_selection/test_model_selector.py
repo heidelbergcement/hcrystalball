@@ -1,13 +1,14 @@
-from hcrystalball.model_selection import load_model_selector
-from hcrystalball.model_selection import ModelSelector
-from hcrystalball.utils import generate_multiple_tsdata
-from hcrystalball.wrappers import get_sklearn_wrapper
-from hcrystalball.feature_extraction import HolidayTransformer
+import os
 
+import pytest
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
-import os
-import pytest
+
+from hcrystalball.feature_extraction import HolidayTransformer
+from hcrystalball.model_selection import ModelSelector
+from hcrystalball.model_selection import load_model_selector
+from hcrystalball.utils import generate_multiple_tsdata
+from hcrystalball.wrappers import get_sklearn_wrapper
 
 
 @pytest.mark.parametrize(

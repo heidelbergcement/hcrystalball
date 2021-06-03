@@ -1,17 +1,19 @@
+import pandas as pd
 import pytest
 from numpy.testing import assert_array_equal
-from pandas.testing import assert_frame_equal, assert_series_equal
-import pandas as pd
-from sklearn.pipeline import Pipeline
+from pandas.testing import assert_frame_equal
+from pandas.testing import assert_series_equal
 from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import Pipeline
 
+from hcrystalball.ensemble import SimpleEnsemble
+from hcrystalball.ensemble import StackingEnsemble
 from hcrystalball.feature_extraction import HolidayTransformer
+from hcrystalball.wrappers import ExponentialSmoothingWrapper
 from hcrystalball.wrappers import ProphetWrapper
 from hcrystalball.wrappers import SarimaxWrapper
 from hcrystalball.wrappers import TBATSWrapper
 from hcrystalball.wrappers import get_sklearn_wrapper
-from hcrystalball.wrappers import ExponentialSmoothingWrapper
-from hcrystalball.ensemble import StackingEnsemble, SimpleEnsemble
 
 
 @pytest.fixture(scope="module")

@@ -1,12 +1,14 @@
 import logging
+
 import numpy as np
-from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import Pipeline
+
+from hcrystalball.compose import TSColumnTransformer
+from hcrystalball.feature_extraction import HolidayTransformer
+from hcrystalball.metrics import get_scorer
 
 from ._split import FinerTimeSplit
-from hcrystalball.compose import TSColumnTransformer
-from hcrystalball.metrics import get_scorer
-from hcrystalball.feature_extraction import HolidayTransformer
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +41,7 @@ def get_gridsearch(
     clip_predictions_lower=None,
     clip_predictions_upper=None,
     exog_cols=None,
+    hcb_verbose=False,
 ):
     """Get grid search object based on selection criteria.
 
@@ -121,6 +124,10 @@ def get_gridsearch(
 
     exog_cols : list
         List of columns to be used as exogenous variables
+
+    hcb_verbose : bool
+        Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+        and 3rd party libraries during fit and predict
 
     Returns
     -------
@@ -214,25 +221,28 @@ def get_gridsearch(
                     autoarima_dict=autoarima_dict,
                     clip_predictions_lower=clip_predictions_lower,
                     clip_predictions_upper=clip_predictions_upper,
+                    hcb_verbose=hcb_verbose,
                 ),
             )
         )
 
     if stacking_ensembles or average_ensembles or sklearn_models:
-        from sklearn.linear_model import ElasticNet
         from sklearn.ensemble import RandomForestRegressor
+        from sklearn.linear_model import ElasticNet
+
+        from hcrystalball.feature_extraction import SeasonalityTransformer
 
         # TODO when scoring time is fixed, add HistGradientBoostingRegressor
         # from sklearn.experimental import enable_hist_gradient_boosting
         # from sklearn.ensemble import HistGradientBoostingRegressor
         from hcrystalball.wrappers import get_sklearn_wrapper
-        from hcrystalball.feature_extraction import SeasonalityTransformer
 
         sklearn_model = get_sklearn_wrapper(
             RandomForestRegressor,
             random_state=RANDOM_STATE,
             clip_predictions_lower=clip_predictions_lower,
             clip_predictions_upper=clip_predictions_upper,
+            hcb_verbose=hcb_verbose,
         )
 
         sklearn_model_pipeline = Pipeline(
@@ -247,6 +257,7 @@ def get_gridsearch(
                 ElasticNet,
                 clip_predictions_lower=clip_predictions_lower,
                 clip_predictions_upper=clip_predictions_upper,
+                hcb_verbose=hcb_verbose,
             ),
             "RandomForestRegressor": sklearn_model,
         }
@@ -286,6 +297,7 @@ def get_gridsearch(
                     ProphetWrapper(
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
+                        hcb_verbose=hcb_verbose,
                     )
                 ],
                 "model__seasonality_mode": ["multiplicative", "additive"],
@@ -299,6 +311,7 @@ def get_gridsearch(
                     ProphetWrapper(
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
+                        hcb_verbose=hcb_verbose,
                     )
                 ],
                 "model__extra_seasonalities": [
@@ -329,6 +342,7 @@ def get_gridsearch(
                         freq=frequency,
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
+                        hcb_verbose=hcb_verbose,
                     )
                 ],
                 "model__trend": ["add"],
@@ -346,6 +360,7 @@ def get_gridsearch(
                         freq=frequency,
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
+                        hcb_verbose=hcb_verbose,
                     )
                 ],
                 "model__trend": ["add"],
@@ -363,6 +378,7 @@ def get_gridsearch(
                         freq=frequency,
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
+                        hcb_verbose=hcb_verbose,
                     )
                 ],
                 "model__trend": [None],
@@ -379,10 +395,12 @@ def get_gridsearch(
                     SimpleSmoothingWrapper(
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
+                        hcb_verbose=hcb_verbose,
                     ),
                     HoltSmoothingWrapper(
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
+                        hcb_verbose=hcb_verbose,
                     ),
                 ]
             }
@@ -397,6 +415,7 @@ def get_gridsearch(
                     ThetaWrapper(
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
+                        hcb_verbose=hcb_verbose,
                     )
                 ]
             }
@@ -412,16 +431,18 @@ def get_gridsearch(
                         use_arma_errors=False,
                         clip_predictions_lower=clip_predictions_lower,
                         clip_predictions_upper=clip_predictions_upper,
+                        hcb_verbose=hcb_verbose,
                     )
                 ]
             }
         )
 
     if stacking_ensembles:
+        from sklearn.ensemble import RandomForestRegressor
+
         from hcrystalball.ensemble import StackingEnsemble
         from hcrystalball.wrappers import ProphetWrapper
         from hcrystalball.wrappers import ThetaWrapper
-        from sklearn.ensemble import RandomForestRegressor
 
         grid_search.param_grid.append(
             {
@@ -443,11 +464,13 @@ def get_gridsearch(
                         ProphetWrapper(
                             clip_predictions_lower=clip_predictions_lower,
                             clip_predictions_upper=clip_predictions_upper,
+                            hcb_verbose=hcb_verbose,
                         ),
                         sklearn_model_pipeline,
                         ThetaWrapper(
                             clip_predictions_lower=clip_predictions_lower,
                             clip_predictions_upper=clip_predictions_upper,
+                            hcb_verbose=hcb_verbose,
                         ),
                     ],
                 ],
@@ -472,11 +495,13 @@ def get_gridsearch(
                         ProphetWrapper(
                             clip_predictions_lower=clip_predictions_lower,
                             clip_predictions_upper=clip_predictions_upper,
+                            hcb_verbose=hcb_verbose,
                         ),
                         sklearn_model_pipeline,
                         ThetaWrapper(
                             clip_predictions_lower=clip_predictions_lower,
                             clip_predictions_upper=clip_predictions_upper,
+                            hcb_verbose=hcb_verbose,
                         ),
                     ],
                 ],

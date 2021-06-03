@@ -1,12 +1,14 @@
-import os
-import hashlib
-import functools
 import collections
-import pandas as pd
-import numpy as np
+import functools
+import hashlib
+import os
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.utils import check_random_state
+
 from hcrystalball.exceptions import InsufficientDataLengthError
 from hcrystalball.exceptions import PredictWithoutFitError
 
@@ -476,8 +478,9 @@ def filter_statsmodels_warnings(warnings_to_filter=None):
         List of warnings to add to `warnings.simplefilter`.
         By default None translates to ConvergenceWarning, ValueWarning, FutureWarning, UserWarning
     """
-    from statsmodels.tools import sm_exceptions as sme
     import warnings
+
+    from statsmodels.tools import sm_exceptions as sme
 
     default_warnings = [sme.ConvergenceWarning, FutureWarning, UserWarning, sme.ValueWarning]
     warnings_to_filter = warnings_to_filter if warnings_to_filter is not None else default_warnings

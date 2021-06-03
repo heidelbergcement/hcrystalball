@@ -1,9 +1,10 @@
-import pandas as pd
-import numpy as np
-import pytest
-from hcrystalball.feature_extraction import SeasonalityTransformer
 import calendar
 
+import numpy as np
+import pandas as pd
+import pytest
+
+from hcrystalball.feature_extraction import SeasonalityTransformer
 
 weekdays = [f"_{day}" for day in calendar.day_name]
 months = [f"_{month}" for month in list(calendar.month_name)[1:]]

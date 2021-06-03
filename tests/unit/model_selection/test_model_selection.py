@@ -1,15 +1,15 @@
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import GridSearchCV
-from sklearn.dummy import DummyRegressor
 import numpy as np
+import pytest
+from sklearn.dummy import DummyRegressor
+from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import Pipeline
 
+from hcrystalball.metrics import get_scorer
+from hcrystalball.model_selection import FinerTimeSplit
+from hcrystalball.model_selection import get_best_not_failing_model
+from hcrystalball.model_selection import select_model
 from hcrystalball.wrappers import ExponentialSmoothingWrapper
 from hcrystalball.wrappers import get_sklearn_wrapper
-from hcrystalball.model_selection import FinerTimeSplit
-from hcrystalball.metrics import get_scorer
-from hcrystalball.model_selection import select_model
-from hcrystalball.model_selection import get_best_not_failing_model
-import pytest
 
 
 @pytest.mark.parametrize(

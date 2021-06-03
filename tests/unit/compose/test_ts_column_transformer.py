@@ -1,7 +1,8 @@
 import pytest
-from sklearn.preprocessing import StandardScaler
-from hcrystalball.compose import TSColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import StandardScaler
+
+from hcrystalball.compose import TSColumnTransformer
 
 
 @pytest.fixture

@@ -1,6 +1,8 @@
-import pytest
 import types
+
 import numpy as np
+import pytest
+
 from hcrystalball.model_selection import FinerTimeSplit
 
 

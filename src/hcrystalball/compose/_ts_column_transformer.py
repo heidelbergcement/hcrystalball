@@ -1,9 +1,11 @@
-from sklearn.compose import ColumnTransformer
-from sklearn.utils.validation import check_array, check_is_fitted
-from scipy import sparse
 from collections import namedtuple
+
 import numpy as np
 import pandas as pd
+from scipy import sparse
+from sklearn.compose import ColumnTransformer
+from sklearn.utils.validation import check_array
+from sklearn.utils.validation import check_is_fitted
 
 
 class TSColumnTransformer(ColumnTransformer):

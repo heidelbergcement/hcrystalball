@@ -1,8 +1,9 @@
 import pandas as pd
 import pytest
+
 from hcrystalball.wrappers import ExponentialSmoothingWrapper
-from hcrystalball.wrappers import SimpleSmoothingWrapper
 from hcrystalball.wrappers import HoltSmoothingWrapper
+from hcrystalball.wrappers import SimpleSmoothingWrapper
 from hcrystalball.wrappers import ThetaWrapper
 
 

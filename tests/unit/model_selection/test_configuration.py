@@ -1,14 +1,14 @@
-from hcrystalball.model_selection import get_gridsearch
-from hcrystalball.model_selection import add_model_to_gridsearch
-from hcrystalball.model_selection import FinerTimeSplit
-from hcrystalball.feature_extraction import HolidayTransformer
-from hcrystalball.compose import TSColumnTransformer
-from hcrystalball.wrappers import ProphetWrapper
-
-from sklearn.model_selection import GridSearchCV
-from sklearn.pipeline import Pipeline
 import numpy as np
 import pytest
+from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import Pipeline
+
+from hcrystalball.compose import TSColumnTransformer
+from hcrystalball.feature_extraction import HolidayTransformer
+from hcrystalball.model_selection import FinerTimeSplit
+from hcrystalball.model_selection import add_model_to_gridsearch
+from hcrystalball.model_selection import get_gridsearch
+from hcrystalball.wrappers import ProphetWrapper
 
 
 @pytest.mark.parametrize(

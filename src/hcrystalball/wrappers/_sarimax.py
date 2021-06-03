@@ -7,11 +7,14 @@ sys_out.setFormatter(logging.Formatter("%(asctime)s - statsmodels - %(levelname)
 logging.getLogger("py.warnings").addHandler(sys_out)
 
 import pandas as pd
-from pmdarima.arima import AutoARIMA, ARIMA
+from pmdarima.arima import ARIMA
+from pmdarima.arima import AutoARIMA
 
+from hcrystalball.utils import check_fit_before_predict
+from hcrystalball.utils import check_X_y
+from hcrystalball.utils import enforce_y_type
 from hcrystalball.wrappers._base import TSModelWrapper
 from hcrystalball.wrappers._base import tsmodel_wrapper_constructor_factory
-from hcrystalball.utils import check_X_y, enforce_y_type, check_fit_before_predict
 
 
 class SarimaxWrapper(TSModelWrapper):
@@ -46,6 +49,10 @@ class SarimaxWrapper(TSModelWrapper):
 
     clip_predictions_upper: float
         Maximum value allowed for predictions - predictions will be clipped to this value.
+
+    hcb_verbose : bool
+        Whtether to keep (True) or suppress (False) messages to stdout and stderr from the wrapper
+        and 3rd party libraries during fit and predict
     """
 
     @tsmodel_wrapper_constructor_factory(ARIMA)
@@ -58,6 +65,7 @@ class SarimaxWrapper(TSModelWrapper):
         always_search_model=False,
         clip_predictions_lower=None,
         clip_predictions_upper=None,
+        hcb_verbose=True,
     ):
         """This constructor will be modified at runtime to accept
         all parameters of the ARIMA class on top of the ones defined here!"""

@@ -1,6 +1,8 @@
-from ._sklearn import get_sklearn_wrapper as get_sklearn_wrapper
 from sklearn import set_config
+
 from hcrystalball.utils import optional_import
+
+from ._sklearn import get_sklearn_wrapper as get_sklearn_wrapper
 
 set_config(print_changed_only=False)
 
