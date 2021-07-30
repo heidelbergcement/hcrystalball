@@ -116,7 +116,11 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
         pandas.DataFrame
             Prediction is stored in column with name being the `name` of the wrapper.
         """
-        X_fit, y_fit = self._transform_data_to_tsmodel_input_format(self._X, self._y, len(X))
+        if self.optimize_for_horizon:
+            lenX=len(X)
+        else:
+            lenX=0
+        X_fit, y_fit = self._transform_data_to_tsmodel_input_format(self._X, self._y, lenX)
         self.model = (
             self.model.fit(X_fit, y_fit, **self.fit_params)
             if self.fit_params
