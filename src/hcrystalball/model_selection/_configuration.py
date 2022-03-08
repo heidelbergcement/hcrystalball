@@ -347,9 +347,7 @@ def get_gridsearch(
                 ],
                 "model__trend": ["add"],
                 "model__seasonal": [None, "add"],
-                "model__damped_trend": [True, False],
-                "model__use_boxcox": [True, False],
-                "model__use_basinhopping": [False],
+                "model__damped_trend": [True, False],                
             }
         )
 
@@ -365,9 +363,7 @@ def get_gridsearch(
                 ],
                 "model__trend": ["add"],
                 "model__seasonal": ["mul"],
-                "model__damped_trend": [True, False],
-                "model__use_boxcox": [False],
-                "model__use_basinhopping": [False],
+                "model__damped_trend": [True, False],                
             }
         )
 
@@ -383,9 +379,7 @@ def get_gridsearch(
                 ],
                 "model__trend": [None],
                 "model__seasonal": [None, "add", "mul"],
-                "model__damped_trend": [False],
-                "model__use_boxcox": [False],
-                "model__use_basinhopping": [False],
+                "model__damped_trend": [False],               
             }
         )
 
