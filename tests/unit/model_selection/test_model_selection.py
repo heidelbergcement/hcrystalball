@@ -67,8 +67,8 @@ def test_get_best_not_failing_model(X_y_optional, negative_data, best_model_name
     if negative_data:
         y[-1] = -1
     models = [
-        ExponentialSmoothingWrapper(freq="D", seasonal="mul"),
-        get_sklearn_wrapper(DummyRegressor, strategy="constant", constant=-1000),
+        ExponentialSmoothingWrapper(freq="D", trend="mul"),
+        get_sklearn_wrapper(DummyRegressor, strategy="constant", constant=-5000),
     ]
     models = models if expected_error is None else models[:1]
     grid_search = GridSearchCV(
