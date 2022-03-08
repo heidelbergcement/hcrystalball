@@ -135,7 +135,9 @@ def get_gridsearch(
         CV / Model selection configuration
     """
     exog_cols = exog_cols or []
-    country_code_columns = [country_code_column] if isinstance(country_code_column, str) else country_code_column
+    country_code_columns = (
+        [country_code_column] if isinstance(country_code_column, str) else country_code_column
+    )
     country_codes = [country_code] if isinstance(country_code, str) else country_code
 
     # ensures only exogenous columns and country code column will be passed to model if provided
@@ -179,7 +181,9 @@ def get_gridsearch(
     else:
         holiday = "passthrough"
 
-    estimator = Pipeline([("exog_passthrough", exog_passthrough), ("holiday", holiday), ("model", "passthrough")])
+    estimator = Pipeline(
+        [("exog_passthrough", exog_passthrough), ("holiday", holiday), ("model", "passthrough")]
+    )
 
     cv = FinerTimeSplit(n_splits=n_splits, horizon=horizon, between_split_lag=between_split_lag)
 

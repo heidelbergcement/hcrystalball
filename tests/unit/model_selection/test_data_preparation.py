@@ -1,6 +1,6 @@
 import pandas as pd
-from pandas.testing import assert_frame_equal
 import pytest
+from pandas.testing import assert_frame_equal
 
 from hcrystalball.model_selection import filter_data
 from hcrystalball.model_selection import partition_data
