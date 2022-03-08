@@ -3,14 +3,14 @@ channels:
 - conda-forge
 - defaults
 dependencies:
-- scipy=1.4 # for statsmodels multiplicative seasonality. In some cases in future versions returns np.nans otherwise
-- pandas=1.2
-- numpy=1.20
-- scikit-learn=0.24
-- workalendar=15.3 # for HolidayTransformer
-- statsmodels=0.12.1 # SmoothingWrappers
-- prophet=1.0.1 # ProphetWrapper
-- matplotlib-base=3.4.2 # for plotting in model selection
+- scipy=1.8 # for statsmodels multiplicative seasonality. In some cases in future versions returns np.nans otherwise
+- pandas=1.4
+- numpy=1.22 #=1.20
+- scikit-learn=1.0 #=0.24
+- workalendar=16.3 #=15.3 # for HolidayTransformer
+- statsmodels=0.13 #=0.12.1 # SmoothingWrappers
+- prophet=1.0 # ProphetWrapper
+- matplotlib-base=3.5 #3.4.2 # for plotting in model selection
 - tqdm # interactive progress bar
 - ipywidgets # interactive progress bar
 - jupyterlab # run examples, interactive progress bar
@@ -20,18 +20,17 @@ dependencies:
 - nbsphinx # to build docs
 - sphinx_rtd_theme # to build docs
 - sphinx-gallery # to build docs
-- flake8 # to format the code
 - pre-commit # to run pre-commit hooks
 - prefect # to execute model selection in parallel
 - pip
 
 - pip:
-  - pmdarima==1.8.1 # SarimaxWrapper
+  - pmdarima==1.8.5 # SarimaxWrapper
   - tbats==1.1.0 #(T)BATSWrapper
   - pytest # to run tests
   - pytest-cov # to run tests
-  - black==21.5b2 # to format the code, moved to pip to match the pre-commit hooks
-  - flake8==3.9.2 # to lint the code, moved to pip to match the pre-commit hooks
-  - isort==5.5.4 # to sort imports in the code, moved to pip to match the pre-commit hooks
-  - nbstripout==0.4.0 # to strip notebooks output, moved to pip to match the pre-commit hooks
+  - black==22.1 # to format the code, moved to pip to match the pre-commit hooks
+  - flake8==4.0.1 # to lint the code, moved to pip to match the pre-commit hooks
+  - isort==5.10.1 # to sort imports in the code, moved to pip to match the pre-commit hooks
+  - nbstripout==0.5.0 # to strip notebooks output, moved to pip to match the pre-commit hooks
   - . # for the docs build, remove when not having cloned git repository and run `pip install hcrystalball` or `conda install -c conda-forge hcrystalball` instead
