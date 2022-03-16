@@ -9,6 +9,8 @@ from copy import deepcopy
 
 import pandas as pd
 
+from hcrystalball.exceptions import InsufficientDataLengthError
+
 from ._data_preparation import filter_data
 from ._data_preparation import partition_data
 from ._data_preparation import prepare_data_for_training
@@ -160,8 +162,12 @@ def select_model(
             # by fitting the whole `pipeline` on first split (with exog cols and holiday transformer)
             # and appends the best found `model` to current grid_search param grid
             ind_last_split, _ = list(grid_search_tmp.cv.split(X))[0]
-            best_sarimax = grid_search_tmp.autosarimax.fit(X.iloc[ind_last_split, :], y.iloc[ind_last_split])
-            grid_search_tmp.param_grid.append({"model": [best_sarimax["model"]]})
+            try:
+                best_sarimax = grid_search_tmp.autosarimax.fit(X.iloc[ind_last_split, :], y.iloc[ind_last_split])
+                grid_search_tmp.param_grid.append({"model": [best_sarimax["model"]]})
+            except InsufficientDataLengthError:
+                # silently skip autosarimax for this data_part
+                pass
 
         # searches among all models with found best Sarimax on last split (as opose to using AutoSarimax)
         grid_search_tmp.fit(X, y)
