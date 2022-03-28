@@ -22,6 +22,7 @@ dependencies:
 - sphinx-gallery # to build docs
 - pre-commit # to run pre-commit hooks
 - prefect # to execute model selection in parallel
+- jinja2=3.0.3  # temporary fix
 - pip
 
 - pip:
