@@ -113,7 +113,7 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
         except Exception as e:
             logger.error(
                 f"Prediction for estimator {get_estimator_name(estimator)} is set to `np.nan` "
-                f"due to its inability to predict on {X=}\n{e}"
+                f"due to its inability to predict on X={X}\n{e}"
             )
             y_pred = pd.DataFrame({get_estimator_name(estimator).split("__")[-1]: np.nan}, index=X.index)
 
