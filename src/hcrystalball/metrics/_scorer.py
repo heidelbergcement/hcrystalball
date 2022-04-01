@@ -35,18 +35,9 @@ class PersistCVDataMixin:
         -------
         None
         """
-        # Check if the predicted indices exist already in the dataframe
-        if not y_pred.index.isin(self._cv_data.index).all():
-            # We're in a new split
-            new_split_df = pd.DataFrame({"y_true": y_true}, index=y_pred.index).assign(
-                split=self._split_index[estimator_label]
-            )
-            self._cv_data = self._cv_data.append(new_split_df, sort=False)
-
-        # Add the new predictions to the cv data container
-        self._cv_data.loc[
-            lambda x: x["split"] == self._split_index[estimator_label], estimator_label
-        ] = y_pred.values[:, 0]
+        self._results[estimator_label].append(
+            y_pred.set_axis([estimator_label], axis=1).join(y_true.rename("y_true"))
+        )
         self._split_index[estimator_label] += 1
 
     def _upsert_estimator_hash(self, estimator_repr, estimator_hash):
@@ -154,9 +145,27 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
     def estimator_ids(self):
         return self._estimator_ids
 
+    def results_to_cv_data(self):
+        # ensure, that models, that successfully fitted only on last splits
+        # get correctly assigned split numbers
+        merged = []
+        max_split_index = max(self._split_index.values())
+        for estimator_label, estimator_preds in self._results.items():
+            for idx, split_preds in enumerate(estimator_preds):
+                split_diff = max_split_index - self._split_index[estimator_label]
+                merged.append(split_preds.assign(split=idx + split_diff))
+        df_merged = pd.concat(merged)
+        # ensure, unique combinations of split and index,
+        # while keeping nans for failing splits
+        index_name = df_merged.index.name
+        self.cv_data = df_merged.reset_index().groupby(["split", index_name]).max().reset_index(level=0)
+
     @property
     def cv_data(self):
-        if self._cv_data.shape[0] > 0:
+        if not self._cv_data.empty:
+            return self._cv_data
+        elif self._results:
+            self.results_to_cv_data()
             return self._cv_data
         else:
             return None
