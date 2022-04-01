@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 
 import numpy as np
@@ -6,7 +7,10 @@ from sklearn.metrics import SCORERS
 from sklearn.metrics._scorer import _BaseScorer
 
 from hcrystalball.utils import generate_estimator_hash
+from hcrystalball.utils import get_estimator_name
 from hcrystalball.utils import get_estimator_repr
+
+logger = logging.getLogger(__name__)
 
 
 class PersistCVDataMixin:
@@ -104,7 +108,14 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
             Score function applied to prediction of estimator on X.
         """
 
-        y_pred = estimator.predict(X)
+        try:
+            y_pred = estimator.predict(X)
+        except Exception as e:
+            logger.error(
+                f"Prediction for estimator {get_estimator_name(estimator)} is set to `np.nan` "
+                f"due to its inability to predict on {X=}\n{e}"
+            )
+            y_pred = pd.DataFrame({get_estimator_name(estimator).split("__")[-1]: np.nan}, index=X.index)
 
         estimator_repr = get_estimator_repr(estimator)
         estimator_hash = generate_estimator_hash(estimator)
