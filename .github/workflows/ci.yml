@@ -36,7 +36,7 @@ jobs:
           use-only-tar-bz2: true
       - name: Lint with flake8
         shell: pwsh
-        run: flake8 .
+        run: flake8 . --show-source
       - name: Install from source
         # This is required for the pre-commit tests
         shell: pwsh
