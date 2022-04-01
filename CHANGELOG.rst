@@ -2,6 +2,24 @@
 Changelog
 =========
 
+Version 0.1.12
+=============
+- Update failing param grid for exponential smoothing models
+- Update depencencies
+- Silently skip fialing autosarimaxin large scale CV
+
+Version 0.1.11
+=============
+- Fix issues with unstable models picked during CV
+- Improve logging (hcb_verbose flags)
+- Update docs
+- Update depencencies
+
+Version 0.1.10
+=============
+- Add random states to examples and model grid configuration
+- Fix damped_trend in statsmodels model definition
+
 Version 0.1.9
 =============
 

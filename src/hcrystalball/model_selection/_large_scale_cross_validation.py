@@ -164,9 +164,11 @@ def select_model(
             # and appends the best found `model` to current grid_search param grid
             ind_last_split, _ = list(grid_search_tmp.cv.split(X))[0]
             try:
-                best_sarimax = grid_search_tmp.autosarimax.fit(X.iloc[ind_last_split, :], y.iloc[ind_last_split])
+                best_sarimax = grid_search_tmp.autosarimax.fit(
+                    X.iloc[ind_last_split, :], y.iloc[ind_last_split]
+                )
                 grid_search_tmp.param_grid.append({"model": [best_sarimax["model"]]})
-            except Exception as e: # typically InsufficientDataLengthError, LinAlgError
+            except Exception as e:  # typically InsufficientDataLengthError, LinAlgError
                 logger.warning(e)
                 # silently skip autosarimax for this data_part
                 pass
