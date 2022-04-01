@@ -1,6 +1,6 @@
 # This workflow creates docker container from hcrystalball repository including jupyter
 # enabling fast start-up when launching binder to interactively explore code examples
-# from https://discourse.jupyter.org/t/how-to-reduce-mybinder-org-repository-startup-time/4956/2
+# from https://github.com/jupyterhub/repo2docker-action#use-github-actions-to-cache-the-build-for-binderhub
 name: Build Binder Notebook Container
 
 on:
@@ -17,7 +17,7 @@ jobs:
       with:
         ref: ${{ github.event.pull_request.head.sha }}
     - name: update jupyter dependencies with repo2docker
-      uses: machine-learning-apps/repo2docker-action@master
+      uses: jupyterhub/repo2docker-action@master
       with:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

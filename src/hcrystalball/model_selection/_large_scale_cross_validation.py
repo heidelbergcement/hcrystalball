@@ -9,6 +9,8 @@ from copy import deepcopy
 
 import pandas as pd
 
+from hcrystalball.exceptions import InsufficientDataLengthError
+
 from ._data_preparation import filter_data
 from ._data_preparation import partition_data
 from ._data_preparation import prepare_data_for_training
@@ -155,14 +157,19 @@ def select_model(
         # for non_parallel_partition, data_part in zip(df_cv["labels"], df_cv["data"]):
         grid_search_tmp = deepcopy(grid_search)
         X, y = data_part.drop(target_col_name, axis=1), data_part[target_col_name]
+        # specific for autosarimax to add best sarimax model to the grid
         if hasattr(grid_search_tmp, "autosarimax"):
             # ensures uniformly returned model for autosarimax within n_splits
             # by fitting the whole `pipeline` on first split (with exog cols and holiday transformer)
             # and appends the best found `model` to current grid_search param grid
             ind_last_split, _ = list(grid_search_tmp.cv.split(X))[0]
-            best_sarimax = grid_search_tmp.autosarimax.fit(X.iloc[ind_last_split, :], y.iloc[ind_last_split])
-            grid_search_tmp.param_grid.append({"model": [best_sarimax["model"]]})
-
+            try:
+                best_sarimax = grid_search_tmp.autosarimax.fit(X.iloc[ind_last_split, :], y.iloc[ind_last_split])
+                grid_search_tmp.param_grid.append({"model": [best_sarimax["model"]]})
+            except Exception as e: # typically InsufficientDataLengthError, LinAlgError
+                logger.warning(e)
+                # silently skip autosarimax for this data_part
+                pass
         # searches among all models with found best Sarimax on last split (as opose to using AutoSarimax)
         grid_search_tmp.fit(X, y)
         best_param_rank = get_best_not_failing_model(grid_search_tmp, X, y)
