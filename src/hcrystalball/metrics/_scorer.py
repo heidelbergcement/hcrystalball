@@ -140,13 +140,14 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
         self._cv_data = pd.DataFrame(columns=["split"])
         self._estimator_ids = dict()
         self._split_index = defaultdict(int)
+        self._results = defaultdict(list)
 
     @property
     def estimator_ids(self):
         return self._estimator_ids
 
     def results_to_cv_data(self):
-        # ensure, that models, that successfully fitted only on last splits
+        # ensure, that models successfully fitting only on last splits
         # get correctly assigned split numbers
         merged = []
         max_split_index = max(self._split_index.values())
@@ -155,10 +156,16 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
                 split_diff = max_split_index - self._split_index[estimator_label]
                 merged.append(split_preds.assign(split=idx + split_diff))
         df_merged = pd.concat(merged)
-        # ensure, unique combinations of split and index,
+        # ensure unique combinations of split and index
         # while keeping nans for failing splits
-        index_name = df_merged.index.name
-        self.cv_data = df_merged.reset_index().groupby(["split", index_name]).max().reset_index(level=0)
+        self._cv_data = (
+            df_merged.rename_axis([None])
+            .reset_index()
+            .groupby(["split", "index"])
+            .max()
+            .reset_index(level=0)
+            .astype({"split": pd.Int64Dtype()})
+        )
 
     @property
     def cv_data(self):
