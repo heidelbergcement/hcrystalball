@@ -36,7 +36,9 @@ class PersistCVDataMixin:
         None
         """
         self._results[estimator_label].append(
-            y_pred.set_axis([estimator_label], axis=1).join(y_true.rename("y_true"))
+            y_pred.set_axis([estimator_label], axis=1)
+            .join(y_true.rename("y_true"))
+            .assign(split=self._split_index[estimator_label])
         )
         self._split_index[estimator_label] += 1
 
@@ -149,17 +151,21 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
     def results_to_cv_data(self):
         # ensure, that models successfully fitting only on last splits
         # get correctly assigned split numbers
-        merged = []
-        max_split_index = max(self._split_index.values())
-        for estimator_label, estimator_preds in self._results.items():
-            for idx, split_preds in enumerate(estimator_preds):
-                split_diff = max_split_index - self._split_index[estimator_label]
-                merged.append(split_preds.assign(split=idx + split_diff))
-        df_merged = pd.concat(merged)
+        max_estimator_label = max(self._split_index, key=self._split_index.get)
+        index_split_lookup = {
+            str(result.index): result["split"].unique()[0] for result in self._results[max_estimator_label]
+        }
+        merged = pd.concat(
+            [
+                split_preds.assign(split=index_split_lookup[str(split_preds.index)])
+                for estimator_label, estimator_preds in self._results.items()
+                for split_preds in estimator_preds
+            ]
+        )
         # ensure unique combinations of split and index
         # while keeping nans for failing splits
         self._cv_data = (
-            df_merged.rename_axis([None])
+            merged.rename_axis([None])
             .reset_index()
             .groupby(["split", "index"])
             .max()
