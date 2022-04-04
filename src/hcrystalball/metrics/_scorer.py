@@ -148,22 +148,45 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
     def estimator_ids(self):
         return self._estimator_ids
 
-    def results_to_cv_data(self):
-        # ensure, that models successfully fitting only on last splits
+    @property
+    def cv_data(self):
+        if not self._cv_data.empty:
+            return self._cv_data
+        elif self._results:
+            self._results_to_cv_data()
+            return self._cv_data
+        else:
+            return None
+
+    def _results_to_cv_data(self):
+        """
+        Transform list like results into the dataframe with expected format.
+
+        This function takes the results of the estimator, that has most predictions (most splits)
+        as a blueprint mapping between dates in the predictinos and cv splits.
+        This information is later used to correctly label splits for the predictions in other estimators.
+        """
+        # ensure, that models not successfully fitting on all splits
         # get correctly assigned split numbers
+        #
+        # 1. take label of the estimator, that has the highest number of splits
+        # (how many times predictions were made)
         max_estimator_label = max(self._split_index, key=self._split_index.get)
+        # 2. create dictionary lookup for index -> split number
         index_split_lookup = {
             str(result.index): result["split"].unique()[0] for result in self._results[max_estimator_label]
         }
+        # 3. for each predictions for each estimator assign split number
+        # based on the index for which the predictions were made
         merged = pd.concat(
             [
                 split_preds.assign(split=index_split_lookup[str(split_preds.index)])
-                for estimator_label, estimator_preds in self._results.items()
+                for _, estimator_preds in self._results.items()
                 for split_preds in estimator_preds
             ]
         )
-        # ensure unique combinations of split and index
-        # while keeping nans for failing splits
+        # 4. ensure unique combinations of split and index for each estimator while keeping NaNs
+        # for failing splits (each estimator will have (exactly one) value for each split)
         self._cv_data = (
             merged.rename_axis([None])
             .reset_index()
@@ -172,16 +195,6 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
             .reset_index(level=0)
             .astype({"split": pd.Int64Dtype()})
         )
-
-    @property
-    def cv_data(self):
-        if not self._cv_data.empty:
-            return self._cv_data
-        elif self._results:
-            self.results_to_cv_data()
-            return self._cv_data
-        else:
-            return None
 
 
 def get_scorer(function="neg_mean_absolute_error"):
