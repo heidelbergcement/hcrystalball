@@ -113,7 +113,11 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
         estimator_repr = get_estimator_repr(estimator)
         estimator_hash = generate_estimator_hash(estimator)
         self._upsert_estimator_hash(estimator_repr, estimator_hash)
-        self._save_prediction(y_pred=y_pred, estimator_label=estimator_hash, y_true=y_true)
+        self._save_prediction(
+            y_pred=y_pred,
+            estimator_label=estimator_hash,
+            y_true=y_true if isinstance(y_true, pd.Series) else pd.Series(y_true, index=X.index),
+        )
 
         if y_pred.isna().any().any() or np.isinf(y_pred).any().any():
             return np.nan

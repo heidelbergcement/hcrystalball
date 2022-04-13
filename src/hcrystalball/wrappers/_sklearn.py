@@ -153,9 +153,7 @@ class BaseSklearnWrapper(TSModelWrapper, metaclass=ABCMeta):
             )
 
         if self.optimize_for_horizon:
-            preds = pd.concat(
-                [self._predict(X.iloc[:index, :]).tail(1) for index in range(1, X.shape[0] + 1)]
-            )
+            preds = pd.concat([self._predict(X.iloc[: index + 1]).tail(1) for index in range(len(X))])
         else:
             preds = self._predict(X)
         preds.index = X.index

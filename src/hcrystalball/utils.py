@@ -25,7 +25,7 @@ def deep_dict_update(source, overrides):
     result = source.copy()
 
     for key, value in overrides.items():
-        if isinstance(value, collections.Mapping) and value:
+        if isinstance(value, collections.abc.Mapping) and value:
             returned = deep_dict_update(result.get(key, {}), value)
             result[key] = returned
         else:
