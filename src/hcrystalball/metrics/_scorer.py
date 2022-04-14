@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 
 import numpy as np
@@ -6,7 +7,10 @@ from sklearn.metrics import SCORERS
 from sklearn.metrics._scorer import _BaseScorer
 
 from hcrystalball.utils import generate_estimator_hash
+from hcrystalball.utils import get_estimator_name
 from hcrystalball.utils import get_estimator_repr
+
+logger = logging.getLogger(__name__)
 
 
 class PersistCVDataMixin:
@@ -31,18 +35,11 @@ class PersistCVDataMixin:
         -------
         None
         """
-        # Check if the predicted indices exist already in the dataframe
-        if not y_pred.index.isin(self._cv_data.index).all():
-            # We're in a new split
-            new_split_df = pd.DataFrame({"y_true": y_true}, index=y_pred.index).assign(
-                split=self._split_index[estimator_label]
-            )
-            self._cv_data = self._cv_data.append(new_split_df, sort=False)
-
-        # Add the new predictions to the cv data container
-        self._cv_data.loc[
-            lambda x: x["split"] == self._split_index[estimator_label], estimator_label
-        ] = y_pred.values[:, 0]
+        self._results[estimator_label].append(
+            y_pred.set_axis([estimator_label], axis=1)
+            .join(y_true.rename("y_true"))
+            .assign(split=self._split_index[estimator_label])
+        )
         self._split_index[estimator_label] += 1
 
     def _upsert_estimator_hash(self, estimator_repr, estimator_hash):
@@ -104,12 +101,23 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
             Score function applied to prediction of estimator on X.
         """
 
-        y_pred = estimator.predict(X)
+        try:
+            y_pred = estimator.predict(X)
+        except Exception as e:
+            logger.error(
+                f"Prediction for estimator {get_estimator_name(estimator)} is set to `np.nan` "
+                f"due to its inability to predict on X={X}\n{e}"
+            )
+            y_pred = pd.DataFrame({get_estimator_name(estimator).split("__")[-1]: np.nan}, index=X.index)
 
         estimator_repr = get_estimator_repr(estimator)
         estimator_hash = generate_estimator_hash(estimator)
         self._upsert_estimator_hash(estimator_repr, estimator_hash)
-        self._save_prediction(y_pred=y_pred, estimator_label=estimator_hash, y_true=y_true)
+        self._save_prediction(
+            y_pred=y_pred,
+            estimator_label=estimator_hash,
+            y_true=y_true if isinstance(y_true, pd.Series) else pd.Series(y_true, index=X.index),
+        )
 
         if y_pred.isna().any().any() or np.isinf(y_pred).any().any():
             return np.nan
@@ -138,6 +146,7 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
         self._cv_data = pd.DataFrame(columns=["split"])
         self._estimator_ids = dict()
         self._split_index = defaultdict(int)
+        self._results = defaultdict(list)
 
     @property
     def estimator_ids(self):
@@ -145,10 +154,51 @@ class _TSPredictScorer(_BaseScorer, PersistCVDataMixin):
 
     @property
     def cv_data(self):
-        if self._cv_data.shape[0] > 0:
+        if not self._cv_data.empty:
+            return self._cv_data
+        elif self._results:
+            self._results_to_cv_data()
             return self._cv_data
         else:
             return None
+
+    def _results_to_cv_data(self):
+        """
+        Transform list like results into the dataframe with expected format.
+
+        This function takes the results of the estimator, that has most predictions (most splits)
+        as a blueprint mapping between dates in the predictinos and cv splits.
+        This information is later used to correctly label splits for the predictions in other estimators.
+        """
+        # ensure, that models not successfully fitting on all splits
+        # get correctly assigned split numbers
+        #
+        # 1. take label of the estimator, that has the highest number of splits
+        # (how many times predictions were made)
+        max_estimator_label = max(self._split_index, key=self._split_index.get)
+        # 2. create dictionary lookup for index -> split number
+        index_split_lookup = {
+            str(result.index): result["split"].unique()[0] for result in self._results[max_estimator_label]
+        }
+        # 3. for each predictions for each estimator assign split number
+        # based on the index for which the predictions were made
+        merged = pd.concat(
+            [
+                split_preds.assign(split=index_split_lookup[str(split_preds.index)])
+                for _, estimator_preds in self._results.items()
+                for split_preds in estimator_preds
+            ]
+        )
+        # 4. ensure unique combinations of split and index for each estimator while keeping NaNs
+        # for failing splits (each estimator will have (exactly one) value for each split)
+        self._cv_data = (
+            merged.rename_axis([None])
+            .reset_index()
+            .groupby(["split", "index"])
+            .max()
+            .reset_index(level=0)
+            .astype({"split": pd.Int64Dtype()})
+        )
 
 
 def get_scorer(function="neg_mean_absolute_error"):

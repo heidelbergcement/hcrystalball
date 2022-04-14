@@ -1,6 +1,7 @@
 import hashlib
 import inspect
 
+import numpy as np
 import pandas as pd
 import pytest
 from sklearn.metrics import mean_absolute_error
@@ -164,3 +165,98 @@ def test_get_scorer(function, expected_error):
     else:
         with pytest.raises(expected_error):
             get_scorer(function)
+
+
+@pytest.fixture
+def ts_predict_scorer():
+    scorer = _TSPredictScorer(score_func=mean_absolute_error, sign=-1, kwargs={})
+
+    model_a_split_1_preds = pd.DataFrame(
+        {
+            "y_true": [1, 2],
+            "pred_ml": [np.nan, np.nan],  # simulate failed .predict()
+            "split": [0, 0],
+            "updated": [pd.Timestamp("2021-07-31"), pd.Timestamp("2021-08-31")],
+        }
+    ).set_index(["updated"])
+    # model_a_split_2_preds do not exist - simulate failed .fit()
+    model_a_split_3_preds = pd.DataFrame(
+        {
+            "y_true": [3, 4],
+            "pred_ml": [2, 3],
+            "split": [1, 1],
+            "updated": [pd.Timestamp("2021-09-30"), pd.Timestamp("2021-10-30")],
+        }
+    ).set_index(["updated"])
+    # model_a_split_4_preds do not exist - simulate failed .fit()
+
+    scorer._split_index["pred_ml"] = 2
+    scorer._results["pred_ml"].append(model_a_split_1_preds)
+    scorer._results["pred_ml"].append(model_a_split_3_preds)
+
+    model_b_split_1_preds = pd.DataFrame(
+        {
+            "y_true": [0, 1],
+            "pred_base": [0, 1],
+            "split": [0, 0],
+            "updated": [pd.Timestamp("2021-06-30"), pd.Timestamp("2021-07-31")],
+        },
+    ).set_index(["updated"])
+    model_b_split_2_preds = pd.DataFrame(
+        {
+            "y_true": [1, 2],
+            "pred_base": [1, 2],
+            "split": [1, 1],
+            "updated": [pd.Timestamp("2021-07-31"), pd.Timestamp("2021-08-31")],
+        }
+    ).set_index(["updated"])
+    model_b_split_3_preds = pd.DataFrame(
+        {
+            "y_true": [2, 3],
+            "pred_base": [2, 3],
+            "split": [2, 2],
+            "updated": [pd.Timestamp("2021-08-31"), pd.Timestamp("2021-09-30")],
+        },
+    ).set_index(["updated"])
+    model_b_split_4_preds = pd.DataFrame(
+        {
+            "y_true": [3, 4],
+            "pred_base": [3, 4],
+            "split": [3, 3],
+            "updated": [pd.Timestamp("2021-09-30"), pd.Timestamp("2021-10-30")],
+        }
+    ).set_index(["updated"])
+
+    scorer._split_index["pred_base"] = 4
+    scorer._results["pred_base"].append(model_b_split_1_preds)
+    scorer._results["pred_base"].append(model_b_split_2_preds)
+    scorer._results["pred_base"].append(model_b_split_3_preds)
+    scorer._results["pred_base"].append(model_b_split_4_preds)
+
+    return scorer
+
+
+def test_splits_in_short_data(ts_predict_scorer):
+    expected_df = pd.DataFrame(
+        {
+            "split": [0, 0, 1, 1, 2, 2, 3, 3],
+            "y_true": [0, 1, 1, 2, 2, 3, 3, 4],
+            "pred_ml": [np.nan] * 6 + [2, 3],
+            "pred_base": [0, 1, 1, 2, 2, 3, 3, 4],
+            "index": [
+                pd.Timestamp("2021-06-30"),
+                pd.Timestamp("2021-07-31"),
+                pd.Timestamp("2021-07-31"),
+                pd.Timestamp("2021-08-31"),
+                pd.Timestamp("2021-08-31"),
+                pd.Timestamp("2021-09-30"),
+                pd.Timestamp("2021-09-30"),
+                pd.Timestamp("2021-10-30"),
+            ],
+        }
+    ).set_index("index")
+
+    pd.testing.assert_frame_equal(
+        ts_predict_scorer.cv_data.astype(float),
+        expected_df.astype(float),
+    )

@@ -139,13 +139,13 @@ class SarimaxWrapper(TSModelWrapper):
         endog, exog = self._transform_data_to_tsmodel_input_format(X, y)
         if self.init_with_autoarima or self.always_search_model:
             autoarima_params = self.autoarima_dict or {}
-            found_params = AutoARIMA(**autoarima_params).fit(y=endog, exog=exog).model_.get_params()
+            found_params = AutoARIMA(**autoarima_params).fit(y=endog, X=exog).model_.get_params()
             self.set_params(**found_params)
             self.init_with_autoarima = self.always_search_model
         elif self.order is None:
             raise ValueError("Parameter `order` must be set if `init_with_autoarima` is set to False!")
         self.model = self._init_tsmodel(ARIMA)
-        self.model.fit(y=endog, exog=exog)
+        self.model.fit(y=endog, X=exog)
         self.fitted = True
         return self
 
@@ -168,7 +168,7 @@ class SarimaxWrapper(TSModelWrapper):
         if X.filter(like="_holiday_").shape[1] > 0:
             X = self._adjust_holidays(X)
         _, exog = self._transform_data_to_tsmodel_input_format(X)
-        preds, conf_ints = self.model.predict(n_periods=X.shape[0], exog=exog, return_conf_int=True)
+        preds, conf_ints = self.model.predict(n_periods=X.shape[0], X=exog, return_conf_int=True)
         preds = pd.DataFrame(preds, index=X.index, columns=[self.name])
         if self.conf_int:
             conf_ints = pd.DataFrame(

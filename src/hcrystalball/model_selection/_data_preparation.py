@@ -116,8 +116,7 @@ def filter_data(df, include_rules=None, exclude_rules=None):
         if not isinstance(include_rules, dict):
             raise TypeError("`include_rules` is not a dictionary.")
 
-        mask = pd.Series(index=df.index)
-        mask[:] = True
+        mask = pd.Series(True, index=df.index)
         for key, value in include_rules.items():
             mask = mask & (df[key].isin(value))
 
@@ -127,8 +126,7 @@ def filter_data(df, include_rules=None, exclude_rules=None):
         if not isinstance(exclude_rules, dict):
             raise TypeError("`exclude_rules` is not a dictionary.")
 
-        mask = pd.Series(index=df.index)
-        mask[:] = True
+        mask = pd.Series(True, index=df.index)
         for key, value in exclude_rules.items():
             mask = mask & (~df[key].isin(value))
 
