@@ -37,7 +37,7 @@ class PersistCVDataMixin:
             new_split_df = pd.DataFrame({"y_true": y_true}, index=y_pred.index).assign(
                 split=self._split_index[estimator_label]
             )
-            self._cv_data = self._cv_data.append(new_split_df, sort=False)
+            self._cv_data = pd.concat(self._cv_data, new_split_df)
 
         # Add the new predictions to the cv data container
         self._cv_data.loc[
