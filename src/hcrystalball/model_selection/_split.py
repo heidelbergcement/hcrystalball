@@ -79,15 +79,19 @@ class FinerTimeSplit:
                 f"`horizon`({self.horizon}) have to be greater than 1'"
             )
 
-        max_obs = (
-            self.horizon if self.between_split_lag is None else max(self.horizon, self.between_split_lag)
-        )
-        if n_samples < self.n_splits * max_obs:
+        if (self.between_split_lag is not None) and (
+                n_samples < self.horizon + (self.n_splits - 1) * self.between_split_lag):
+            raise ValueError(
+                f"Cannot have number of samples({n_samples}) lower than the number "
+                f"of (`n_splits` ({self.n_splits}) - 1) * `between_split_lag`({self.between_split_lag}) "
+                f"+ `horizon`({self.horizon}),"
+                f"if you provided `between_split_lag`"
+            )
+        elif (self.between_split_lag is None) and (n_samples < self.n_splits * self.horizon):
             raise ValueError(
                 f"Cannot have number of samples({n_samples}) lower than the number "
                 f"of `n_splits`({self.n_splits}) * `horizon`({self.horizon}),"
-                f"or `n_splits`({self.n_splits}) * `between_split_lag`({self.between_split_lag}) "
-                f"if you provided `between_split_lag`"
+                f"if you have not provided `between_split_lag`"
             )
 
         indices = np.arange(n_samples)

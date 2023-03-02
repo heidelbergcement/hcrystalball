@@ -2,6 +2,10 @@
 Changelog
 =========
 
+Version 0.1.13
+=============
+- Fix throwing error when the FinerTimeSplit is used with a large number of overlapping splits
+
 Version 0.1.12
 =============
 - Update failing param grid for exponential smoothing models
