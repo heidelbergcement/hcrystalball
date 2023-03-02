@@ -8,3 +8,4 @@ Contributors
 * Attila Juhasz <attila.juhasz@heidelbergcement.com>
 * Christoph Deil <christoph.deil@heidelbergcement.com>
 * Krisitna Kokoskova <kristina.kokoskova@heidelbergcement.com>
+* Grigorii Smirnov-Pinchukov <grigorii.smirnov-pinchukov@heidelbergmaterials.com>
