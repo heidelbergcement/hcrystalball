@@ -2,13 +2,15 @@ from collections import defaultdict
 
 import numpy as np
 import pandas as pd
-from sklearn.metrics import get_scorer_names, get_scorer
+from sklearn.metrics import get_scorer
+from sklearn.metrics import get_scorer_names
 from sklearn.metrics._scorer import _BaseScorer
 
 from hcrystalball.utils import generate_estimator_hash
 from hcrystalball.utils import get_estimator_repr
 
 SCORERS = {name: get_scorer(name) for name in get_scorer_names()}
+
 
 class PersistCVDataMixin:
     def _save_prediction(self, y_pred, estimator_label, y_true):

@@ -183,7 +183,9 @@ class StackingEnsemble(BaseEstimator):
         -------
         pandas.DataFrame
         """
-        return pd.get_dummies(pd.to_datetime(cross_results_index).day_name(), dtype="uint8").set_index(cross_results_index)
+        return pd.get_dummies(pd.to_datetime(cross_results_index).day_name(), dtype="uint8").set_index(
+            cross_results_index
+        )
 
     @enforce_y_type
     @check_X_y
