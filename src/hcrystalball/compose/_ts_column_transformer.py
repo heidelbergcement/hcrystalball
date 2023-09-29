@@ -64,9 +64,9 @@ class TSColumnTransformer(ColumnTransformer):
                 )
             elif trans == "drop":
                 continue
-            elif hasattr(trans, "get_feature_names"):
+            elif hasattr(trans, "get_feature_names_out"):
                 col_tuple = Columns(
-                    col_name=trans.get_feature_names(),
+                    col_name=trans.get_feature_names_out(),
                     trans_name=name,
                     trans_index=index,
                     passthrough=False,
