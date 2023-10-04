@@ -4,7 +4,7 @@ channels:
 - nodefaults
 dependencies:
 - scipy>=1.5
-- pandas
+- pandas>=2.0
 - numpy>=1.20.2
 - scikit-learn>=1.0
 - workalendar>=14 # for HolidayTransformer
@@ -24,6 +24,7 @@ dependencies:
 - prefect # to execute model selection in parallel
 - jinja2=3.0.3  # temporary fix
 - pip
+- dask
 
 - pip:
   - pmdarima==2.0.3 # SarimaxWrapper
