@@ -27,7 +27,7 @@ def column_transformer_and_cols(request):
                 ),
             ]
         )
-        cols = ["trend", "one_hot", "x0_1", "x0_2", "x0_3", "x0_4"]
+        cols = ["trend", "one_hot", "one_hot_1", "one_hot_2", "one_hot_3", "one_hot_4"]
 
     elif "passthrough_columns_in_the_middle" in request.param:
         tran = TSColumnTransformer(
@@ -37,7 +37,7 @@ def column_transformer_and_cols(request):
                 ("scaler", StandardScaler(), ["trend"]),
             ]
         )
-        cols = ["x0_1", "x0_2", "x0_3", "x0_4", "one_hot", "trend"]
+        cols = ["one_hot_1", "one_hot_2", "one_hot_3", "one_hot_4", "one_hot", "trend"]
 
     return tran, cols
 

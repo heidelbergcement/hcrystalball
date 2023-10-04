@@ -2,11 +2,14 @@ from collections import defaultdict
 
 import numpy as np
 import pandas as pd
-from sklearn.metrics import SCORERS
+from sklearn.metrics import get_scorer
+from sklearn.metrics import get_scorer_names
 from sklearn.metrics._scorer import _BaseScorer
 
 from hcrystalball.utils import generate_estimator_hash
 from hcrystalball.utils import get_estimator_repr
+
+SCORERS = {name: get_scorer(name) for name in get_scorer_names()}
 
 
 class PersistCVDataMixin:
@@ -37,7 +40,7 @@ class PersistCVDataMixin:
             new_split_df = pd.DataFrame({"y_true": y_true}, index=y_pred.index).assign(
                 split=self._split_index[estimator_label]
             )
-            self._cv_data = self._cv_data.append(new_split_df, sort=False)
+            self._cv_data = pd.concat([self._cv_data, new_split_df], sort=False)
 
         # Add the new predictions to the cv data container
         self._cv_data.loc[

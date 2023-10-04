@@ -7,22 +7,29 @@ repos:
     -   id: pretty-format-json
         args:
           - --autofix
-          - --no-sort-keys
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
 -   repo: https://github.com/pre-commit/mirrors-isort
     rev: v5.8.0
     hooks:
     -   id: isort
+        args:
+          - --sl
+          - --line-length=110
+          - --profile=black
 -   repo: https://github.com/psf/black
-    rev: 21.5b2
+    rev: 22.3.0
     hooks:
     -   id: black
-        args: [--line-length=110]
--   repo: https://gitlab.com/PyCQA/flake8
-    rev: '3.9.2'
+        args:
+          - --line-length=110
+-   repo: https://github.com/PyCQA/flake8
+    rev: '3.9.1'
     hooks:
     -   id: flake8
+        exclude: ^alembic
+        args:
+          - --max-line-length=110
 -   repo: https://github.com/kynan/nbstripout
     rev: 0.4.0
     hooks:
