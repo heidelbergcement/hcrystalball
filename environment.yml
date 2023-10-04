@@ -3,14 +3,14 @@ channels:
 - conda-forge
 - nodefaults
 dependencies:
-- scipy=1.7
-- pandas=1.3
-- numpy=1.21
-- scikit-learn=1.0
-- workalendar=16.3 # for HolidayTransformer
-- statsmodels=0.13 # SmoothingWrappers
-- prophet=1.0 # ProphetWrapper
-- matplotlib-base=3.5 # for plotting in model selection
+- scipy=1.11.3
+- pandas=2.1.1
+- numpy=1.25.2
+- scikit-learn=1.3.1
+- workalendar=17 # for HolidayTransformer
+- statsmodels=0.14 # SmoothingWrappers
+- prophet=1.1 # ProphetWrapper
+- matplotlib=3.8 # for plotting in model selection
 - tqdm # interactive progress bar
 - ipywidgets # interactive progress bar
 - jupyterlab # run examples, interactive progress bar
@@ -26,8 +26,8 @@ dependencies:
 - pip
 
 - pip:
-  - pmdarima==1.8.5 # SarimaxWrapper
-  - tbats==1.1.0 #(T)BATSWrapper
+  - pmdarima==2.0.3 # SarimaxWrapper
+  - tbats==1.1.3 #(T)BATSWrapper
   - pytest # to run tests
   - pytest-cov # to run tests
   - black # to format the code, moved to pip to match the pre-commit hooks
