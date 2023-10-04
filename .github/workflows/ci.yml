@@ -20,17 +20,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-#      - name: Cache conda
-#        uses: actions/cache@v1
-#        with:
-#          path: ~/conda_pkgs_dir
-#          key: conda-${{ matrix.os }}-python-${{ matrix.python-version }}-${{ hashFiles('environment.yml') }}
+      - name: Cache conda
+        uses: actions/cache@v1
+        with:
+          path: ~/conda_pkgs_dir
+          key: conda-${{ matrix.os }}-python-${{ matrix.python-version }}-${{ hashFiles('environment.yml') }}
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
           auto-activate-base: false
           activate-environment: hcrystalball
+          channels: conda-forge
           python-version: ${{ matrix.python-version }}
           environment-file: environment.yml
           use-only-tar-bz2: true
