@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
@@ -67,7 +69,7 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
     @unified_country_code.setter
     def unified_country_code(self, value):
         if value is not None and value not in list(registry.region_registry.keys()):
-            raise ValueError("Unknown `country_code`. For list of valid codes please look at workalendar.")
+            logging.warning("Unknown `country_code`. For list of valid codes please look at workalendar.")
         self._unified_country_code = value
 
     def fit(self, X, y=None):
@@ -141,14 +143,21 @@ class HolidayTransformer(TransformerMixin, BaseEstimator):
             self.unified_country_code = X[self.country_code_column].unique()[0]
 
         years = X.index.year.unique().tolist() + [max(X.index.year)]
-        cal = registry.region_registry[self.unified_country_code]()
-        holidays = (
-            pd.concat(
-                [pd.DataFrame(data=cal.holidays(year), columns=["date", self._col_name]) for year in years]
+        try:
+            cal = registry.region_registry[self.unified_country_code]()
+            holidays = (
+                pd.concat(
+                    [
+                        pd.DataFrame(data=cal.holidays(year), columns=["date", self._col_name])
+                        for year in years
+                    ]
+                )
+                # one day could have multiple public holidays
+                .drop_duplicates(subset="date").set_index("date")
             )
-            # one day could have multiple public holidays
-            .drop_duplicates(subset="date").set_index("date")
-        )
+        except KeyError:
+            logging.warning("HolidayTransformer: No holidays found for %s", self.unified_country_code)
+            holidays = pd.DataFrame(columns=["date", self._col_name]).set_index("date")
 
         df = (
             pd.merge(X, holidays, left_index=True, right_index=True, how="left")
